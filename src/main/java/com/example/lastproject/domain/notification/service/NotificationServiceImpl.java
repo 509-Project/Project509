@@ -3,16 +3,16 @@ package com.example.lastproject.domain.notification.service;
 import com.example.lastproject.common.CustomException;
 import com.example.lastproject.common.enums.ErrorCode;
 import com.example.lastproject.domain.auth.entity.AuthUser;
+import com.example.lastproject.domain.chat.dto.ChatRoomResponse;
 import com.example.lastproject.domain.market.entity.Market;
 import com.example.lastproject.domain.notification.dto.request.NotificationRequest;
-import com.example.lastproject.domain.notification.dto.response.NotificationListResponseDto;
+import com.example.lastproject.domain.notification.dto.response.NotificationListResponse;
 import com.example.lastproject.domain.notification.dto.response.NotificationResponse;
 import com.example.lastproject.domain.notification.entity.Notification;
 import com.example.lastproject.domain.notification.entity.NotificationType;
 import com.example.lastproject.domain.notification.repository.EmitterRepository;
 import com.example.lastproject.domain.notification.repository.NotificationRepository;
 import com.example.lastproject.domain.party.dto.response.PartyResponse;
-import com.example.lastproject.domain.party.entity.Party;
 import com.example.lastproject.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -195,11 +195,24 @@ public class NotificationServiceImpl implements NotificationService {
     /**
      * 참가 신청한 파티의 채팅창이 생성된 경우 알림을 보냅니다.
      * @param authUser 요청을 보낸 인증된 사용자 정보
-     * @param party 생성된 파티 정보
+     * @param chatRoomResponse 생성된 파티의 채팅창
      */
     @Override
-    public void notifyUsersAboutPartyChatCreation(AuthUser authUser, Party party) {
+    @Transactional
+    public void notifyUsersAboutPartyChatCreation(AuthUser authUser, ChatRoomResponse chatRoomResponse) {
+        User receiver = User.fromAuthUser(authUser);
+        String content = "참가 신청한 파티의 채팅창이 취소되었습니다.";
 
+        String redirectUrl = CLIENT_BASIC_URL + "/chat/history/" + chatRoomResponse.getId();
+
+        NotificationRequest request = NotificationRequest.builder()
+                .notificationType(NotificationType.PARTY_CREATE)
+                .content(content)
+                .url(redirectUrl)
+                .receiver(receiver)
+                .build();
+
+        send(authUser, request);
     }
 
     /**
@@ -208,8 +221,8 @@ public class NotificationServiceImpl implements NotificationService {
      * @return 사용자의 알림 목록을 포함한 NotificationListResponseDto
      */
     @Override
-    public NotificationListResponseDto getNotifications(AuthUser authUser) {
-        return NotificationListResponseDto.of(
+    public NotificationListResponse getNotifications(AuthUser authUser) {
+        return NotificationListResponse.of(
                 notificationRepository.findAllByReceiverIdOrderByCreatedAtDesc(authUser.getUserId()));
     }
 

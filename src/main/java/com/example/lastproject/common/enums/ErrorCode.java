@@ -34,9 +34,11 @@ public enum ErrorCode {
 
     // UserRole ErrorCode
     USERROLE_NOT_FOUND(HttpStatus.NOT_FOUND, "조회에 실패했습니다."),
+    USERROLE_FAILED(HttpStatus.NOT_FOUND, "접근할 수 없습니다."),
 
-    // UserPenalty ErrorCode
 
+    // Penalty ErrorCode
+    CANNOT_PENALIZE_SELF(HttpStatus.BAD_REQUEST, "본인에게 페널티를 부여할 수 없습니다."),
 
     // Party ErrorCode
     PARTY_NOT_FOUND(HttpStatus.NOT_FOUND, "파티를 찾을 수 없습니다."),

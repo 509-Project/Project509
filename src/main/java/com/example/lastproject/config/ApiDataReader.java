@@ -32,6 +32,9 @@ public class ApiDataReader implements ItemReader<String> {
     @Value("${API_PORT:}")
     private String apiPort;
 
+    @Value("${API_URL:}")
+    private String apiUrl;
+
     private int startIndex = 1;
     private int endIndex = 1000;
     private final int maxIndex = 10000;
@@ -55,7 +58,7 @@ public class ApiDataReader implements ItemReader<String> {
     private String itemOpenApiRequest(int startIndex, int endIndex) {
 
         // api 키가 주입되었을때만 실행
-        if (!apiKey.isBlank() && !apiPort.isBlank()) {
+        if (!apiKey.isBlank() && !apiPort.isBlank() && !apiUrl.isBlank()) {
             try {
                 // 포트 설정
                 StringBuilder urlBuilder = new StringBuilder(apiPort);
@@ -64,7 +67,7 @@ public class ApiDataReader implements ItemReader<String> {
                 // 데이터 응답 형태
                 urlBuilder.append("/" + "json");
                 // api URL
-                urlBuilder.append("/" + "Grid_20151207000000000328_1");
+                urlBuilder.append("/" + apiUrl);
                 // 요청 데이터 인덱스 시작 위치
                 urlBuilder.append("/" + startIndex);
                 // 요청 데이터 인덱스 종료 위치

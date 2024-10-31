@@ -1,7 +1,7 @@
 package com.example.lastproject.domain.notification.controller;
 
 import com.example.lastproject.domain.auth.entity.AuthUser;
-import com.example.lastproject.domain.notification.dto.response.NotificationListResponseDto;
+import com.example.lastproject.domain.notification.dto.response.NotificationListResponse;
 import com.example.lastproject.domain.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,7 +37,7 @@ public class NotificationController {
      * @return 알림 리스트 반환
      */
     @GetMapping
-    public ResponseEntity<NotificationListResponseDto> getNotifications(@AuthenticationPrincipal AuthUser authUser) {
+    public ResponseEntity<NotificationListResponse> getNotifications(@AuthenticationPrincipal AuthUser authUser) {
         return ResponseEntity.ok(notificationService.getNotifications(authUser));
     }
 

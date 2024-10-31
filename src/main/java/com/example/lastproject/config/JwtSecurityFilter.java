@@ -26,18 +26,39 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtSecurityFilter extends OncePerRequestFilter {
 
+    /*
+    OncePerRequestFilter 을 상속받아 매 요청마다 한 번만 필터링하도록 처리
+    HTTP 요청의 헤더에서 JWT 를 추출하고 이를 검증하여 인증 정보를 설정
+    JWT 에 대한 유효성 검사를 수행하고 발생하는 다양한 예외에 대해 적절한 HTTP 응답을 반환
+    최종적으로 필터 체인을 계속 진행하여 다른 필터나 핸들러로 요청을 전달
+     */
+
     private final JwtUtil jwtUtil;
 
+    /**
+     * OncePerRequestFilter 추상 클래스의 추상 메서드 구현체
+     * HTTP 요청을 필터링하고 필요한 인증 절차를 수행
+     * SecurityContextHolder 에 인증 정보를 설정
+     *
+     * @param httpRequest Http 요청 객체
+     * @param httpResponse Http 응답 객체
+     * @param chain 다음 필터 또는 요청 처리기로 요청 전달
+     * @throws ServletException Http 요청 처리 중 발생할 수 있는 예외
+     * @throws IOException 입출력 처리 중 발생할 수 있는 예외
+     */
     @Override
     protected void doFilterInternal(
             HttpServletRequest httpRequest,
             @NonNull HttpServletResponse httpResponse,
             @NonNull FilterChain chain
     ) throws ServletException, IOException {
+
         String authorizationHeader = httpRequest.getHeader("Authorization");
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+
             String jwt = jwtUtil.substringToken(authorizationHeader);
+
             try {
                 Claims claims = jwtUtil.extractClaims(jwt);
                 Long userId = Long.valueOf(claims.getSubject());

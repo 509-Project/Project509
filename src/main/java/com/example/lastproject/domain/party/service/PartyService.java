@@ -38,8 +38,8 @@ public class PartyService {
      * @param request 파티 생성 시 필요한 정보 (마켓 이름, 마켓 주소, 거래 품목, 거래 단위, 장보기 시작&종료 시간, 파티 인원)
      * @return PartyResponse 생성된 파티 정보
      */
-    @LogisticsNotify
     @Transactional
+    @LogisticsNotify
     public PartyResponse createParty(PartyCreateRequest request, Long userId) {
 
         // 거래 품목 조회

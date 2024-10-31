@@ -1,12 +1,12 @@
 package com.example.lastproject.domain.notification.service;
 
 import com.example.lastproject.domain.auth.entity.AuthUser;
+import com.example.lastproject.domain.chat.dto.ChatRoomResponse;
 import com.example.lastproject.domain.market.entity.Market;
 import com.example.lastproject.domain.notification.dto.request.NotificationRequest;
-import com.example.lastproject.domain.notification.dto.response.NotificationListResponseDto;
+import com.example.lastproject.domain.notification.dto.response.NotificationListResponse;
 import com.example.lastproject.domain.notification.entity.Notification;
 import com.example.lastproject.domain.party.dto.response.PartyResponse;
-import com.example.lastproject.domain.party.entity.Party;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 public interface NotificationService {
@@ -18,7 +18,7 @@ public interface NotificationService {
     void notifyUsersAboutPartyCancellation(AuthUser authUser, Market market);
 
     // 참가 신청한 파티의 채팅창이 생성된 경우 알림
-    void notifyUsersAboutPartyChatCreation(AuthUser authUser, Party party);
+    void notifyUsersAboutPartyChatCreation(AuthUser authUser, ChatRoomResponse chatRoomResponse);
 
     SseEmitter subscribe(AuthUser authUser, String lastEventId);
 
@@ -26,7 +26,7 @@ public interface NotificationService {
 
     void sendToClient(SseEmitter emitter, String emitterId, String eventId, Object data);
 
-    NotificationListResponseDto getNotifications(AuthUser authUser);
+    NotificationListResponse getNotifications(AuthUser authUser);
 
     void readNotification(Long notificationId, AuthUser authUser);
 

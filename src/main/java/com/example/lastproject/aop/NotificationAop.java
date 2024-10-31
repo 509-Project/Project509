@@ -1,6 +1,7 @@
 package com.example.lastproject.aop;
 
 import com.example.lastproject.domain.auth.entity.AuthUser;
+import com.example.lastproject.domain.chat.dto.ChatRoomResponse;
 import com.example.lastproject.domain.notification.service.NotificationService;
 import com.example.lastproject.domain.party.dto.response.PartyResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,9 @@ public class NotificationAop {
 
     // 파티 생성 알림 AOP 메서드
     @AfterReturning(
-            pointcut = "@annotation(com.example.lastproject.common.annotation.LogisticsNotify)", returning = "result")
+            pointcut = "@annotation(com.example.lastproject.common.annotation.LogisticsNotify) && " +
+                    "execution(com.example.lastproject.domain.party.dto.response.PartyResponse *(..))",
+            returning = "result")
     public void afterPartyCreation(Object result) {
         // 반환된 result 객체를 PartyResponse 타입으로 캐스팅
         PartyResponse partyResponse = (PartyResponse) result;
@@ -58,5 +61,29 @@ public class NotificationAop {
 //            log.warn("알림 전송 실패: 유효한 AuthUser 객체를 찾을 수 없습니다.");
 //        }
 //    }
+
+    // 채팅방 생성 알림 AOP 메서드
+    @AfterReturning(
+            pointcut = "@annotation(com.example.lastproject.common.annotation.LogisticsNotify) && " +
+                    "execution(com.example.lastproject.domain.chat.dto.ChatRoomResponse *(..))",
+            returning = "result")
+    public void afterChatCreation(Object result) {
+        // 반환된 result 객체를 PartyResponse 타입으로 캐스팅
+        ChatRoomResponse chatRoomResponse = (ChatRoomResponse) result;
+
+        // SecurityContextHolder에서 AuthUser 가져오기
+        AuthUser authUser = (AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // 알림 전송 로직
+        if (authUser != null) {
+            // Party 정보를 PartyResponse에서 가져와 알림 전송
+            notificationService.notifyUsersAboutPartyChatCreation(authUser, chatRoomResponse);
+            log.info("ChatRoom 생성 알림 전송 완료: {}", chatRoomResponse);
+
+
+        } else {
+            log.warn("알림 전송 실패: 유효한 AuthUser 객체를 찾을 수 없습니다.");
+        }
+    }
 
 }

@@ -21,11 +21,14 @@ function connect(event) {
     username = document.querySelector('#name').value.trim();
     chatRoomId = document.querySelector('#chatRoomId').value.trim();
 
+    const jwtToken = '인증된jwt토큰';
+    localStorage.setItem('jwtToken', jwtToken);
+
     if(username && chatRoomId) {
         usernamePage.classList.add('hidden');
         chatPage.classList.remove('hidden');
 
-        var socket = new SockJS('/ws');
+        var socket = new SockJS(`/ws?token=${jwtToken}`);
         stompClient = Stomp.over(socket);
 
         stompClient.connect({}, onConnected, onError);

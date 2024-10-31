@@ -1,5 +1,6 @@
 package com.example.lastproject.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -14,7 +15,10 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 @Configuration
 @EnableWebSocketMessageBroker
+@RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+    private final JwtHandshakeInterceptor jwtHandshakeInterceptor;
 
     /**
      * 클라이언트가 Websocket서버에 접속하기 위해 사용할 메서드
@@ -25,7 +29,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         //cors정책과 충돌하지 않기 위해 patterns로 수정
-        registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS();
+        //JWT인증을 위해 Interceptor 추가
+        registry.addEndpoint("/ws").setAllowedOriginPatterns("*").addInterceptors(jwtHandshakeInterceptor).withSockJS();
     }
 
     /**
