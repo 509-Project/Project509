@@ -1,6 +1,7 @@
 package com.example.lastproject.domain.notification.controller;
 
 import com.example.lastproject.common.dto.AuthUser;
+import com.example.lastproject.common.enums.CustomMessage;
 import com.example.lastproject.domain.notification.dto.response.NotificationListResponse;
 import com.example.lastproject.domain.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
@@ -48,10 +49,10 @@ public class NotificationController {
      * @return 성공 메시지
      */
     @PatchMapping(value = "/{notificationId}")
-    public ResponseEntity<String> readNotification(@PathVariable Long notificationId,
+    public ResponseEntity<CustomMessage> readNotification(@PathVariable Long notificationId,
                                                         @AuthenticationPrincipal AuthUser authUser) {
         notificationService.readNotification(notificationId, authUser);
-        return ResponseEntity.ok("알림이 읽음으로 변경되었습니다.");
+        return ResponseEntity.ok(CustomMessage.ON_SUCCESS);
     }
 
     /**

@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
 
-        updateOldPenaltiesStatus();
+//        updateOldPenaltiesStatus();
         List<Penalty> penalties = penaltyRepository.findPenaltiesByUserIdAndStatus(findUser, PenaltyStatus.SEARCHABLE);
 
         String nicknameWithEmoji = getNicknameWithEmoji(findUser.getNickname(), penalties);
