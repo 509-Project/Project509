@@ -1,7 +1,7 @@
 package com.example.lastproject.domain.likeitem.controller;
 
-import com.example.lastproject.common.enums.CustomMessage;
 import com.example.lastproject.common.dto.AuthUser;
+import com.example.lastproject.common.enums.CustomMessage;
 import com.example.lastproject.domain.likeitem.dto.response.LikeItemResponse;
 import com.example.lastproject.domain.likeitem.service.LikeItemService;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +48,8 @@ public class LikeItemController {
 
     /**
      * 즐겨찾기 품목 삭제
-     * @param authUser 즐겨찾기 삭제할 유저
+     *
+     * @param authUser   즐겨찾기 삭제할 유저
      * @param likeItemId 삭제할 즐겨찾기 아이디
      * @return 성공메시지
      */

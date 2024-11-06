@@ -20,7 +20,6 @@ public enum ErrorCode {
      * throw new CustomException(ErrorCode.STORE_FORBIDDEN);  <br />
      */
 
-
     // Token ErrorCode
     TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "토큰을 찾을 수 없습니다."),
 
@@ -29,8 +28,7 @@ public enum ErrorCode {
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "검증에 실패했습니다."),
     EXIST_EMAIL(HttpStatus.BAD_REQUEST, "존재하는 이메일입니다."),
     EXIST_NICKNAME(HttpStatus.BAD_REQUEST, "존재하는 닉네임입니다."),
-    SIGNUP_ERROR(HttpStatus.BAD_REQUEST, "가입에 실패했습니다."),
-    SIGNIN_ERROR(HttpStatus.BAD_REQUEST, "로그인에 실패했습니다."),
+    SIGN_IN_ERROR(HttpStatus.BAD_REQUEST, "로그인에 실패했습니다."),
     WITHDRAWAL_ERROR(HttpStatus.BAD_REQUEST, "탈퇴에 실패했습니다."),
     NO_CONTENTS(HttpStatus.BAD_REQUEST, "변경된 정보가 없습니다."),
     ENCODING_FAILED(HttpStatus.BAD_REQUEST, "인코딩에 실패했습니다."),
@@ -39,9 +37,7 @@ public enum ErrorCode {
     USER_ROLE_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자 권한 조회에 실패했습니다."),
     USER_IS_NOT_LEADER(HttpStatus.NOT_FOUND, "파티장만 접근 가능합니다."),
 
-
     // Penalty ErrorCode
-    CANNOT_PENALIZE_SELF(HttpStatus.BAD_REQUEST, "본인에게 페널티를 부여할 수 없습니다."),
 
     // Party ErrorCode
     PARTY_NOT_FOUND(HttpStatus.NOT_FOUND, "파티를 찾을 수 없습니다."),
@@ -50,16 +46,14 @@ public enum ErrorCode {
     INVALID_MEMBERS_COUNT(HttpStatus.BAD_REQUEST, "최소 참가 인원은 1명 이상이어야 합니다."),
     INVALID_ITEM_COUNT(HttpStatus.BAD_REQUEST, "개수를 입력해야 합니다."),
     NOT_PARTY_LEADER(HttpStatus.BAD_REQUEST, "이 작업은 파티장만 수행할 수 있습니다."),
-    INVALID_MARKET_UPDATE(HttpStatus.BAD_REQUEST, "마켓 이름과 주소는 수정할 수 없습니다."),
     PARTY_NOT_DONE(HttpStatus.BAD_REQUEST, "장보기 완료가 되지 않았습니다."),
 
     // PartyMember ErrorCode
     PARTY_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "파티 멤버를 찾을 수 없습니다."),
     ALREADY_PARTY_MEMBER(HttpStatus.BAD_REQUEST, "같은 파티에 중복으로 참가 신청할 수 없습니다."),
-    CANNOT_JOIN_OWN_PARTY(HttpStatus.BAD_REQUEST, "파티장은 본인이 생성한 파티에 참가 신청할 수 없습니다."),
 
     // Market ErrorCode
-
+    MARKET_NOT_FOUND(HttpStatus.NOT_FOUND, "마켓 정보를 찾을 수 없습니다."),
 
     // Item ErrorCode
     ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "조회되는 품목이 없습니다."),
@@ -72,26 +66,6 @@ public enum ErrorCode {
     // Chat ErrorCode
     CHATROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "채팅방을 찾을 수 없습니다."),
     CHATROOM_RESIST_DUPLICATION(HttpStatus.BAD_REQUEST, "이미 존재하는 채팅방입니다"),
-
-
-    // UserReview ErrorCode
-
-
-    // UserPenalty ErrorCode
-
-
-    // Party ErrorCode
-
-
-    // PartyMember ErrorCode
-
-
-    // Market ErrorCode
-    MARKET_NOT_FOUND(HttpStatus.NOT_FOUND, "마켓 정보를 찾을 수 없습니다."),
-
-
-    // Notification ErrorCode
-
 
     // OpenApi ErrorCode
     API_CONNECTION_ERROR(HttpStatus.BAD_REQUEST, "API 요청이 잘못되었습니다."),
@@ -116,4 +90,5 @@ public enum ErrorCode {
         this.status = httpStatus;
         this.message = message;
     }
+
 }

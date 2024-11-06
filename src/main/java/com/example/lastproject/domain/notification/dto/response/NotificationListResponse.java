@@ -3,6 +3,7 @@ package com.example.lastproject.domain.notification.dto.response;
 import com.example.lastproject.domain.notification.entity.Notification;
 import lombok.Builder;
 import lombok.Getter;
+
 import java.util.List;
 
 @Getter

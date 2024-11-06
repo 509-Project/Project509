@@ -14,13 +14,13 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.util.Optional;
 
-/**
- * 소켓의 연결과 해제를 감지하기위한 이벤트리스너를 사용하는 클래스
- */
-
 @Component
 @RequiredArgsConstructor
 public class WebSocketEventListener {
+
+    /*
+    소켓의 연결과 해제를 감지하기위한 이벤트리스너를 사용하는 클래스
+    */
 
     private static final Logger logger = LoggerFactory.getLogger(WebSocketEventListener.class);
     private final SimpMessageSendingOperations messagingTemplate;

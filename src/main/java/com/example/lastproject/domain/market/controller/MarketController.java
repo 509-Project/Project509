@@ -16,22 +16,24 @@ public class MarketController {
 
     /**
      * 마켓 등록
+     *
      * @param requestDto 등록할 마켓 객체데이터
      * @return 성공메시지
      */
     @PostMapping
-    public ResponseEntity<CustomMessage> saveMarket(@RequestBody MarketRequestDto requestDto){
+    public ResponseEntity<CustomMessage> saveMarket(@RequestBody MarketRequestDto requestDto) {
         marketService.saveMarket(requestDto);
         return ResponseEntity.ok(CustomMessage.ON_SUCCESS);
     }
 
     /**
      * 마켓 삭제
+     *
      * @param marketId 삭제할 마켓 아이디
      * @return 성공 메시지
      */
     @DeleteMapping("/{marketId}")
-    public ResponseEntity<CustomMessage> deleteMarket(@PathVariable Long marketId){
+    public ResponseEntity<CustomMessage> deleteMarket(@PathVariable Long marketId) {
         marketService.deleteMarket(marketId);
         return ResponseEntity.ok(CustomMessage.ON_SUCCESS);
     }

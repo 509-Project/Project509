@@ -7,7 +7,6 @@ import com.example.lastproject.domain.user.dto.response.UserResponse;
 
 public interface UserService {
 
-
     UserResponse getUser(Long userId);
 
     UserResponse changePassword(AuthUser authUser, UserChangePasswordRequest request);

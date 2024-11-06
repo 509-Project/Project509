@@ -1,7 +1,7 @@
 package com.example.lastproject.domain.market.service;
 
-import com.example.lastproject.common.exception.CustomException;
 import com.example.lastproject.common.enums.ErrorCode;
+import com.example.lastproject.common.exception.CustomException;
 import com.example.lastproject.domain.market.dto.request.MarketRequestDto;
 import com.example.lastproject.domain.market.entity.Market;
 import com.example.lastproject.domain.market.repository.MarketRepository;
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class MarketServiceImpl implements MarketService{
+public class MarketServiceImpl implements MarketService {
 
     private final MarketRepository marketRepository;
 
@@ -25,6 +25,7 @@ public class MarketServiceImpl implements MarketService{
     // 마켓 삭제
     @Transactional
     public void deleteMarket(Long marketId) {
+
         Market market = marketRepository.findById(marketId).orElseThrow(
                 () -> new CustomException(ErrorCode.MARKET_NOT_FOUND)
         );

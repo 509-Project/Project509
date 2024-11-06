@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class LikeItemResponse {
+
     private final long id;
     private final String category;
     private final String productName;

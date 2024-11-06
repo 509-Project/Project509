@@ -1,8 +1,8 @@
 package com.example.lastproject.domain.likeitem.service;
 
-import com.example.lastproject.common.exception.CustomException;
-import com.example.lastproject.common.enums.ErrorCode;
 import com.example.lastproject.common.dto.AuthUser;
+import com.example.lastproject.common.enums.ErrorCode;
+import com.example.lastproject.common.exception.CustomException;
 import com.example.lastproject.domain.item.entity.Item;
 import com.example.lastproject.domain.item.service.ItemService;
 import com.example.lastproject.domain.likeitem.dto.response.LikeItemResponse;
@@ -39,7 +39,7 @@ public class LikeItemServiceImpl implements LikeItemService {
         }
 
         // 등록할 품목엔티티
-        Item item = itemService.validateEntity(itemId);
+        Item item = itemService.validateItem(itemId);
 
         LikeItem likeItem = new LikeItem(user, item);
         likeItemRepository.save(likeItem);
@@ -57,7 +57,7 @@ public class LikeItemServiceImpl implements LikeItemService {
     }
 
     /**
-     * @param authUser 즐겨찾기 삭제할 유저
+     * @param authUser   즐겨찾기 삭제할 유저
      * @param likeItemId 삭제할 즐겨찾기 아이디
      */
     @Transactional

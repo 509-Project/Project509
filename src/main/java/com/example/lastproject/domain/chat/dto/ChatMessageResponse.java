@@ -16,7 +16,7 @@ public class ChatMessageResponse {
     @Enumerated(EnumType.STRING)
     private ChatMessageRequest.MessageType type;
 
-    public ChatMessageResponse(ChatMessage chatMessage){
+    public ChatMessageResponse(ChatMessage chatMessage) {
         this.sender = chatMessage.getSender();
         this.content = chatMessage.getContent();
         this.type = chatMessage.getType();

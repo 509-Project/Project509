@@ -76,7 +76,7 @@ public class AuthServiceImpl implements AuthService {
 
         // 로그인 시 이메일과 비밀번호가 일치하지 않을 경우 401을 반환합니다.
         if (!passwordEncoder.matches(signinRequest.getPassword(), user.getPassword())) {
-            throw new CustomException(ErrorCode.SIGNIN_ERROR);
+            throw new CustomException(ErrorCode.SIGN_IN_ERROR);
         }
 
         return jwtUtil.createToken(user.getId(), user.getEmail(), user.getUserRole());

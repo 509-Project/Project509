@@ -25,7 +25,8 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
     /**
      * 입력한 채팅메세지를 DB에 저장 후 반환하는 메서드
-     * @param chatRoomId : 채팅방 Id
+     *
+     * @param chatRoomId         : 채팅방 Id
      * @param chatMessageRequest : 채팅타입, 내용, 보낸사람
      * @return : 입력된 채팅메세지
      */
@@ -47,6 +48,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
     /**
      * 새로운 사용자가 채팅방에 입장했을 때, 입장 전 기록된 채팅들을 보여주기 위한 메서드
+     *
      * @param chatRoomId : 채팅방 Id
      * @return : 입장전 입력되었던 채팅메세지
      */

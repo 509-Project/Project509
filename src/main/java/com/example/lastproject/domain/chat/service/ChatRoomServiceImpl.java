@@ -17,6 +17,7 @@ import com.example.lastproject.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +32,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     /**
      * 채팅방을 생성하는 메서드
+     *
      * @param partyId : 채팅방 생성 대상이 되는 파티의 Id
      * @return : 새로운 채팅방 정보
      */
@@ -60,6 +62,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     /**
      * 사용자가 참여한 역대 채팅방들을 조회하는 메서드
+     *
      * @param authUser : 사용자 정보가 담긴 객체
      * @return : List형태의 채팅 정보 집합
      */
@@ -86,6 +89,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     /**
      * 채팅방을 삭제하는 메서드 : 채팅방의 Status값을 ACTIVATED -> DELETED로 변경
+     *
      * @param chatRoomId
      */
     @Transactional

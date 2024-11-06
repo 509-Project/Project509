@@ -12,7 +12,7 @@ import static com.example.lastproject.domain.item.entity.QItem.item;
 
 @Repository
 @RequiredArgsConstructor
-public class ItemQueryRepositoryImpl implements ItemQueryRepository{
+public class ItemQueryRepositoryImpl implements ItemQueryRepository {
 
     private final JPAQueryFactory q;
 
@@ -24,7 +24,7 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository{
                         new QItemResponse(item.id, item.category, item.productName)
                 )
                 .from(item)
-                .where(item.category.contains(keyword).or(item.productName.contains(keyword)))
+                .where(item.category.like(keyword + "%").or(item.productName.like(keyword + "%")))
                 .fetch();
 
         return results;

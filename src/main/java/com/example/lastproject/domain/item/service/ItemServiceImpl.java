@@ -1,7 +1,7 @@
 package com.example.lastproject.domain.item.service;
 
-import com.example.lastproject.common.exception.CustomException;
 import com.example.lastproject.common.enums.ErrorCode;
+import com.example.lastproject.common.exception.CustomException;
 import com.example.lastproject.domain.item.dto.response.ItemResponse;
 import com.example.lastproject.domain.item.entity.Item;
 import com.example.lastproject.domain.item.repository.ItemRepository;
@@ -48,9 +48,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void getItemFromOpenApi() {
 
-        /**
-         * 오픈 API 요청후 응답받은 데이터를 item 엔티티에 저장
-         */
+        // 오픈 API 요청후 응답받은 데이터를 item 엔티티에 저장
         try {
             JobParameters jobParameters = new JobParametersBuilder()
                     .addLong("time", System.currentTimeMillis())
@@ -63,10 +61,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     // 재사용 잦은 코드 메서드 분리
-    public Item validateEntity(Long itemId) {
-        Item item = itemRepository.findById(itemId).orElseThrow(
+    public Item validateItem(Long itemId) {
+        return itemRepository.findById(itemId).orElseThrow(
                 () -> new CustomException(ErrorCode.ITEM_NOT_FOUND));
-        return item;
     }
 
 }

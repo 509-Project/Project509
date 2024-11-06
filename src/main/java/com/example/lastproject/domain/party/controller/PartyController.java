@@ -25,12 +25,12 @@ public class PartyController {
     private final PartyService partyService;
 
     /**
-     *파티장 : 파티 생성
+     * 파티장 : 파티 생성
      *
-     * @param authUser 파티 생성 요청을 한 사용자(파티장)
+     * @param authUser           파티 생성 요청을 한 사용자(파티장)
      * @param partyCreateRequest 파티 생성 시 필요한 json body
-     *        (marketName: 마켓 이름, marketAddress: 마켓 주소, itemId: 거래 품목, itemCount: 품목 개수, itemUnit: 거래 단위,
-     *         startTime: 장보기 시작 시간, endTime: 장보기 종료 시간, membersCount: 파티 인원)
+     *                           (marketName: 마켓 이름, marketAddress: 마켓 주소, itemId: 거래 품목, itemCount: 품목 개수, itemUnit: 거래 단위,
+     *                           startTime: 장보기 시작 시간, endTime: 장보기 종료 시간, membersCount: 파티 인원)
      * @return ResponseEntity<PartyResponse>로 생성된 파티 정보 반환, HTTP 상태 코드 201 반환
      */
     @PostMapping
@@ -44,9 +44,9 @@ public class PartyController {
     /**
      * 파티장: 내가 생성한 파티에 참가 신청한 유저 상태 변경
      *
-     * @param partyId       파티 ID
-     * @param authUser      현재 로그인한 파티장 (파티장 여부 검증)
-     * @param requestDto    상태를 변경할 파티 멤버 ID와 새로운 초대 상태를 포함한 DTO
+     * @param partyId    파티 ID
+     * @param authUser   현재 로그인한 파티장 (파티장 여부 검증)
+     * @param requestDto 상태를 변경할 파티 멤버 ID와 새로운 초대 상태를 포함한 DTO
      * @return 상태 변경 결과
      * @throws CustomException NOT_PARTY_LEADER: "이 작업은 파티장만 수행할 수 있습니다."
      */
@@ -91,11 +91,11 @@ public class PartyController {
     /**
      * 파티장 : 파티 수정
      *
-     * @param partyId 수정할 파티의 ID
+     * @param partyId            수정할 파티의 ID
      * @param partyUpdateRequest 파티 수정에 필요한 json body
-     *        (itemId: 거래 품목, itemCount: 품목 개수, itemUnit: 거래 단위,
-     *         startTime: 장보기 시작 시간, endTime: 장보기 종료 시간, membersCount: 파티 인원)
-     * @param authUser 수정 요청을 한 사용자 ID
+     *                           (itemId: 거래 품목, itemCount: 품목 개수, itemUnit: 거래 단위,
+     *                           startTime: 장보기 시작 시간, endTime: 장보기 종료 시간, membersCount: 파티 인원)
+     * @param authUser           수정 요청을 한 사용자 ID
      * @return ResponseEntity<PartyResponse> 수정된 파티 정보 반환, HTTP 상태 코드 200 반환
      */
     @PutMapping("/{partyId}")
@@ -136,7 +136,7 @@ public class PartyController {
     /**
      * 유저가 파티에 있는지 확인
      *
-     * @param partyId 파티 ID
+     * @param partyId  파티 ID
      * @param authUser 인증된 사용자
      * @return ResponseEntity<Boolean> 유저가 파티에 존재하는지 여부
      */

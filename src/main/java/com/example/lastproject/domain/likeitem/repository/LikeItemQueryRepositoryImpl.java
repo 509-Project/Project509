@@ -31,6 +31,7 @@ public class LikeItemQueryRepositoryImpl implements LikeItemQueryRepository {
 
     /**
      * 등록할 즐겨찾기 품목이 이미 등록된 품목인지 검증
+     *
      * @param userId 즐겨찾기 등록할 유저아이디
      * @param itemId 즐겨찾기 등록할 품목아이디
      * @return 존재여부 반환
