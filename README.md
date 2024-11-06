@@ -11,29 +11,29 @@
 ## 🏆 API 명세
 
 ### 1️⃣ Market
-<img src="https://file.notion.so/f/f/83c75a39-3aba-4ba4-a792-7aefe4b07895/94c779b6-e062-480d-aa14-e1b44047cc43/image.png?table=block&id=d268800f-9761-442f-91b4-e6011a67c7e2&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&expirationTimestamp=1730952000000&signature=r7olSQcJ72c0fuIhpXIWmv_q-uRzEGsPcUa4n3bYxnY&downloadName=image.png" width="1100">
+<img src="src/main/resources/assets/market.png" width="1100">
 
 ### 2️⃣ Notification
-<img src="https://file.notion.so/f/f/83c75a39-3aba-4ba4-a792-7aefe4b07895/abe9530e-e945-426c-af40-2aeadae6c97d/image.png?table=block&id=be5409b4-6a19-4ee5-a615-d249f275beb9&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&expirationTimestamp=1730952000000&signature=C7cDJrdXOz2eQTqybdxUtb4kczM8BiNRhv8NYoXeoJM&downloadName=image.png" width="1100">
+<img src="src/main/resources/assets/notice.png" width="1100">
 
 ### 4️⃣ Chat
-<img src="https://file.notion.so/f/f/83c75a39-3aba-4ba4-a792-7aefe4b07895/5453d15c-86ce-49be-8c9b-527e89ed52a8/image.png?table=block&id=5cf13653-727f-4a7c-9a17-d993e441c666&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&expirationTimestamp=1730952000000&signature=sZIHEmTSLNbpMiYIQxBVeTrxcRGujQEDItw811aD9Jw&downloadName=image.png" width="1100">
+<img src="src/main/resources/assets/chat.png" width="1100">
 
 ### 5️⃣ Party
-<img src="https://file.notion.so/f/f/83c75a39-3aba-4ba4-a792-7aefe4b07895/7abe18ef-e860-4547-a339-4af145ac30b2/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2024-11-06_%E1%84%8B%E1%85%A9%E1%84%8C%E1%85%A5%E1%86%AB_11.45.57.png?table=block&id=5835ef75-bcb0-4984-b05b-45dea2aced7b&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&expirationTimestamp=1730952000000&signature=-g-ZjaZrZMAtBSBF8EDKKB4RdyF4haw9jq7i4Kg4_2s&downloadName=%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA+2024-11-06+%E1%84%8B%E1%85%A9%E1%84%8C%E1%85%A5%E1%86%AB+11.45.57.png" width="1100">
-<img src="https://file.notion.so/f/f/83c75a39-3aba-4ba4-a792-7aefe4b07895/90fae505-307f-4ef2-9c5f-8767deeb3682/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2024-11-06_%E1%84%8B%E1%85%A9%E1%84%8C%E1%85%A5%E1%86%AB_11.51.04.png?table=block&id=12a3fcc2-868d-4d6e-a5db-3582331fc54b&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&expirationTimestamp=1730952000000&signature=_iXvHT9jDN4qmPkaqa5mVxgImOYPwqPcM_uTzzC9he4&downloadName=%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA+2024-11-06+%E1%84%8B%E1%85%A9%E1%84%8C%E1%85%A5%E1%86%AB+11.51.04.png">
+<img src="src/main/resources/assets/party_1.png" width="1100">
+<img src="src/main/resources/assets/party_2.png" width="1100">
 
 ### 6️⃣ Penalty
-<img src="https://file.notion.so/f/f/83c75a39-3aba-4ba4-a792-7aefe4b07895/93332b04-1a3b-4680-9b45-5debf6bde42c/image.png?table=block&id=87880ddf-e48a-435f-9ccf-43ff5bdf4d1d&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&expirationTimestamp=1730952000000&signature=-Y7k978mFgY_aqmkoimf6yOjrqePrijHpcYaHIrZvQ8&downloadName=image.png" width="1100">
+<img src="src/main/resources/assets/penalty.png" width="1100">
 
 ### 7️⃣ Item
-<img src="https://file.notion.so/f/f/83c75a39-3aba-4ba4-a792-7aefe4b07895/a5669020-3ce0-4741-8e34-e3d1ec08f9c1/image.png?table=block&id=4a40b72d-c46e-4707-89f3-cd6a78ab409c&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&expirationTimestamp=1730952000000&signature=pb0jwkTxV-TlaoZUg5zHnYQP6euBimPasStLBsJOXV8&downloadName=image.png" width="1100">
+<img src="src/main/resources/assets/item.png" width="1100">
 
 ### 8️⃣ Auth
-<img src="https://file.notion.so/f/f/83c75a39-3aba-4ba4-a792-7aefe4b07895/fb7107a9-3dd4-43ca-bf4d-9c48269b56ac/image.png?table=block&id=01010c9c-8d14-4836-91c2-aae54f528497&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&expirationTimestamp=1730952000000&signature=HZ182dOCzU_PtYolPEfuAexgL8KeD-_EOTGK2SKymDU&downloadName=image.png" width="1100">
+<img src="src/main/resources/assets/auth.png" width="1100">
 
 ### 3️⃣ User
-<img src="https://file.notion.so/f/f/83c75a39-3aba-4ba4-a792-7aefe4b07895/739ce0fe-d37a-4dd6-9a2b-8131f1ccfa0b/image.png?table=block&id=ce6fe1fa-b667-41c6-816b-391277ca89cf&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&expirationTimestamp=1730952000000&signature=9VZHKGUAlyyaoc-e0NYXaDdVvudIKwAl__nDVy_RVV8&downloadName=image.png" width="1100">
+<img src="src/main/resources/assets/user.png" width="1100">
 
 ## 📋 ERD Diagram
 <img src="https://file.notion.so/f/f/83c75a39-3aba-4ba4-a792-7aefe4b07895/1ef21ce0-8ab7-40db-9d8c-b986774137ca/ERD.png?table=block&id=4bb354ff-0c71-4fe9-b417-adcc1bd47b55&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&expirationTimestamp=1730944800000&signature=4l4OSwH8ZhEFGM00w0UM_F2LxMVRaZv4wPrvSm8Etds&downloadName=ERD.png" width="1100">
