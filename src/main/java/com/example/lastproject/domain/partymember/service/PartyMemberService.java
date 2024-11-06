@@ -1,8 +1,8 @@
 package com.example.lastproject.domain.partymember.service;
 
-import com.example.lastproject.common.exception.CustomException;
-import com.example.lastproject.common.enums.ErrorCode;
 import com.example.lastproject.common.dto.AuthUser;
+import com.example.lastproject.common.enums.ErrorCode;
+import com.example.lastproject.common.exception.CustomException;
 import com.example.lastproject.domain.party.entity.Party;
 import com.example.lastproject.domain.party.repository.PartyRepository;
 import com.example.lastproject.domain.party.service.PartyService;
@@ -12,7 +12,6 @@ import com.example.lastproject.domain.partymember.enums.PartyMemberInviteStatus;
 import com.example.lastproject.domain.partymember.enums.PartyMemberRole;
 import com.example.lastproject.domain.partymember.repository.PartyMemberRepository;
 import com.example.lastproject.domain.user.entity.User;
-import com.example.lastproject.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,13 +26,12 @@ public class PartyMemberService {
 
     private final PartyMemberRepository partyMemberRepository;
     private final PartyRepository partyRepository;
-    private final UserRepository userRepository;
     private final PartyService partyService;
 
     /**
      * 파티원: 파티에 참가 신청
      *
-     * @param partyId 파티의 ID
+     * @param partyId  파티의 ID
      * @param authUser 파티에 참가 신청하는 유저 정보
      * @throws CustomException PARTY_NOT_FOUND: "파티를 찾을 수 없습니다."
      * @throws CustomException ALREADY_PARTY_MEMBER: "같은 파티에 중복으로 참가 신청할 수 없습니다."

@@ -19,9 +19,11 @@ public interface PartyMemberRepository extends JpaRepository<PartyMember, Long> 
     Optional<PartyMember> findByPartyIdAndUserId(Long partyId, Long userId);
 
     List<PartyMember> findByUserId(Long userId);
+
     List<Party> findAllByStatus(PartyStatus status);
 
     Optional<PartyMember> findByPartyIdAndUserIdAndRole(Long partyId, Long userId, PartyMemberRole role);
 
-    List<PartyMember> findByPartyIdAndUserIdInAndRoleNot(Long partyId, List<Long> userIds, PartyMemberRole role);
+    List<PartyMember> findByPartyIdAndUserIdInAndRoleNotAndInviteStatusNot(Long partyId, List<Long> userIds, PartyMemberRole role, PartyMemberInviteStatus inviteStatus);
+
 }

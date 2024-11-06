@@ -1,7 +1,7 @@
 package com.example.lastproject.config;
 
-import com.example.lastproject.common.exception.CustomException;
 import com.example.lastproject.common.enums.ErrorCode;
+import com.example.lastproject.common.exception.CustomException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,7 +12,6 @@ import org.springframework.batch.item.ItemStreamException;
 import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -21,15 +20,15 @@ import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Queue;
 
-/**
- * BatchConfig 설정에 들어가는 클래스로
- * api 요청후 응답데이터를 받아오는 Reader 클래스
- * null 을 리턴하면 요청종료
- */
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class ApiDataReader implements ItemStreamReader<String> {
+
+    /*
+    BatchConfig 설정에 들어가는 클래스
+    api 요청후 응답데이터를 받아오는 Reader 클래스 null 을 리턴하면 요청종료
+    */
 
     // 환경변수 설정값이 없으면 빈 문자열을 주입
     @Value("${ITEM_API_KEY:}")
@@ -58,7 +57,7 @@ public class ApiDataReader implements ItemStreamReader<String> {
              * Flux.range(0, (totalPage + pageSize - 1) / pageSize)
              * Flux 는 Reactor 함수로 매개 변수인 0 과 [(totalPage + pageSize - 1) / pageSize] 사이의 범위의 스트림을 생성
              * 예) Flux.range(1,5) 의 경우 1~5 범위의 스트림이 생성됨
-             * 아래 코드의 경우 0부터 페이지수의 스트림이 생성되어 각 생성된 페이지 범위의 요청을 비동기방식으로 요청함
+             * 아래 코드의 경우 페이지범위의 스트림이 생성되어 각 생성된 페이지 범위의 요청을 비동기방식으로 요청함
              */
             Flux<String> jsonData = Flux.range(0, (totalPage + pageSize - 1) / pageSize)
                     .flatMap(page -> {
@@ -87,7 +86,6 @@ public class ApiDataReader implements ItemStreamReader<String> {
 
     /**
      * 응답데이터를 프로세스 영역에 전달
-     *
      * @return Json 응답데이터
      */
     @Override

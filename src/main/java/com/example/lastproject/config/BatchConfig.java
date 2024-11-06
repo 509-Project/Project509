@@ -32,21 +32,22 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Job => 전체 배치처리 과정을 추상화한 클래스 : 배치의 실행 단위로 전체 배치 작업을 정의
- * Step => Job 의 세부 실행 단위, Job 은 여러개의 Step 을 가질수 있음
- * 각 Step 은 Reader, Processor, Writer 로 이루어져 있음
- * Reader : 외부 데이터(파일, DB, API)를 읽어오며 읽어온 데이터를 Processor 에 전달
- * Processor : 읽어온 데이터를 가공하거나 변환후 Writer 에 전달
- * Writer : 처리된 데이터를 DB에 저장함
- * Batch 의 로직 흐름[청크기반] : JobLauncher => Job => Step(Reader => Processor => Writer)
- * 청크 기반의 배치처리의 장점 : 데이터를 청크단위로 묶어서 처리하여 최적화가능, 대용량 데이터에도 안정적인 처리가능
- */
 @Slf4j
 @Configuration
 @EnableBatchProcessing
 @RequiredArgsConstructor
 public class BatchConfig {
+
+    /**
+     * Job => 전체 배치처리 과정을 추상화한 클래스 : 배치의 실행 단위로 전체 배치 작업을 정의
+     * Step => Job 의 세부 실행 단위, Job 은 여러개의 Step 을 가질수 있음
+     * 각 Step 은 Reader, Processor, Writer 로 이루어져 있음
+     * Reader : 외부 데이터(파일, DB, API)를 읽어오며 읽어온 데이터를 Processor 에 전달
+     * Processor : 읽어온 데이터를 가공하거나 변환후 Writer 에 전달
+     * Writer : 처리된 데이터를 DB에 저장함
+     * Batch 의 로직 흐름[청크기반] : JobLauncher => Job => Step(Reader => Processor => Writer)
+     * 청크 기반의 배치처리의 장점 : 데이터를 청크단위로 묶어서 처리하여 최적화가능, 대용량 데이터에도 안정적인 처리가능
+     */
 
     @Value("${API_URL:}")
     private String apiUrl;
@@ -55,7 +56,7 @@ public class BatchConfig {
     private final ItemRepository itemRepository;
     private final ApiDataReader apiDataReader;
     private final PlatformTransactionManager platformTransactionManager;
-    // 중복 데이터 검증시 사용되는 캐시 데이터
+    // 중복 데이터 검증시 사용되는 데이터
     private final Set<String> itemCache = new HashSet<>();
 
     // Job 설정
@@ -65,7 +66,7 @@ public class BatchConfig {
         return new JobBuilder("itemApiJob", jobRepository)
                 // api 요청후 데이터 파싱을 거쳐 DB에 저장해주는 Step
                 .start(itemApiStep())
-                // 중복 데이터 검증에 사용되는 캐시데이터 업데이트해주는 Step
+                // 중복 데이터 검증에 사용되는 Hash set 에 업데이트해주는 Step
                 .next(checkItemCacheEmpty())
                 .build();
     }
@@ -151,14 +152,14 @@ public class BatchConfig {
                         // 품목명 추출
                         String productName = (String) jsonItem.get("STD_SPCIES_NM");
 
-                        // 저장된 캐시 데이터로 중복 검사
+                        // 저장된 Hash set 데이터로 중복 검사
                         if (itemCache.isEmpty()) {
                             Item item = new Item(category, productName);
                             items.add(item);
                         } else if (!itemCache.contains(productName)) {
                             Item item = new Item(category, productName);
                             items.add(item);
-                            itemCache.add(productName); // 캐시 데이터에 저장
+                            itemCache.add(productName); // Hash set 에 저장
                         }
                     }
                     log.info("데이터 파싱 종료");
@@ -199,7 +200,7 @@ public class BatchConfig {
         return executor;
     }
 
-    // 서버 시작시 기존 데이터베이스에서 데이터를 가져와 캐싱
+    // 서버 시작시 기존 데이터베이스에서 데이터를 가져와 Hash set 에 저장
     @PostConstruct
     public void loadDataToCache() {
         itemCache.addAll(itemRepository.findAllByProductNames());

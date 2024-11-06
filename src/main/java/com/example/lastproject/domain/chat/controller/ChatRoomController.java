@@ -1,5 +1,6 @@
 package com.example.lastproject.domain.chat.controller;
 
+import com.example.lastproject.common.annotation.LogisticsNotify;
 import com.example.lastproject.common.dto.AuthUser;
 import com.example.lastproject.domain.chat.dto.ChatRoomResponse;
 import com.example.lastproject.domain.chat.service.ChatRoomService;
@@ -22,6 +23,7 @@ public class ChatRoomController {
      * @return : 채팅방 생성
      */
     @PostMapping("/{partyId}")
+    @LogisticsNotify
     public ResponseEntity<ChatRoomResponse> createChatRoom(@PathVariable Long partyId, @AuthenticationPrincipal AuthUser authUser) {
         return ResponseEntity.ok(chatRoomService.createChatRoom(partyId, authUser));
     }

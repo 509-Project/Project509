@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class  LikeItem {
+public class LikeItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

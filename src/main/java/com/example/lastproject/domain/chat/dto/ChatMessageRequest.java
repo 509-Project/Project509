@@ -26,4 +26,5 @@ public class ChatMessageRequest {
     public void changeContent(String content) {
         this.content = content;
     }
+
 }

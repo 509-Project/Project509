@@ -39,7 +39,8 @@ public class NotificationServiceImpl implements NotificationService {
 
     /**
      * SSE 연결
-     * @param authUser 요청을 보낸 인증된 사용자 정보
+     *
+     * @param authUser    요청을 보낸 인증된 사용자 정보
      * @param lastEventId 클라이언트가 마지막으로 수신한 데이터의 Id값을 의미한다. 이를 이용하여 유실된 데이터를 다시 보내줄 수 있다.
      * @return SseEmitter(발신기)를 생성하여 반환합니다.
      */
@@ -68,6 +69,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     /**
      * 데이터 유실 시점을 파악하기 위해 사용자 ID와 현재 시간을 포함한 ID를 생성합니다.
+     *
      * @param authUser 인증된 사용자 정보
      * @return 사용자 ID와 현재 시간이 포함된 문자열 ID
      */
@@ -77,10 +79,11 @@ public class NotificationServiceImpl implements NotificationService {
 
     /**
      * 클라이언트에게 데이터를 전송합니다.
-     * @param emitter SseEmitter 객체
+     *
+     * @param emitter   SseEmitter 객체
      * @param emitterId 발신기 ID
-     * @param eventId 이벤트 ID
-     * @param data 전송할 데이터
+     * @param eventId   이벤트 ID
+     * @param data      전송할 데이터
      * @throws CustomException SSE 연결 오류 발생 시 예외를 던집니다.
      */
     public void sendToClient(SseEmitter emitter, String emitterId, String eventId, Object data) {
@@ -97,6 +100,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     /**
      * 알림을 저장하고, 저장된 알림을 클라이언트에게 전송합니다.
+     *
      * @param authUser 요청을 보낸 인증된 사용자 정보
      * @param
      */
@@ -107,6 +111,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     /**
      * 알림 저장
+     *
      * @param authUser 요청을 보낸 인증된 사용자 정보
      * @param
      * @return 새롭게 생성된 알림 정보(id, content, type, enum, url, isRead, createdAt)가 포함된 notification 객체
@@ -121,7 +126,8 @@ public class NotificationServiceImpl implements NotificationService {
 
     /**
      * 비동기적으로 알림을 전송합니다.
-     * @param authUser 요청을 보낸 인증된 사용자 정보
+     *
+     * @param authUser     요청을 보낸 인증된 사용자 정보
      * @param notification 전송할 알림 정보
      */
     @Async
@@ -145,9 +151,10 @@ public class NotificationServiceImpl implements NotificationService {
 
     /**
      * 사용자가 찜한 품목에 대한 파티가 생성된 경우 해당 사용자에게 알림을 보냅니다.
+     *
      * @param authUser 요청을 보낸 인증된 사용자 정보
      * @param itemName 찜한 품목의 이름
-     * @param partyId 생성된 파티의 ID
+     * @param partyId  생성된 파티의 ID
      */
     @Transactional
     @Override
@@ -170,6 +177,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     /**
      * 사용자가 찜한 품목의 파티가 취소된 경우 해당 사용자에게 알림을 보냅니다.
+     *
      * @param authUser 요청을 보낸 인증된 사용자 정보
      */
     @Transactional
@@ -196,27 +204,28 @@ public class NotificationServiceImpl implements NotificationService {
      * @param authUser 요청을 보낸 인증된 사용자 정보
      * @param chatRoomResponse 생성된 파티의 채팅창
      */
-//    @Transactional
-//    @Override
-//    public void notifyUsersAboutPartyChatCreation(AuthUser authUser, ChatRoomResponse chatRoomResponse) {
-//        User receiver = User.fromAuthUser(authUser);
-//        String content = "참가 신청한 파티의 채팅창이 생성되었습니다.";
-//        String redirectUrl = clientBasicUrl + "/chat/history/" + chatRoomResponse.getId();
-//
-//        // Notification 엔티티 생성
-//        Notification notification = Notification.builder()
-//                .notificationType(NotificationType.CHAT_CREATE)
-//                .content(content)
-//                .url(redirectUrl)
-//                .receiver(receiver)
-//                .isRead(false) // 기본값 설정
-//                .build();
-//
-//        send(authUser, notification);
-//    }
+    @Transactional
+    @Override
+    public void notifyUsersAboutPartyChatCreation(AuthUser authUser, ChatRoomResponse chatRoomResponse) {
+        User receiver = User.fromAuthUser(authUser);
+        String content = "참가 신청한 파티의 채팅창이 생성되었습니다.";
+        String redirectUrl = clientBasicUrl + "/chat/history/" + chatRoomResponse.getId();
+
+        // Notification 엔티티 생성
+        Notification notification = Notification.builder()
+                .notificationType(NotificationType.CHAT_CREATE)
+                .content(content)
+                .url(redirectUrl)
+                .receiver(receiver)
+                .isRead(false) // 기본값 설정
+                .build();
+
+        send(authUser, notification);
+    }
 
     /**
      * 사용자의 알림 목록을 조회합니다.
+     *
      * @param authUser 요청을 보낸 인증된 사용자 정보
      * @return 사용자의 알림 목록을 포함한 NotificationListResponseDto
      */
@@ -228,8 +237,9 @@ public class NotificationServiceImpl implements NotificationService {
 
     /**
      * 알림을 읽음 처리합니다.
+     *
      * @param notificationId 읽음 처리할 알림 ID
-     * @param authUser 요청을 보낸 인증된 사용자 정보
+     * @param authUser       요청을 보낸 인증된 사용자 정보
      */
     @Override
     @Transactional
@@ -242,8 +252,9 @@ public class NotificationServiceImpl implements NotificationService {
 
     /**
      * 알림 삭제
+     *
      * @param notificationId 삭제할 알림의 ID
-     * @param authUser 요청을 보낸 인증된 사용자 정보
+     * @param authUser       요청을 보낸 인증된 사용자 정보
      */
     @Transactional
     @Override
@@ -256,8 +267,9 @@ public class NotificationServiceImpl implements NotificationService {
 
     /**
      * 특정 ID의 알림을 조회하고 권한을 검증합니다.
+     *
      * @param notificationId 알림의 고유 ID
-     * @param authUser 요청을 보낸 인증된 사용자 정보
+     * @param authUser       요청을 보낸 인증된 사용자 정보
      * @throws CustomException 해당 ID의 알림이 존재하지 않거나 접근 권한이 없을 경우 발생합니다.
      */
     @Override

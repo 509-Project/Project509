@@ -62,7 +62,6 @@ public class AuthController {
      */
     @GetMapping("/withdrawal")
     public ResponseEntity<WithdrawalResponse> withdrawal(@AuthenticationPrincipal AuthUser authUser) {
-        authService.withdrawal(authUser);
         WithdrawalResponse response = authService.withdrawal(authUser);
         return ResponseEntity.accepted().
                 body(response);

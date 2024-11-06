@@ -14,14 +14,11 @@ public enum CustomMessage {
     CHANGE_PW_SUCCESS(HttpStatus.OK, "님의 비밀번호 변경이 완료되었습니다."),
     CHANGE_DETAIL_SUCCESS(HttpStatus.OK, "님의 정보 변경이 완료되었습니다."),
 
-
-
-    // UserRole Success
-
-
     // Penalty Success
     PENALTY_SEND_SUCCESS(HttpStatus.OK, "해당 유저에게 페널티를 부과했습니다."),
 
+    // Item Success
+    ON_SUCCESS(HttpStatus.OK, "Success"),
 
     // Party Success
 
@@ -32,14 +29,10 @@ public enum CustomMessage {
     // Market Success
 
 
-    // Item Success
-    ON_SUCCESS(HttpStatus.OK, "Success"),
-
     // LikeItem Success
 
 
     // Notification Success
-
 
     // Chat Success
 

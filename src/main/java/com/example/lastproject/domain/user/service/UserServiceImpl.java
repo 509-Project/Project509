@@ -1,9 +1,9 @@
 package com.example.lastproject.domain.user.service;
 
-import com.example.lastproject.common.exception.CustomException;
+import com.example.lastproject.common.dto.AuthUser;
 import com.example.lastproject.common.enums.CustomMessage;
 import com.example.lastproject.common.enums.ErrorCode;
-import com.example.lastproject.common.dto.AuthUser;
+import com.example.lastproject.common.exception.CustomException;
 import com.example.lastproject.domain.penalty.entity.Penalty;
 import com.example.lastproject.domain.penalty.enums.PenaltyStatus;
 import com.example.lastproject.domain.penalty.repository.PenaltyRepository;
@@ -18,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -37,35 +36,21 @@ public class UserServiceImpl implements UserService {
      * @param penalties 사용자가 받은 페널티 내역
      * @return 해당하는 이모지 + 닉네임
      */
-    private String getNicknameWithEmoji(String nickname, List<Penalty> penalties) {
-
-        String emoji;
-        int penaltyCount = penalties.size();
+    private String getNicknameWithEmoji(
+            String nickname,
+            List<Penalty> penalties
+    ) {
 
         // 페널티 횟수가 3개 이상이면 유령 등급, 2개 이하이면 별 등급
-        emoji = (penaltyCount >= 3) ? "👻" : "⭐";
-
+        String emoji = (penalties.size() >= 3) ? "👻" : "⭐";
         return emoji + nickname;
-
     }
-
-    /**
-     * 과거 페널티 상태 업데이트
-     */
-    private void updateOldPenaltiesStatus() {
-
-        LocalDateTime threeMonthsAgo = LocalDateTime.now().minusMonths(3);
-
-        // 최근 3개월보다 이전의 페널티를 UNSEARCHABLE 로 설정
-        penaltyRepository.updatePenaltyStatusBeforeDate(threeMonthsAgo, PenaltyStatus.UNSEARCHABLE);
-    }
-
 
     /**
      * 사용자 조회
      *
      * @param userId 조회할 사용자 id
-     * @return
+     * @return 응답 객체
      */
     @Override
     public UserResponse getUser(Long userId) {
@@ -78,8 +63,10 @@ public class UserServiceImpl implements UserService {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
 
-//        updateOldPenaltiesStatus();
-        List<Penalty> penalties = penaltyRepository.findPenaltiesByUserIdAndStatus(findUser, PenaltyStatus.SEARCHABLE);
+        List<Penalty> penalties = penaltyRepository.findPenaltiesByUserIdAndStatus(
+                findUser,
+                PenaltyStatus.SEARCHABLE
+        );
 
         String nicknameWithEmoji = getNicknameWithEmoji(findUser.getNickname(), penalties);
 
@@ -99,7 +86,10 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public UserResponse changePassword(AuthUser authUser, UserChangePasswordRequest request) {
+    public UserResponse changePassword(
+            AuthUser authUser,
+            UserChangePasswordRequest request
+    ) {
 
         User user = User.fromAuthUser(authUser);
 
@@ -131,7 +121,10 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public UserResponse updateUser(AuthUser authUser, UserUpdateRequest request) {
+    public UserResponse updateUser(
+            AuthUser authUser,
+            UserUpdateRequest request
+    ) {
 
         User user = User.fromAuthUser(authUser);
 

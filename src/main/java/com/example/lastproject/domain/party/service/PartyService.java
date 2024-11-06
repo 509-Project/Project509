@@ -38,7 +38,6 @@ public class PartyService {
     private final PartyMemberRepository partyMemberRepository;
     private final UserRepository userRepository;
 
-
     /**
      * 파티장 : 파티 생성
      *

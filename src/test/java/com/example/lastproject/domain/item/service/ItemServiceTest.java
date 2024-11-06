@@ -79,7 +79,7 @@ public class ItemServiceTest {
         given(itemRepository.findById(anyLong())).willReturn(Optional.of(item));
 
         //when
-        Item result = itemService.validateEntity(anyLong());
+        Item result = itemService.validateItem(anyLong());
 
         //then
         assertEquals(item, result);
@@ -93,7 +93,7 @@ public class ItemServiceTest {
         given(itemRepository.findById(anyLong())).willReturn(Optional.empty());
 
         //when
-        CustomException exception = assertThrows(CustomException.class, () -> itemService.validateEntity(anyLong()));
+        CustomException exception = assertThrows(CustomException.class, () -> itemService.validateItem(anyLong()));
 
         //then
         assertEquals("조회되는 품목이 없습니다.", exception.getMessage());

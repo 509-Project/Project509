@@ -49,9 +49,9 @@ public class LikeItemServiceTest {
         AuthUser authUser = new AuthUser(1L, "test@email.com", UserRole.ROLE_USER);
         User user = User.fromAuthUser(authUser);
         Long itemId = 1L;
-        Item item = new Item(itemId, "사과", "홍옥");
+        Item item = new Item("사과", "홍옥");
         given(likeItemRepository.existsByUserBookmarkedItem(1L, 1L)).willReturn(false);
-        given(itemService.validateEntity(itemId)).willReturn(item);
+        given(itemService.validateItem(itemId)).willReturn(item);
 
         // when
         likeItemService.bookmarkItem(authUser, 1L);

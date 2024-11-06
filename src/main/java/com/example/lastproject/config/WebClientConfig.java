@@ -24,10 +24,11 @@ public class WebClientConfig {
         return WebClient.builder()
                 .exchangeStrategies(ExchangeStrategies.builder()
                         // 웹 큻라이언트 요청시 최대 메모리 저장용량을 10MB로 설정
-                        .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(10 * 1024 * 1024))
+                        .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(10 * 1024 * 1024)) // 10MB
                         .build())
                 // 기본 url 설정
                 .baseUrl(apiPort + "/" + apiKey + "/json" + "/" + apiUrl)
                 .build();
     }
+
 }
