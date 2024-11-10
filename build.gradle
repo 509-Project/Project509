@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.4'
 	id 'io.spring.dependency-management' version '1.1.6'
+	id 'io.gatling.gradle' version '3.9.5' // Gatling 플러그인 추가
 }
 
 group = 'com.example'
@@ -59,6 +60,9 @@ dependencies {
 
 	// notifications
 	implementation 'org.springframework.boot:spring-boot-starter-web-services'
+	implementation 'io.gatling.highcharts:gatling-charts-highcharts:3.9.5' // 리포팅 기능을 위한 의존성
+	implementation 'io.gatling:gatling-app:3.9.5' // Gatling 기본 의존성
+	testImplementation 'junit:junit:4.13.2' // 테스트 의존성 (선택 사항)
 
 	// WebSocket
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
