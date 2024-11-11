@@ -32,7 +32,7 @@ public class NotificationServiceImpl implements NotificationService {
     private final EmitterRepository emitterRepository;
 
     // 연결 지속시간 한시간
-    private static final Long DEFAULT_TIMEOUT = 60 * 60 * 1000L;
+    private static final Long DEFAULT_TIMEOUT = 30 * 60 * 1000L;
 
     @Value("${client.basic-url}")
     private String clientBasicUrl;
@@ -94,7 +94,8 @@ public class NotificationServiceImpl implements NotificationService {
                     .data(data));
         } catch (IOException exception) {
             emitterRepository.deleteById(emitterId);
-            throw new CustomException(ErrorCode.SSE_CONNECTION_ERROR);
+            log.info(exception.getMessage());
+//            throw new CustomException(ErrorCode.SSE_CONNECTION_ERROR); // 예외를 던지지 않고 로그만 남기도록 처리
         }
     }
 

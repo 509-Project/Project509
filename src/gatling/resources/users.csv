@@ -1,5 +1,4 @@
-email,password
-test1@gmail.com,123123aA!
-test2@gmail.com,123123aA!
-test3@gmail.com,123123aA!
-test4@gmail.com,123123aA!
+email,password,nickname,address,userRole
+user1@example.com,123123aA!,nickname1,address1,ROLE_ADMIN
+user2@example.com,123123aA!,nickname2,address1,ROLE_ADMIN
+user3@example.com,123123aA!,nickname3,address1,ROLE_ADMIN
