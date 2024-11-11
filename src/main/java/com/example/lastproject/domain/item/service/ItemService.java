@@ -10,9 +10,6 @@ public interface ItemService {
     // 품목 조회
     List<ItemResponse> searchItems(String keyword);
 
-    // 품목 업데이트
-    void getItemFromOpenApi();
-
     // 품목 엔티티 검증 및 호출
     Item validateItem(Long itemId);
 

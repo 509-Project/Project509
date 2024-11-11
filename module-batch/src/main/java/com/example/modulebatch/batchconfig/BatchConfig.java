@@ -1,7 +1,7 @@
-package com.example.lastproject.config;
+package com.example.modulebatch.batchconfig;
 
-import com.example.lastproject.common.exception.CustomException;
 import com.example.lastproject.common.enums.ErrorCode;
+import com.example.lastproject.common.exception.CustomException;
 import com.example.lastproject.domain.item.entity.Item;
 import com.example.lastproject.domain.item.repository.ItemRepository;
 import jakarta.annotation.PostConstruct;
@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -80,7 +79,7 @@ public class BatchConfig {
                  * String 리더클래스 반환타입, List<Item> 프로세싱클래스 반환타입
                  * platformTransactionManager => 청크진행시 실패했을때 다시처리할수있도록 세팅
                  */
-                .<String, List<Item>>chunk(10, platformTransactionManager)
+                .<String, List<Item>>chunk(1, platformTransactionManager)
                 // api 요청 리더 클래스 주입
                 .reader(synchronizedApiDataReader())
                 // 응답 데이터 엔티티 파싱 클래스 주입
@@ -94,6 +93,7 @@ public class BatchConfig {
 
     /**
      * 병렬처리로 부터 데이터 일관성을 지키기 위해 첫 업데이트의 경우 캐시 업데이트는 별도의 Step 으로 분리함
+     *
      * @return itemApiStep 다음으로 실행되는 Step 클래스
      */
     @Bean
@@ -191,9 +191,9 @@ public class BatchConfig {
     public TaskExecutor taskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         // 최소 스레드수
-        executor.setCorePoolSize(10);
+        executor.setCorePoolSize(8);
         // 최대 스레드수
-        executor.setMaxPoolSize(15);
+        executor.setMaxPoolSize(10);
         // 대기 큐 용량
         executor.setQueueCapacity(100);
         executor.initialize();
