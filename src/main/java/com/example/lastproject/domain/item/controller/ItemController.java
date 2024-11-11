@@ -1,12 +1,14 @@
 package com.example.lastproject.domain.item.controller;
 
-import com.example.lastproject.common.enums.CustomMessage;
 import com.example.lastproject.domain.item.dto.response.ItemResponse;
 import com.example.lastproject.domain.item.service.ItemService;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -16,17 +18,6 @@ import java.util.List;
 public class ItemController {
 
     private final ItemService itemService;
-
-    /**
-     * 표준 품목 업데이트
-     *
-     * @return 성공메시지
-     */
-    @PostMapping("/open-api")
-    public ResponseEntity<CustomMessage> getItemFromOpenApi() {
-        itemService.getItemFromOpenApi();
-        return ResponseEntity.ok(CustomMessage.ON_SUCCESS);
-    }
 
     /**
      * @param keyword 카테고리 검색어

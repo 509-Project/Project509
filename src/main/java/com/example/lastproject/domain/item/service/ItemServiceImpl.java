@@ -6,17 +6,7 @@ import com.example.lastproject.domain.item.dto.response.ItemResponse;
 import com.example.lastproject.domain.item.entity.Item;
 import com.example.lastproject.domain.item.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.JobParametersInvalidException;
-import org.springframework.batch.core.configuration.JobRegistry;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.launch.NoSuchJobException;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -26,8 +16,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ItemServiceImpl implements ItemService {
 
-    private final JobLauncher jobLauncher;
-    private final JobRegistry jobRegistry;
     private final ItemRepository itemRepository;
 
     /**
@@ -42,22 +30,6 @@ public class ItemServiceImpl implements ItemService {
             throw new CustomException(ErrorCode.ITEM_NOT_FOUND);
         }
         return results;
-    }
-
-    // 트랜젝션 비활성화
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public void getItemFromOpenApi() {
-
-        // 오픈 API 요청후 응답받은 데이터를 item 엔티티에 저장
-        try {
-            JobParameters jobParameters = new JobParametersBuilder()
-                    .addLong("time", System.currentTimeMillis())
-                    .toJobParameters();
-            jobLauncher.run(jobRegistry.getJob("itemApiJob"), jobParameters);
-        } catch (NoSuchJobException | JobExecutionAlreadyRunningException | JobRestartException |
-                 JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
-            throw new CustomException(ErrorCode.JOB_EXECUTION_ERROR);
-        }
     }
 
     // 재사용 잦은 코드 메서드 분리
