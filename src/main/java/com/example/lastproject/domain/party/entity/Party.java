@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,6 +29,12 @@ public class Party extends Timestamped {
 
     @Column(name = "market_address", nullable = false)
     private String marketAddress;
+
+    @Column(name = "x", nullable = false)
+    private BigDecimal x;
+
+    @Column(name = "y", nullable = false)
+    private BigDecimal y;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id", nullable = false)
@@ -58,9 +65,11 @@ public class Party extends Timestamped {
     @Column(name = "creator_id", nullable = false)
     private Long creatorId;
 
-    public Party(String marketName, String marketAddress, Item item, int itemCount, String itemUnit, LocalDateTime startTime, LocalDateTime endTime, int membersCount, Long creatorId) {
+    public Party(String marketName, String marketAddress, BigDecimal x, BigDecimal y, Item item, int itemCount, String itemUnit, LocalDateTime startTime, LocalDateTime endTime, int membersCount, Long creatorId) {
         this.marketName = marketName;
         this.marketAddress = marketAddress;
+        this.x = x;
+        this.y = y;
         this.item = item;
         this.itemCount = itemCount;
         this.itemUnit = itemUnit;

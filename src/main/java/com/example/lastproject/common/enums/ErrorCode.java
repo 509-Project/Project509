@@ -54,6 +54,7 @@ public enum ErrorCode {
 
     // Market ErrorCode
     MARKET_NOT_FOUND(HttpStatus.NOT_FOUND, "마켓 정보를 찾을 수 없습니다."),
+    ADDRESS_NOT_FOUND(HttpStatus.NOT_FOUND, "조회되는 주소가 없습니다."),
 
     // Item ErrorCode
     ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "조회되는 품목이 없습니다."),

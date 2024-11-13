@@ -9,9 +9,10 @@ import java.util.Optional;
 
 public interface PartyRepository extends JpaRepository<Party, Long> {
 
+    List<Party> findAllByCreatorId(Long creatorId);
     List<Party> findAllByPartyStatus(PartyStatus partyStatus);
-    Optional<Party> findByIdAndCreatorId(Long partyId, Long creatorId);
 
+    Optional<Party> findByIdAndCreatorId(Long partyId, Long creatorId);
     Optional<Party> findByIdAndPartyStatus(Long partyId, PartyStatus partyStatus);
 
 }

@@ -95,7 +95,8 @@ public class ApiDataReader implements ItemStreamReader<String> {
         if (jsonQueue.isEmpty()) {
             return null;
         }
-
+        Thread thread = new Thread();
+        thread.start();
         return jsonQueue.poll();
     }
 

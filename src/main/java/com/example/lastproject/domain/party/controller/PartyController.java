@@ -121,31 +121,16 @@ public class PartyController {
     }
 
     /**
-     * 파티원 : 본인이 참가 신청한 파티 목록 조회
+     * 본인이 생성한 파티 및 참가 신청한 파티 목록 조회
      *
      * @param authUser 현재 로그인한 사용자
      * @return 사용자가 신청한 파티 목록
      */
     @GetMapping("/my-parties")
-    public ResponseEntity<List<PartyResponse>> getPartiesUserApplied(
+    public ResponseEntity<List<PartyResponse>> getMyParties(
             @AuthenticationPrincipal AuthUser authUser) {
-        List<PartyResponse> responses = partyService.getPartiesUserApplied(authUser);
+        List<PartyResponse> responses = partyService.getMyParties(authUser);
         return ResponseEntity.ok(responses);
-    }
-
-    /**
-     * 유저가 파티에 있는지 확인
-     *
-     * @param partyId  파티 ID
-     * @param authUser 인증된 사용자
-     * @return ResponseEntity<Boolean> 유저가 파티에 존재하는지 여부
-     */
-    @GetMapping("/{partyId}/is-member")
-    public ResponseEntity<Boolean> isUserInParty(
-            @PathVariable Long partyId,
-            @AuthenticationPrincipal AuthUser authUser) {
-        boolean isMember = partyService.isUserInParty(partyId, authUser);
-        return ResponseEntity.ok(isMember);
     }
 
 }

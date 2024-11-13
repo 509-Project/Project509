@@ -2,10 +2,13 @@ package com.example.lastproject.domain.market.controller;
 
 import com.example.lastproject.common.enums.CustomMessage;
 import com.example.lastproject.domain.market.dto.request.MarketRequestDto;
+import com.example.lastproject.domain.market.dto.response.AddressResponseDto;
 import com.example.lastproject.domain.market.service.MarketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/markets")
@@ -36,6 +39,16 @@ public class MarketController {
     public ResponseEntity<CustomMessage> deleteMarket(@PathVariable Long marketId) {
         marketService.deleteMarket(marketId);
         return ResponseEntity.ok(CustomMessage.ON_SUCCESS);
+    }
+
+    /**
+     * @param keyword 주소 검색단어
+     * @return 검색결과 : 주소, 위도, 경도
+     */
+    @GetMapping("/addresses")
+    public ResponseEntity<List<AddressResponseDto>> searchAddress(@RequestParam String keyword) {
+        List<AddressResponseDto> responseDto = marketService.searchAddress(keyword);
+        return ResponseEntity.ok(responseDto);
     }
 
 }

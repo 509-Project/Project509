@@ -9,7 +9,7 @@ var messageArea = document.querySelector('#messageArea');
 var connectingElement = document.querySelector('.connecting');
 
 var stompClient = null;
-var username = null;
+
 var chatRoomId = null;
 
 var colors = [
@@ -18,18 +18,22 @@ var colors = [
 ];
 
 function connect(event) {
-    username = document.querySelector('#name').value.trim();
+
     chatRoomId = document.querySelector('#chatRoomId').value.trim();
 
     const jwtToken = '인증된jwt토큰';
     localStorage.setItem('jwtToken', jwtToken);
 
-    if(username && chatRoomId) {
+    if(chatRoomId) {
         usernamePage.classList.add('hidden');
         chatPage.classList.remove('hidden');
 
         var socket = new SockJS(`/ws?token=${jwtToken}`);
         stompClient = Stomp.over(socket);
+
+        // Heartbeat 설정
+        stompClient.heartbeat.outgoing = 10000; // 클라이언트 -> 서버, 10초 간격으로 heart-beat 전송
+        stompClient.heartbeat.incoming = 10000; // 서버 -> 클라이언트, 10초 간격으로 heart-beat 수신
 
         stompClient.connect({chatRoomId: chatRoomId}, onConnected, onError);
     }
@@ -57,14 +61,19 @@ function onConnected() {
 function onError(error) {
     connectingElement.textContent = 'Could not connect to WebSocket server. Please refresh this page to try again!';
     connectingElement.style.color = 'red';
-}
 
+    // 재연결 로직
+    setTimeout(() => {
+        console.log('Attempting to reconnect...');
+        connect(); // 재연결 시도
+    }, 5000); // 5초 후 재연결 시도
+}
 
 function sendMessage(event) {
     var messageContent = messageInput.value.trim();
     if(messageContent && stompClient) {
         var chatMessage = {
-            sender: username,
+            sender: '',
             content: messageInput.value,
             type: 'CHAT'
         };
@@ -122,5 +131,9 @@ function getAvatarColor(messageSender) {
     return colors[index];
 }
 
-usernameForm.addEventListener('submit', connect, true)
+// HTML 이벤트 리스너에서는 event.preventDefault()가 필요함
+usernameForm.addEventListener('submit', function(event) {
+    event.preventDefault(); // 기본 제출 동작 방지
+    connect();
+}, true);
 messageForm.addEventListener('submit', sendMessage, true)
