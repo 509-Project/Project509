@@ -172,7 +172,7 @@ class AuthServiceTest {
                     authService.signin(signinRequest);
                 });
 
-                assertEquals(ErrorCode.SIGNIN_ERROR, exception.getErrorCode());
+                assertEquals(ErrorCode.SIGN_IN_ERROR, exception.getErrorCode());
             }
 
             @Test

@@ -100,11 +100,14 @@ public class NotificationServiceSimulation extends Simulation {
                     )
             );
 
-
+//    atOnceUsers(10), // 즉시 실행
+//    rampUsers(50).during(10.seconds), // 10초 동안 50명의 사용자를 점진적으로 추가
+//    constantUsersPerSec(20).during(1.minute()), // 1분 동안 매초 20명의 사용자를 추가
+//    heavisideUsers(100).during(20.seconds) // 20초 동안 선형적으로 100명의 사용자를 증가
     {
         // 여러 시나리오를 하나의 setUp에서 실행
         setUp(
-                scenario.injectOpen(atOnceUsers(30))  // 모든 시나리오를 한 번에 실행
+                scenario.injectOpen(rampUsers(30).during(10))  // 모든 시나리오를 한 번에 실행
         ).protocols(httpProtocol);  // HTTP 프로토콜 설정
     }
 }

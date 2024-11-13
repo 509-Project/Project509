@@ -10,8 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.batch.core.configuration.JobRegistry;
-import org.springframework.batch.core.launch.JobLauncher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +22,6 @@ import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 public class ItemServiceTest {
-
-    @Mock
-    JobLauncher jobLauncher;
-
-    @Mock
-    JobRegistry jobRegistry;
 
     @Mock
     ItemRepository itemRepository;
