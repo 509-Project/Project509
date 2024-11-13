@@ -13,6 +13,7 @@ import com.example.lastproject.domain.partymember.repository.PartyMemberReposito
 import com.example.lastproject.domain.penalty.dto.request.PenaltyRequest;
 import com.example.lastproject.domain.penalty.entity.Penalty;
 import com.example.lastproject.domain.penalty.repository.PenaltyRepository;
+import com.example.lastproject.domain.user.service.PenaltyCountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,7 @@ public class PenaltyServiceImpl implements PenaltyService {
     private final PenaltyRepository penaltyRepository;
     private final PartyRepository partyRepository;
     private final PartyMemberRepository partyMemberRepository;
+    private final PenaltyCountService penaltyCountService;
 
     /**
      * 페널티 부여
@@ -82,22 +84,20 @@ public class PenaltyServiceImpl implements PenaltyService {
 
         List<Penalty> penalties = new ArrayList<>();
 
-        // 지정된 유저를 대상으로 각각 페널티를 부여하고 리스트에 추가
+        /*
+        지정된 유저를 대상으로 각각 페널티를 부여하고 리스트에 추가
+        부여된 페널티는 DB에 페널티 내역으로 저장되고, redis 에 user 의 페널티 카운트 키와 그 값이 저장됨
+         */
         for (PartyMember user : members) {
 
             Penalty penalty = new Penalty(party, user.getUser());
             penalties.add(penalty);
+            penaltyCountService.setPenaltyCount(user.getId());
+            penaltyCountService.incrementPenaltyCount(user.getId());
         }
 
         // 추가한 페널티 리스트를 한번에 save
         penaltyRepository.saveAll(penalties);
-
     }
 
-    ////////////////////////////////////////////////////////////////
-    // 페널티 부여 안 할 거면 요청 못 보내게 막기 --> PARTY_MEMBER_NOT_FOUND 처리
-    // 파티 초대 거절된 멤버 ( REJECTED )에게는 페널티 부여 x --> REJECTED NOT 처리
-    // 탈퇴된 사람들도 페널티를 줄 수 없게 막기
-    // 이미 부과한 유저 제외하기
-    // 이 파티 아닌 사람 제외하기, 가입만 했으면 전부 페널티 줄 수 있음
 }
