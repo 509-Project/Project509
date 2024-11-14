@@ -2,6 +2,7 @@ package com.example.lastproject.domain.auth.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,10 +27,10 @@ public class SignupRequest {
     @NotBlank(message = "마켓 주소는 공백일 수 없습니다.")
     private String address;
 
-    @NotBlank(message = "위도는 공백일 수 없습니다.")
+    @NotNull(message = "위도는 공백일 수 없습니다.")
     private BigDecimal latitude;
 
-    @NotBlank(message = "경도는 공백일 수 없습니다.")
+    @NotNull(message = "경도는 공백일 수 없습니다.")
     private BigDecimal longitude;
 
     @NotBlank(message = "권한은 공백일 수 없습니다.")

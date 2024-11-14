@@ -4,6 +4,7 @@ import com.example.lastproject.common.dto.AuthUser;
 import com.example.lastproject.common.exception.CustomException;
 import com.example.lastproject.domain.party.dto.request.PartyCreateRequest;
 import com.example.lastproject.domain.party.dto.request.PartyUpdateRequest;
+import com.example.lastproject.domain.party.dto.response.NearByPartyResponse;
 import com.example.lastproject.domain.party.dto.response.PartyResponse;
 import com.example.lastproject.domain.party.service.PartyService;
 import com.example.lastproject.domain.partymember.dto.request.PartyMemberUpdateRequest;
@@ -130,6 +131,18 @@ public class PartyController {
     public ResponseEntity<List<PartyResponse>> getMyParties(
             @AuthenticationPrincipal AuthUser authUser) {
         List<PartyResponse> responses = partyService.getMyParties(authUser);
+        return ResponseEntity.ok(responses);
+    }
+
+    /**
+     * 회원가입시 사용자가 등록한 위치 주변 10KM 이내 파티 목록 조회
+     *
+     * @param authUser 현재 로그인한 사용자
+     * @return 조회된 파티 목록
+     */
+    @GetMapping("/nearby-parties")
+    public ResponseEntity<List<NearByPartyResponse>> getNearByParties(@AuthenticationPrincipal AuthUser authUser) {
+        List<NearByPartyResponse> responses = partyService.getNearByParties(authUser);
         return ResponseEntity.ok(responses);
     }
 

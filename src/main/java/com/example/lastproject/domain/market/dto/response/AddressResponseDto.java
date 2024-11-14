@@ -7,6 +7,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AddressResponseDto {
     private final String address;
-    private final String x;
-    private final String y;
+    private final String latitude;
+    private final String longitude;
 }

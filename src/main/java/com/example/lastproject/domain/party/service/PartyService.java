@@ -8,6 +8,7 @@ import com.example.lastproject.domain.item.entity.Item;
 import com.example.lastproject.domain.item.repository.ItemRepository;
 import com.example.lastproject.domain.party.dto.request.PartyCreateRequest;
 import com.example.lastproject.domain.party.dto.request.PartyUpdateRequest;
+import com.example.lastproject.domain.party.dto.response.NearByPartyResponse;
 import com.example.lastproject.domain.party.dto.response.PartyResponse;
 import com.example.lastproject.domain.party.entity.Party;
 import com.example.lastproject.domain.party.enums.PartyStatus;
@@ -24,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
@@ -93,8 +95,8 @@ public class PartyService {
         Party party = new Party(
                 request.getMarketName(),
                 request.getMarketAddress(),
-                request.getX(),
-                request.getY(),
+                request.getLatitude(),
+                request.getLongitude(),
                 item,
                 request.getItemCount(),
                 request.getItemUnit(),
@@ -319,6 +321,23 @@ public class PartyService {
             }
         }
         return false;
+    }
+
+    /**
+     * @param authUser 인증된 사용자
+     * @return 사용자가 등록한 위치 반경 10KM 내의 파티목록
+     */
+    public List<NearByPartyResponse> getNearByParties(AuthUser authUser) {
+        User user = userRepository.findById(authUser.getUserId())
+                .orElseThrow(() -> new CustomException(ErrorCode.PARTY_NOT_FOUND));
+
+        // 위경도
+        BigDecimal latitude = user.getLatitude();
+        BigDecimal longitude = user.getLongitude();
+
+        List<NearByPartyResponse> responses = partyRepository.getNearByParties(latitude, longitude);
+
+        return responses;
     }
 
 }

@@ -30,11 +30,11 @@ public class Party extends Timestamped {
     @Column(name = "market_address", nullable = false)
     private String marketAddress;
 
-    @Column(name = "x", nullable = false)
-    private BigDecimal x;
+    @Column(name = "latitude", nullable = false)
+    private BigDecimal latitude;
 
-    @Column(name = "y", nullable = false)
-    private BigDecimal y;
+    @Column(name = "longitude", nullable = false)
+    private BigDecimal longitude;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id", nullable = false)
@@ -65,11 +65,11 @@ public class Party extends Timestamped {
     @Column(name = "creator_id", nullable = false)
     private Long creatorId;
 
-    public Party(String marketName, String marketAddress, BigDecimal x, BigDecimal y, Item item, int itemCount, String itemUnit, LocalDateTime startTime, LocalDateTime endTime, int membersCount, Long creatorId) {
+    public Party(String marketName, String marketAddress, BigDecimal latitude, BigDecimal longitude, Item item, int itemCount, String itemUnit, LocalDateTime startTime, LocalDateTime endTime, int membersCount, Long creatorId) {
         this.marketName = marketName;
         this.marketAddress = marketAddress;
-        this.x = x;
-        this.y = y;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.item = item;
         this.itemCount = itemCount;
         this.itemUnit = itemUnit;

@@ -65,7 +65,7 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable) // BasicAuthenticationFilter 비활성화
                 .logout(AbstractHttpConfigurer::disable) // LogoutFilter 비활성화
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/signin", "/auth/signup", "/error").permitAll() // error -> 토큰이 없는 상태로 /error 경로로 리다이렉션 -> 403 error 발생
+                        .requestMatchers("/auth/signin", "/auth/signup", "/error","/markets/addresses").permitAll() // error -> 토큰이 없는 상태로 /error 경로로 리다이렉션 -> 403 error 발생
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // frontend 관련(css,js) 경로 permit
                         .requestMatchers("/ws/**", "/topic/**", "/app/**", "index.html", "/", "/chat/**").permitAll() // chat 관련 경로 및 frontend 관련(html) 경로 permit
                         .anyRequest().authenticated()

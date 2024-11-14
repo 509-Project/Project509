@@ -69,10 +69,10 @@ public class MarketServiceImpl implements MarketService {
             if (!arrayNode.isEmpty()) {
                 for (JsonNode value : arrayNode) {
                     String address = value.get("address_name").asText();
-                    String x = value.get("x").asText();
-                    String y = value.get("y").asText();
+                    String longitude = value.get("x").asText();
+                    String latitude = value.get("y").asText();
 
-                    responseDtoList.add(new AddressResponseDto(address, x, y));
+                    responseDtoList.add(new AddressResponseDto(address, latitude, longitude));
                 }
                 return responseDtoList;
             } else {
