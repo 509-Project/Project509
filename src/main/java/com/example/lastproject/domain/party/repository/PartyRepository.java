@@ -7,11 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface PartyRepository extends JpaRepository<Party, Long> {
+public interface PartyRepository extends JpaRepository<Party, Long>, PartyQueryRepository {
 
+    List<Party> findAllByCreatorId(Long creatorId);
     List<Party> findAllByPartyStatus(PartyStatus partyStatus);
-    Optional<Party> findByIdAndCreatorId(Long partyId, Long creatorId);
 
+    Optional<Party> findByIdAndCreatorId(Long partyId, Long creatorId);
     Optional<Party> findByIdAndPartyStatus(Long partyId, PartyStatus partyStatus);
 
 }

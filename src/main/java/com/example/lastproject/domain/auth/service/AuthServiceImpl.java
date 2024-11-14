@@ -1,13 +1,13 @@
 package com.example.lastproject.domain.auth.service;
 
-import com.example.lastproject.common.exception.CustomException;
+import com.example.lastproject.common.dto.AuthUser;
 import com.example.lastproject.common.enums.ErrorCode;
+import com.example.lastproject.common.exception.CustomException;
 import com.example.lastproject.config.JwtUtil;
 import com.example.lastproject.domain.auth.dto.request.SigninRequest;
 import com.example.lastproject.domain.auth.dto.request.SignupRequest;
 import com.example.lastproject.domain.auth.dto.response.SignupResponse;
 import com.example.lastproject.domain.auth.dto.response.WithdrawalResponse;
-import com.example.lastproject.common.dto.AuthUser;
 import com.example.lastproject.domain.user.entity.User;
 import com.example.lastproject.domain.user.enums.UserRole;
 import com.example.lastproject.domain.user.enums.UserStatus;
@@ -53,6 +53,8 @@ public class AuthServiceImpl implements AuthService {
                 encodedPassword,
                 signupRequest.getNickname(),
                 signupRequest.getAddress(),
+                signupRequest.getLatitude(),
+                signupRequest.getLongitude(),
                 userRole
         );
 

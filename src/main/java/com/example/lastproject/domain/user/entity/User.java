@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +40,12 @@ public class User extends Timestamped {
     @Column(nullable = false)
     private String address;
 
+    @Column(nullable = false)
+    private BigDecimal latitude;
+
+    @Column(nullable = false)
+    private BigDecimal longitude;
+
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
@@ -49,11 +56,13 @@ public class User extends Timestamped {
     @OneToMany(mappedBy = "user")
     private List<LikeItem> likeItems = new ArrayList<>();
 
-    public User(String email, String password, String nickname, String address, UserRole userRole) {
+    public User(String email, String password, String nickname, String address, BigDecimal latitude, BigDecimal longitude, UserRole userRole) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.userRole = userRole;
     }
 

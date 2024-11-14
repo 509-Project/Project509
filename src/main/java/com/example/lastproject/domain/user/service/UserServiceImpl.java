@@ -4,9 +4,6 @@ import com.example.lastproject.common.dto.AuthUser;
 import com.example.lastproject.common.enums.CustomMessage;
 import com.example.lastproject.common.enums.ErrorCode;
 import com.example.lastproject.common.exception.CustomException;
-import com.example.lastproject.domain.penalty.entity.Penalty;
-import com.example.lastproject.domain.penalty.enums.PenaltyStatus;
-import com.example.lastproject.domain.penalty.repository.PenaltyRepository;
 import com.example.lastproject.domain.user.dto.request.UserChangePasswordRequest;
 import com.example.lastproject.domain.user.dto.request.UserUpdateRequest;
 import com.example.lastproject.domain.user.dto.response.UserResponse;
@@ -18,33 +15,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final PenaltyRepository penaltyRepository;
     private final PasswordEncoder passwordEncoder;
-
-    /**
-     * 사용자의 페널티 횟수에 따른 닉네임 표기
-     *
-     * @param nickname  사용자의 닉네임
-     * @param penalties 사용자가 받은 페널티 내역
-     * @return 해당하는 이모지 + 닉네임
-     */
-    private String getNicknameWithEmoji(
-            String nickname,
-            List<Penalty> penalties
-    ) {
-
-        // 페널티 횟수가 3개 이상이면 유령 등급, 2개 이하이면 별 등급
-        String emoji = (penalties.size() >= 3) ? "👻" : "⭐";
-        return emoji + nickname;
-    }
+    private final PenaltyCountService penaltyCountService;
 
     /**
      * 사용자 조회
@@ -55,24 +33,25 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse getUser(Long userId) {
 
-        User findUser = userRepository.findById(userId).orElseThrow(
+        User user = userRepository.findById(userId).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND)
         );
 
-        if (findUser.getUserStatus() == (UserStatus.DELETED)) {
+        if (user.getUserStatus() == (UserStatus.DELETED)) {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
 
-        List<Penalty> penalties = penaltyRepository.findPenaltiesByUserIdAndStatus(
-                findUser,
-                PenaltyStatus.SEARCHABLE
+        penaltyCountService.setPenaltyCount(userId);
+
+        int penaltyCount = Integer.parseInt(
+                penaltyCountService.getPenaltyCount(user.getId())
         );
 
-        String nicknameWithEmoji = getNicknameWithEmoji(findUser.getNickname(), penalties);
+        String emoji = (penaltyCount >= 3) ? "👻" : "⭐";
 
         return new UserResponse(
-                findUser.getEmail(),
-                nicknameWithEmoji,
+                user.getEmail(),
+                emoji + user.getNickname(),
                 CustomMessage.USER_FOUND.getMessage()
         );
     }
@@ -92,6 +71,10 @@ public class UserServiceImpl implements UserService {
     ) {
 
         User user = User.fromAuthUser(authUser);
+
+        if (user.getUserStatus() == (UserStatus.DELETED)) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
 
         // 기존 비밀번호 확인
         if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {

@@ -4,6 +4,7 @@ import com.example.lastproject.common.dto.AuthUser;
 import com.example.lastproject.common.exception.CustomException;
 import com.example.lastproject.domain.party.dto.request.PartyCreateRequest;
 import com.example.lastproject.domain.party.dto.request.PartyUpdateRequest;
+import com.example.lastproject.domain.party.dto.response.NearByPartyResponse;
 import com.example.lastproject.domain.party.dto.response.PartyResponse;
 import com.example.lastproject.domain.party.service.PartyService;
 import com.example.lastproject.domain.partymember.dto.request.PartyMemberUpdateRequest;
@@ -121,31 +122,28 @@ public class PartyController {
     }
 
     /**
-     * 파티원 : 본인이 참가 신청한 파티 목록 조회
+     * 본인이 생성한 파티 및 참가 신청한 파티 목록 조회
      *
      * @param authUser 현재 로그인한 사용자
      * @return 사용자가 신청한 파티 목록
      */
     @GetMapping("/my-parties")
-    public ResponseEntity<List<PartyResponse>> getPartiesUserApplied(
+    public ResponseEntity<List<PartyResponse>> getMyParties(
             @AuthenticationPrincipal AuthUser authUser) {
-        List<PartyResponse> responses = partyService.getPartiesUserApplied(authUser);
+        List<PartyResponse> responses = partyService.getMyParties(authUser);
         return ResponseEntity.ok(responses);
     }
 
     /**
-     * 유저가 파티에 있는지 확인
+     * 회원가입시 사용자가 등록한 위치 주변 10KM 이내 파티 목록 조회
      *
-     * @param partyId  파티 ID
-     * @param authUser 인증된 사용자
-     * @return ResponseEntity<Boolean> 유저가 파티에 존재하는지 여부
+     * @param authUser 현재 로그인한 사용자
+     * @return 조회된 파티 목록
      */
-    @GetMapping("/{partyId}/is-member")
-    public ResponseEntity<Boolean> isUserInParty(
-            @PathVariable Long partyId,
-            @AuthenticationPrincipal AuthUser authUser) {
-        boolean isMember = partyService.isUserInParty(partyId, authUser);
-        return ResponseEntity.ok(isMember);
+    @GetMapping("/nearby-parties")
+    public ResponseEntity<List<NearByPartyResponse>> getNearByParties(@AuthenticationPrincipal AuthUser authUser) {
+        List<NearByPartyResponse> responses = partyService.getNearByParties(authUser);
+        return ResponseEntity.ok(responses);
     }
 
 }

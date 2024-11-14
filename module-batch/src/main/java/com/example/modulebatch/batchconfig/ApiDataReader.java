@@ -104,13 +104,12 @@ public class ApiDataReader implements ItemStreamReader<String> {
 
         int totalPage;
 
-        Mono<String> response = webClient.get()
+        // 첫 페이지만 요청
+        String jsonData = webClient.get()
                 .uri("/1/1")
                 .retrieve()
-                .bodyToMono(String.class);
-
-        // 읍답데이터
-        String jsonData = response.block();
+                .bodyToMono(String.class)
+                .block();
 
         if (jsonData.isBlank()) {
             throw new CustomException(ErrorCode.API_CONNECTION_ERROR);
