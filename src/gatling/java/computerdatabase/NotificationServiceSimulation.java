@@ -38,7 +38,7 @@ public class NotificationServiceSimulation extends Simulation {
 //                            """))
 //                    .asJson()
 //                    .check(status().is(200))
-//            )
+//            );
 
 
             // 로그인 시나리오
@@ -55,10 +55,19 @@ public class NotificationServiceSimulation extends Simulation {
                     .check(header("Authorization").saveAs("jwtToken"))  // JWT 토큰 추출하여 저장
                     .check(status().is(200)) // 로그인 성공 확인
             )
+            .exitHereIfFailed() // 실패 시 해당 사용자 종료
+
+//            .exec(session -> {
+//                // JWT 토큰이 세션에 저장되는지 확인 (디버그)
+//                System.out.println("JWT Token for User: " + session.getString("jwtToken"));
+//                return session;
+//            })
+
+
             .exec(sse("SSE Connect")
                     .sseName("SSE Connect Stream")  // 스트림 이름을 설정
                     .connect("/notifications/connect")
-                    .header("Authorization", "#{jwtToken}") // JWT 토큰 전달
+                    .header("Authorization", "${jwtToken}") // JWT 토큰 전달
                     .header("Content-Type", "text/event-stream")
                     .await(30) // 최대 30초 대기
                     .on(sse.checkMessage("SSE Check Notification")
@@ -70,7 +79,7 @@ public class NotificationServiceSimulation extends Simulation {
             .exec(http("Create Party Request")
                     .post("/parties")
                     .header("Content-Type", "application/json")
-                    .header("Authorization", "#{jwtToken}")
+                    .header("Authorization", "${jwtToken}")
                     .body(StringBody("""
                                 {
                                     "marketName": "마켓 이름",
@@ -89,7 +98,7 @@ public class NotificationServiceSimulation extends Simulation {
             .exec(sse("SSE Check Notification")
                     .sseName("Check Notification Stream")  // 스트림 이름 설정
                     .connect("/notifications/connect")
-                    .header("Authorization", "#{jwtToken}") // JWT 토큰 전달
+                    .header("Authorization", "${jwtToken}") // JWT 토큰 전달
                     .header("Content-Type", "text/event-stream")
                     .await(30) // 최대 30초 대기
                     .on(
@@ -101,13 +110,13 @@ public class NotificationServiceSimulation extends Simulation {
             );
 
 //    atOnceUsers(10), // 즉시 실행
-//    rampUsers(50).during(10.seconds), // 10초 동안 50명의 사용자를 점진적으로 추가
+//    rampUsers(50).during(10), // 10초 동안 50명의 사용자를 점진적으로 추가
 //    constantUsersPerSec(20).during(1.minute()), // 1분 동안 매초 20명의 사용자를 추가
 //    heavisideUsers(100).during(20.seconds) // 20초 동안 선형적으로 100명의 사용자를 증가
     {
         // 여러 시나리오를 하나의 setUp에서 실행
         setUp(
-                scenario.injectOpen(rampUsers(30).during(10))  // 모든 시나리오를 한 번에 실행
+                scenario.injectOpen(rampUsers(100).during(10))  // 모든 시나리오를 한 번에 실행
         ).protocols(httpProtocol);  // HTTP 프로토콜 설정
     }
 }
