@@ -9,9 +9,6 @@ import com.example.lastproject.domain.chat.dto.ChatMessageResponse;
 import com.example.lastproject.domain.chat.service.ChatMessageService;
 import com.example.lastproject.domain.user.enums.UserRole;
 import org.junit.jupiter.api.Test;
-import org.springframework.batch.core.explore.JobExplorer;
-import org.springframework.batch.core.launch.JobOperator;
-import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -34,18 +31,6 @@ class ChatMessageControllerTest {
 
     @MockBean
     private ChatMessageService chatMessageService;
-
-    // Spring Batch에서 사용하는 빈을 Mock 처리하여 테스트에 영향을 주지 않도록 설정합니다.
-    @MockBean
-    private JobRepository jobRepository;
-
-    // Spring Batch에서 사용하는 빈을 Mock 처리하여 테스트에 영향을 주지 않도록 설정합니다.
-    @MockBean
-    private JobExplorer jobExplorer;
-
-    // Spring Batch에서 사용하는 빈을 Mock 처리하여 테스트에 영향을 주지 않도록 설정합니다.
-    @MockBean
-    private JobOperator jobOperator;
 
     private JwtAuthenticationToken userAuthenticationToken;
 

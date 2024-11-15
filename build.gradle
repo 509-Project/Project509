@@ -85,5 +85,8 @@ allprojects {
         implementation 'org.springframework.boot:spring-boot-starter-webflux'
         // Jackson
         compileOnly 'com.googlecode.json-simple:json-simple:1.1.1'
+
+        implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5-jakarta'
+
     }
 }

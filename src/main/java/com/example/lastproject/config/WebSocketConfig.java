@@ -30,9 +30,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         this.taskScheduler = taskScheduler;
     }
 
-    @Value("${allowedOrigin}")
-    private String allowedOrigin;
-
     /**
      * 클라이언트가 Websocket서버에 접속하기 위해 사용할 메서드
      * SockJS() : Websocket을 지원하지 않는 브라우저에 대해서도 Websocket처럼 동작하게 해줌
@@ -46,7 +43,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         //JWT인증을 위해 Interceptor 추가
 
         registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns(allowedOrigin)
+                .setAllowedOriginPatterns("*")
                 .addInterceptors(jwtHandshakeInterceptor)
                 .withSockJS();
     }

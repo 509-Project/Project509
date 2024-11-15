@@ -1,0 +1,56 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: ajgus0809@
+      MYSQL_DATABASE: project509
+    ports:
+      - "3307:3306"
+    networks:
+      - app-network
+
+  redis:
+    image: redis:6.2
+    container_name: redis_server
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+
+  app1:
+    image: project509-image:latest
+    container_name: project_app1
+    environment:
+      SERVER_PORT: 8081
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/project509
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ajgus0809@
+    ports:
+      - "8081:8081"
+    depends_on:
+      - db
+    networks:
+      - app-network
+    entrypoint: ["./wait-for-it.sh", "db:3306", "--", "java", "-jar", "/app.jar"]
+
+  app2:
+    image: project509-image:latest
+    container_name: project_app2
+    environment:
+      SERVER_PORT: 8082
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/project509
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ajgus0809@
+    ports:
+      - "8082:8082"
+    depends_on:
+      - db
+    networks:
+      - app-network
+    entrypoint: ["./wait-for-it.sh", "db:3306", "--", "java", "-jar", "/app.jar"]
+
+networks:
+  app-network:
+    driver: bridge
