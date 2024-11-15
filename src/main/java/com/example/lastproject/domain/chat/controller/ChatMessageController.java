@@ -30,12 +30,12 @@ public class ChatMessageController {
      */
     @MessageMapping("/chat.sendMessage/{chatRoomId}")
     @SendTo("/topic/{chatRoomId}")
-    public ChatMessageRequest sendMessage(@DestinationVariable("chatRoomId") Long chatRoomId, @Payload ChatMessageRequest chatMessage, SimpMessageHeaderAccessor headerAccessor) {
+    public void sendMessage(@DestinationVariable("chatRoomId") Long chatRoomId, @Payload ChatMessageRequest chatMessage, SimpMessageHeaderAccessor headerAccessor) {
 
         // WebSocket 세션에서 AuthUser 객체를 가져옴
         AuthUser authUser = (AuthUser) headerAccessor.getSessionAttributes().get("authUser");
 
-        return chatMessageService.sendMessage(chatRoomId, chatMessage, authUser);
+        chatMessageService.sendMessage(chatRoomId, chatMessage, authUser);
     }
 
     /**

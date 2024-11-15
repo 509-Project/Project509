@@ -8,7 +8,7 @@ import com.example.lastproject.domain.item.entity.Item;
 import com.example.lastproject.domain.item.repository.ItemRepository;
 import com.example.lastproject.domain.party.dto.request.PartyCreateRequest;
 import com.example.lastproject.domain.party.dto.request.PartyUpdateRequest;
-import com.example.lastproject.domain.party.dto.response.NearByPartyResponse;
+import com.example.lastproject.domain.party.dto.response.NearbyPartyResponse;
 import com.example.lastproject.domain.party.dto.response.PartyResponse;
 import com.example.lastproject.domain.party.entity.Party;
 import com.example.lastproject.domain.party.enums.PartyStatus;
@@ -327,7 +327,7 @@ public class PartyService {
      * @param authUser 인증된 사용자
      * @return 사용자가 등록한 위치 반경 10KM 내의 파티목록
      */
-    public List<NearByPartyResponse> getNearByParties(AuthUser authUser) {
+    public List<NearbyPartyResponse> getNearByParties(AuthUser authUser) {
         User user = userRepository.findById(authUser.getUserId())
                 .orElseThrow(() -> new CustomException(ErrorCode.PARTY_NOT_FOUND));
 
@@ -335,7 +335,7 @@ public class PartyService {
         BigDecimal latitude = user.getLatitude();
         BigDecimal longitude = user.getLongitude();
 
-        List<NearByPartyResponse> responses = partyRepository.getNearByParties(latitude, longitude);
+        List<NearbyPartyResponse> responses = partyRepository.getNearByParties(latitude, longitude);
 
         return responses;
     }

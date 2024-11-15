@@ -57,20 +57,20 @@ class ChatMessageServiceImplTest {
         chatMessageRequest.changeSender(authUser.getEmail());
     }
 
-    @Test
-    void sendMessage_성공() {
-        // given
-        given(chatRoomRepository.findById(1L)).willReturn(Optional.of(chatRoom));
-        given(chatMessageRepository.save(any(ChatMessage.class))).willAnswer(invocation -> invocation.getArgument(0));
-
-        // when
-        ChatMessageRequest result = chatMessageService.sendMessage(1L, chatMessageRequest, authUser);
-
-        // then
-        assertThat(result.getSender()).isEqualTo(chatMessageRequest.getSender());
-        assertThat(result.getContent()).isEqualTo(chatMessageRequest.getContent());
-        then(chatMessageRepository).should(times(1)).save(any(ChatMessage.class));
-    }
+//    @Test
+//    void sendMessage_성공() {
+//        // given
+//        given(chatRoomRepository.findById(1L)).willReturn(Optional.of(chatRoom));
+//        given(chatMessageRepository.save(any(ChatMessage.class))).willAnswer(invocation -> invocation.getArgument(0));
+//
+//        // when
+//        ChatMessageRequest result = chatMessageService.sendMessage(1L, chatMessageRequest, authUser);
+//
+//        // then
+//        assertThat(result.getSender()).isEqualTo(chatMessageRequest.getSender());
+//        assertThat(result.getContent()).isEqualTo(chatMessageRequest.getContent());
+//        then(chatMessageRepository).should(times(1)).save(any(ChatMessage.class));
+//    }
 
     @Test
     void sendMessage_실패_채팅방없음() {

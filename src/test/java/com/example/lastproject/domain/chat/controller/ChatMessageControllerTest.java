@@ -32,8 +32,6 @@ class ChatMessageControllerTest {
     @MockBean
     private ChatMessageService chatMessageService;
 
-
-
     private JwtAuthenticationToken userAuthenticationToken;
 
     @Test

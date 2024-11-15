@@ -22,16 +22,17 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomRepository chatRoomRepository;
+    private final RedisPublisher redisPublisher;
+    private final RedisMessageListener redisMessageListener;
 
     /**
      * 입력한 채팅메세지를 DB에 저장 후 반환하는 메서드
      *
      * @param chatRoomId         : 채팅방 Id
      * @param chatMessageRequest : 채팅타입, 내용, 보낸사람
-     * @return : 입력된 채팅메세지
      */
     @Transactional
-    public ChatMessageRequest sendMessage(Long chatRoomId, ChatMessageRequest chatMessageRequest, AuthUser authUser) {
+    public void sendMessage(Long chatRoomId, ChatMessageRequest chatMessageRequest, AuthUser authUser) {
 
         //채팅메세지가 전송되는 채팅방 찾기
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(
@@ -43,7 +44,10 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
         ChatMessage chatMessage = new ChatMessage(chatMessageRequest, chatRoom);
         chatMessageRepository.save(chatMessage);
-        return chatMessageRequest;
+
+        //Redis pub
+        redisPublisher.publish(redisMessageListener.getTopic(chatRoomId), chatMessage);
+
     }
 
     /**

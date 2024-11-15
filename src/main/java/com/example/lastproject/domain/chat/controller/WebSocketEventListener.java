@@ -2,7 +2,9 @@ package com.example.lastproject.domain.chat.controller;
 
 import com.example.lastproject.common.dto.AuthUser;
 import com.example.lastproject.domain.chat.dto.ChatMessageRequest;
+import com.example.lastproject.domain.chat.service.RedisMessageListener;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
@@ -14,6 +16,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.util.Optional;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class WebSocketEventListener {
@@ -24,6 +27,7 @@ public class WebSocketEventListener {
 
     private static final Logger logger = LoggerFactory.getLogger(WebSocketEventListener.class);
     private final SimpMessageSendingOperations messagingTemplate;
+    private final RedisMessageListener redisMessageListener;
 
     /**
      * 새로운 유저가 들어왔을 때 호출되는 메서드
@@ -45,6 +49,9 @@ public class WebSocketEventListener {
             sendChatMessage(chatRoomId, email, ChatMessageRequest.MessageType.JOIN);
 
         }
+
+        //연결 시, Redis에 Topic으로 추가
+        redisMessageListener.enterChattingRoom(chatRoomId);
 
     }
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ChatMessageService {
 
-    ChatMessageRequest sendMessage(Long chatRoomId, ChatMessageRequest chatMessageRequest, AuthUser authUser);
+    void sendMessage(Long chatRoomId, ChatMessageRequest chatMessageRequest, AuthUser authUser);
 
     List<ChatMessageResponse> getChatHistory(Long chatRoomId);
 
