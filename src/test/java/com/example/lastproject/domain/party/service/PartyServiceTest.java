@@ -203,6 +203,7 @@ class PartyServiceTest {
     @Test
     void cancelParty_success() {
         when(partyRepository.findById(1L)).thenReturn(Optional.of(party));
+        when(partyRepository.save(any())).thenReturn(party);
 
         partyService.cancelParty(1L);
 
