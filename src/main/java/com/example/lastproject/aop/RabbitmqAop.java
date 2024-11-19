@@ -3,10 +3,13 @@ package com.example.lastproject.aop;
 import com.example.lastproject.common.dto.AuthUser;
 import com.example.lastproject.common.enums.ErrorCode;
 import com.example.lastproject.common.exception.CustomException;
+import com.example.lastproject.domain.chat.dto.ChatRoomResponse;
 import com.example.lastproject.domain.likeitem.dto.response.LikeItemResponse;
 import com.example.lastproject.domain.likeitem.repository.LikeItemQueryRepository;
 import com.example.lastproject.domain.party.dto.response.PartyResponse;
+import com.example.lastproject.domain.party.entity.Party;
 import com.example.lastproject.domain.party.repository.PartyQueryRepositoryImpl;
+import com.example.lastproject.domain.party.repository.PartyRepository;
 import com.example.lastproject.domain.user.dto.NearbyBookmarkUserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +33,7 @@ public class RabbitmqAop {
     private final RabbitTemplate rabbitTemplate;
     private final PartyQueryRepositoryImpl partyQueryRepository;
     private final LikeItemQueryRepository likeItemQueryRepository;  // 찜한 품목 조회를 위한 repository 추가
+    private final PartyRepository partyRepository;
 
     @Value("${rabbitmq.exchange.name}")
     private String exchangeName;
@@ -110,17 +114,52 @@ public class RabbitmqAop {
         log.info("Party 생성 알림 전송 완료: {}", partyResponse);
     }
 
-    @AfterReturning(pointcut = "partyCancel()")
-    public void publishPartyCancelEvent() {
-        rabbitTemplate.convertAndSend(exchangeName, partyCancelKey);
-        log.info("Message sent to RabbitMQ with routing key: {}", partyCancelKey);
+    @AfterReturning(pointcut = "partyCancel()", returning = "partyResponse")
+    public void publishPartyCancelEvent(PartyResponse partyResponse) {
+        if (partyResponse == null) {
+            log.warn("Party cancellation returned null, skipping event publishing.");
+            return;
+        }
+
+        // 메시지 생성: "파티 취소 요청\n[마켓 이름] [품목 이름] 파티가 취소되었습니다."
+        String message = String.format(
+                "파티 취소 요청\n%s %s 파티가 취소되었습니다.",
+                partyResponse.getMarketName(),
+                partyResponse.getCategory()
+        );
+
+        // RabbitMQ로 메시지 전송
+        String routingKey = partyCancelKey;
+        rabbitTemplate.convertAndSend(exchangeName, routingKey, message);
+        log.info("Party 취소 알림 전송 완료: 파티: {}", partyResponse);
     }
 
-    @AfterReturning(pointcut = "chatCreate()")
-    public void publishChatCreateEvent() {
-        rabbitTemplate.convertAndSend(exchangeName, chatCreateKey);
-        log.info("Message sent to RabbitMQ with routing key: {}", chatCreateKey);
+    @AfterReturning(pointcut = "chatCreate()", returning = "chatRoomResponse")
+    public void publishChatCreateEvent(ChatRoomResponse chatRoomResponse) {
+        if (chatRoomResponse == null) {
+            log.warn("Chat room creation returned null, skipping event publishing.");
+            return;
+        }
+
+        // 파티 정보를 조회 (예: Repository를 통해 파티 정보 가져오기)
+        Party party = validatePartyExists(chatRoomResponse.getPartyId());
+
+        // 메시지 생성: "채팅 생성 요청\n[마켓 이름] [품목 이름] 채팅창이 생성되었습니다."
+        String message = String.format(
+                "채팅 생성 요청\n%s %s 채팅창이 생성되었습니다.",
+                party.getMarketName(),
+                party.getItem().getCategory()
+        );
+
+        // RabbitMQ로 메시지 전송
+        String routingKey = chatCreateKey;
+        rabbitTemplate.convertAndSend(exchangeName, routingKey, message);
+        log.info("Chat 생성 알림 전송 완료: {}", chatRoomResponse);
     }
 
+        private Party validatePartyExists(Long partyId) {
+        return partyRepository.findById(partyId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PARTY_NOT_FOUND));
+    }
 
 }

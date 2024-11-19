@@ -257,9 +257,10 @@ public class PartyService {
      */
     @Transactional
     @SseNotify
-    public void cancelParty(Long partyId) {
+    public PartyResponse cancelParty(Long partyId) {
         Party party = findPartyById(partyId);
         party.cancelParty();
+        return new PartyResponse(party, "Leader");
     }
 
     /**
