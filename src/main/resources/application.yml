@@ -1,0 +1,60 @@
+spring:
+  application:
+    name: project509
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:batch.sql
+  profiles:
+    active: producer
+
+
+  datasource:
+    hikari:
+      maximum-pool-size: 200
+      minimum-idle: 10
+      idle-timeout: 30000
+      connection-timeout: 30000
+      max-lifetime: 1800000  # 최대 생애 주기 설정
+    url: jdbc:mysql://localhost:3306/project509
+    username: gayeon
+    password: 12345
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+#        show_sql: true
+#        format_sql: true
+#        use_sql_comments: true
+
+#  data:
+#    redis:
+#      port: ${REDIS_PORT}
+#      host: ${REDIS_HOST}
+#      password: ${REDIS_PASSWORD}
+
+jwt:
+  secret:
+    key: 7Iqk7YyM66W07YOA7L2U65Sp7YG065+9U3ByaW5n6rCV7J2Y7Yqc7YSw7LWc7JuQ67mI7J6F64uI64ukLg==
+
+client:
+  basic-url: http://localhost:8080
+
+allowedOrigin : http://localhost:8080
+
+
+
+ITEM_API_KEY : 3bc2f328cfdd21307bbe428fa23d37a1cd8e8470d61d3c1117e049ef305384aa
+
+API_PORT : http://211.237.50.150:7080/openapi
+
+API_URL : Grid_20151207000000000328_1
+
+KAKAO_API_KEY : KakaoAK c6f4ef93d1ba43b887ff2a3625991863
+
+KAKAO_URL : https://dapi.kakao.com/v2/local/search/address.json
+
