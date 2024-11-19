@@ -1,7 +1,7 @@
 package com.example.lastproject.domain.chat.service;
 
 import com.example.lastproject.common.exception.CustomException;
-import com.example.lastproject.common.annotation.LogisticsNotify;
+import com.example.lastproject.common.annotation.SseNotify;
 import com.example.lastproject.common.enums.ErrorCode;
 import com.example.lastproject.common.dto.AuthUser;
 import com.example.lastproject.domain.chat.dto.ChatRoomResponse;
@@ -37,7 +37,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
      * @return : 새로운 채팅방 정보
      */
     @Transactional
-    @LogisticsNotify
+    @SseNotify
     public ChatRoomResponse createChatRoom(Long partyId, AuthUser authUser) {
 
         //이미 채팅방이 존재하는지 검증

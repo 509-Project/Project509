@@ -4,9 +4,15 @@ server:
 ## Spring Application Configuration
 rabbitmq:
   exchange:
-    name: notifications.topic # Topic Exchange 이름
-    dead-letter: notifications.dlx # Dead Letter Exchange 이름
-  queue:
-    name: notification_queue # Queue 이름 접두어
-    dead-letter: notification_queue.dlx # Dead Letter Queue 이름
+    name: party.exchange
+    dead-letter: exchange.dlx
+  queues:
+    party.create: party.create.queue
+    party.cancel: party.cancel.queue
+    chat.create: party.chat.create.queue
+    dead-letter: queue.dlx
+  routing-keys:
+    party.create: party.create
+    party.cancel: party.cancel
+    chat.create: party.chat.create
   ttl: 60000 # 메시지 TTL (밀리초)

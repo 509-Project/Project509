@@ -1,12 +1,6 @@
 group = 'com.sparta'
 version = '0.0.1-SNAPSHOT'
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
-}
-
 bootJar {
     enabled = false
 }
@@ -20,8 +14,6 @@ repositories {
 }
 
 dependencies {
-    // 루트 프로젝트 의존성
-    implementation project(':')
-
+    implementation project(':module-rabbitmq:module-rabbitmq-consumer')
 }
 

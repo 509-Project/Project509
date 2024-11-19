@@ -8,7 +8,6 @@ spring:
   profiles:
     active: producer
 
-
   datasource:
     hikari:
       maximum-pool-size: 200
@@ -36,6 +35,17 @@ spring:
 #      port: ${REDIS_PORT}
 #      host: ${REDIS_HOST}
 #      password: ${REDIS_PASSWORD}
+rabbitmq:
+  exchange:
+    name: party.exchange
+  queues:
+    party.create: party.create.queue
+    party.cancel: party.cancel.queue
+    chat.create: party.chat.create.queue
+  routing-keys:
+    party.create: party.create
+    party.cancel: party.cancel
+    chat.create: party.chat.create
 
 jwt:
   secret:

@@ -1,13 +1,13 @@
 package com.example.lastproject.domain.party.service;
 
-import com.example.lastproject.common.annotation.LogisticsNotify;
+import com.example.lastproject.common.annotation.SseNotify;
 import com.example.lastproject.common.dto.AuthUser;
 import com.example.lastproject.common.enums.ErrorCode;
 import com.example.lastproject.common.exception.CustomException;
 import com.example.lastproject.domain.item.entity.Item;
 import com.example.lastproject.domain.item.repository.ItemRepository;
 import com.example.lastproject.domain.market.entity.Market;
-import com.example.lastproject.domain.market.repository.MarketRepository;
+import com.example.lastproject.domain.market.service.MarketServiceImpl;
 import com.example.lastproject.domain.party.dto.request.PartyCreateRequest;
 import com.example.lastproject.domain.party.dto.request.PartyUpdateRequest;
 import com.example.lastproject.domain.party.dto.response.NearbyPartyResponse;
@@ -23,9 +23,7 @@ import com.example.lastproject.domain.partymember.enums.PartyMemberRole;
 import com.example.lastproject.domain.partymember.repository.PartyMemberRepository;
 import com.example.lastproject.domain.user.entity.User;
 import com.example.lastproject.domain.user.repository.UserRepository;
-import com.example.modulerabbitmqproducer.service.RabbitProducerService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,9 +43,7 @@ public class PartyService {
     private final ItemRepository itemRepository;
     private final PartyMemberRepository partyMemberRepository;
     private final UserRepository userRepository;
-    private final MarketRepository marketRepository;
-
-    private final RabbitProducerService rabbitProducerService;
+    private final MarketServiceImpl marketService;
 
     // 공통으로 사용하는 partyId로 Party 객체를 조회하는 메서드
     private Party findPartyById(Long partyId) {
@@ -68,7 +64,7 @@ public class PartyService {
      * @throws CustomException INVALID_MEMBERS_COUNT: "최소 참가 인원은 1명 이상이어야 합니다."
      */
     @Transactional
-    @LogisticsNotify
+    @SseNotify
     public PartyResponse createParty(PartyCreateRequest request, AuthUser authUser) {
         User user = User.fromAuthUser(authUser);
 
@@ -113,9 +109,9 @@ public class PartyService {
         );
 
         // 파티 저장
-        Party party1 = partyRepository.save(party);
-        Market market1 = marketRepository.save(new Market(party));
+        partyRepository.save(party);
 
+        marketService.saveMarket(new Market(party));
 
         // 파티 멤버 리더 역할
         PartyMember partyMember = new PartyMember(
@@ -126,7 +122,6 @@ public class PartyService {
         );
 
         partyMemberRepository.save(partyMember);
-        rabbitProducerService.sendPartyCreateMessage(party1.getId(), user.getId(), market1.getId(), party1.getItem().getId());
         return new PartyResponse(party, "Leader");
     }
 
@@ -261,7 +256,7 @@ public class PartyService {
      * @throws CustomException PARTY_NOT_FOUND: "파티를 찾을 수 없습니다."
      */
     @Transactional
-    @LogisticsNotify
+    @SseNotify
     public void cancelParty(Long partyId) {
         Party party = findPartyById(partyId);
         party.cancelParty();

@@ -29,11 +29,16 @@ public class MarketServiceImpl implements MarketService {
     @Qualifier("kakaoApi")
     private final WebClient webClient;
 
-//    // 마켓 저장
-//    @Transactional
-//    public void saveMarket(MarketRequestDto requestDto) {
-//        marketRepository.save(requestDto.toEntity());
-//    }
+    // 마켓 저장
+    @Transactional
+    public Market saveMarket(Market market) {
+
+        // 중복 검사
+        return marketRepository.findByMarketNameAndMarketAddress(
+                market.getMarketName(),
+                market.getMarketAddress()
+        ).orElseGet(() -> marketRepository.save(market));
+    }
 
     // 마켓 삭제
     @Transactional

@@ -2,28 +2,34 @@ package com.example.lastproject.domain.likeitem.repository;
 
 import com.example.lastproject.domain.likeitem.dto.response.LikeItemResponse;
 import com.example.lastproject.domain.likeitem.dto.response.QLikeItemResponse;
+import com.example.lastproject.domain.user.entity.User;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.lastproject.domain.likeitem.entity.QLikeItem.likeItem;
 
 @Repository
 @RequiredArgsConstructor
+@Primary
 public class LikeItemQueryRepositoryImpl implements LikeItemQueryRepository {
 
     private final JPAQueryFactory q;
 
     @Override
-    public List<LikeItemResponse> getBookmarkedItems(long bookmarkId) {
+    public List<LikeItemResponse> getBookmarkedItems(long userId) {
+
         List<LikeItemResponse> results = q
                 .select(
                         new QLikeItemResponse(likeItem.item.id, likeItem.item.category, likeItem.item.productName)
                 )
                 .from(likeItem)
-                .where(likeItem.user.id.eq(bookmarkId))
+                .where(likeItem.user.id.eq(userId))
                 .fetch();
 
         return results;
