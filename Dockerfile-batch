@@ -16,7 +16,8 @@ RUN cp module-batch/build/libs/*.jar app.jar
 RUN chmod +x /wait-for-it.sh
 
 # RDS 엔드포인트
-ENV RDS_ENDPOINT=${RDS_ENDPOINT}
+ARG RDS_ENDPOINT
+ENV RDS_ENDPOINT=$RDS_ENDPOINT
 
 # DB 서비스가 시작될 때까지 대기 후 애플리케이션 실행
-ENTRYPOINT ["/wait-for-it.sh", "$RDS_ENDPOINT:3306", "--", "java", "-Dspring.config.location=file:application.properties",  "-jar", "app.jar"]
+ENTRYPOINT ["/wait-for-it.sh", "$RDS_ENDPOINT:3306", "--", "java",  "-jar", "app.jar"]
