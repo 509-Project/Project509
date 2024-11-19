@@ -1,4 +1,0 @@
-email,password,nickname,address,userRole
-user1@example.com,123123aA!,nickname1,address1,ROLE_ADMIN
-user2@example.com,123123aA!,nickname2,address1,ROLE_ADMIN
-user3@example.com,123123aA!,nickname3,address1,ROLE_ADMIN

@@ -60,9 +60,14 @@ public enum ErrorCode {
     ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "조회되는 품목이 없습니다."),
     DUPLICATE_ITEM(HttpStatus.BAD_REQUEST, "이미 등록된 물품입니다."),
 
-    // Notification ErrorCode
+    // SSE Notification ErrorCode
     SSE_CONNECTION_ERROR(HttpStatus.BAD_REQUEST, "SSE 연결 오류입니다."),
     NOT_FOUND_NOTIFICATION(HttpStatus.BAD_REQUEST, "존재하지 않는 알림입니다."),
+
+    // RabbitMQ Notification ErrorCode
+    INVALID_EVENT_LIST(HttpStatus.BAD_REQUEST, "이벤트 리스트가 비어 있습니다."),
+    INVALID_EVENT_TYPE_LIST(HttpStatus.BAD_REQUEST, "파티 이벤트가 유효하지 않습니다."),
+    NO_NEARBY_USERS(HttpStatus.BAD_REQUEST, "10km 이내의 유저가 없습니다."),
 
     // Chat ErrorCode
     CHATROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "채팅방을 찾을 수 없습니다."),
