@@ -15,8 +15,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: '17'
+
       - name: gradlew 실행 권한 부여
         run: chmod +x ./gradlew
+
+      - name: Write Profile
+        run: |
+          echo "${{ secrets.BATCH-APPLICATION }}" > ./src/main/resources/application.properties
 
       # 도커 로그인
       - name: Log in to Docker Hub
@@ -56,11 +65,12 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}
             
             docker run -d --name app-batch -p 8081:8081 \
-              -e API_PORT=${{ secrets.API_PORT }} \
-              -e API_URL=${{ secrets.API_URL }} \
-              -e RDS_ENDPOINT=${{ secrets.RDS_ENDPOINT }} \
-              -e DB_NAME=${{ secrets.DB_NAME }} \
-              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-              -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
-              -e ITEM_API_KEY=${{ secrets.ITEM_API_KEY }} \
-              ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}
+            -e SPRING_CONFIG_LOCATION=classpath:/application.properties \
+            -e API_PORT=${{ secrets.API_PORT }} \
+            -e API_URL=${{ secrets.API_URL }} \
+            -e RDS_ENDPOINT=${{ secrets.RDS_ENDPOINT }} \
+            -e DB_NAME=${{ secrets.DB_NAME }} \
+            -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+            -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
+            -e ITEM_API_KEY=${{ secrets.ITEM_API_KEY }} \
+            ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}
