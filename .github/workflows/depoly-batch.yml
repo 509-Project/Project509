@@ -1,12 +1,10 @@
 name: batch CI/CD
 
-# 메인서버 배포후 배치서버 배포
 on:
-  workflow_run:
-    workflows: ["509test CICD"]
-    types:
-      - completed
-
+  push:
+    branches:
+      - main
+      
   workflow_dispatch:
     inputs:
       logLevel:
