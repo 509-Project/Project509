@@ -33,7 +33,7 @@ jobs:
 
       - name: Write Profile
         run: |
-          echo "${{ secrets.APPLICATION_PROD }}" > application.yml
+          echo "${{ secrets.APPLICATION_PROD }}" > ./src/main/resources/application.yml
 
       # ECR 로그인
       - name: Configure AWS credentials
