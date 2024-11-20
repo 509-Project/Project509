@@ -133,6 +133,7 @@ public class BatchConfig {
 
                 try {
                     log.info("데이터 파싱 시작");
+                    System.out.println(jsonData);
                     // 데이터 파싱을 위한 제이슨 객체 생성
                     JSONParser jsonParser = new JSONParser();
                     JSONObject jsonResponse = (JSONObject) jsonParser.parse(jsonData);
