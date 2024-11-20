@@ -27,7 +27,6 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class PenaltyServiceImpl implements PenaltyService {
 
     private final PenaltyRepository penaltyRepository;
