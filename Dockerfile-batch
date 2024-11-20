@@ -4,7 +4,7 @@ FROM openjdk:17-jdk-slim
 COPY . .
 
 # 환경변수파일 복사
-RUN cp ./application.yml application.yml
+RUN cp ./src/main/resources/application.yml application.yml
 
 # 배치모듈의 빌드
 RUN ./module-batch/gradlew :module-batch:build -x test --no-daemon
