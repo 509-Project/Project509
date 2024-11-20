@@ -91,6 +91,9 @@ public class PartyService {
             throw new CustomException(ErrorCode.INVALID_MEMBERS_COUNT);
         }
 
+        // 파티 생성 시 사용할 formatter 선언
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
         // 파티 생성
         Party party = new Party(
                 request.getMarketName(),
@@ -100,8 +103,8 @@ public class PartyService {
                 item,
                 request.getItemCount(),
                 request.getItemUnit(),
-                startDateTime,
-                endDateTime,
+                startDateTime.format(formatter),
+                endDateTime.format(formatter),
                 request.getMembersCount(),
                 user.getId()
         );
