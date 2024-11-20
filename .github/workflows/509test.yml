@@ -39,6 +39,15 @@ jobs:
           echo "${{ secrets.APPLICATION_PROD }}" > ./src/main/resources/application-prod.yml
           cat ./src/main/resources/application.yml
 
+      - name: Copy Profiles to EC2
+        uses: appleboy/scp-action@v0.1.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: ./src/main/resources/application*.yml
+          target: /home/ubuntu/project509/
+
       - name: Build with Gradle
         run: ./gradlew build -x test
       
