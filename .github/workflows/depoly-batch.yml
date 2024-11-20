@@ -33,7 +33,7 @@ jobs:
 
       - name: Write Profile
         run: |
-          echo "${{ secrets.APPLICATION_PROD }}" > ./src/main/resources/application-prod.yml
+          echo "${{ secrets.APPLICATION_PROD }}" > application-prod.yml
 
       # ECR 로그인
       - name: Configure AWS credentials
@@ -85,6 +85,7 @@ jobs:
             docker pull $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
             
             docker run -d --name app-batch -p 8081:8081 \
+              -e SPRING_CONFIG_LOCATION=classpath:/application-prod.yml
               -e API_PORT=${{ secrets.API_PORT }} \
               -e API_URL=${{ secrets.API_URL }} \
               -e DB_URL=${{ secrets.DB_URL }} \
