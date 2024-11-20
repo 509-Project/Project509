@@ -38,6 +38,10 @@ public enum ErrorCode {
     USER_IS_NOT_LEADER(HttpStatus.NOT_FOUND, "파티장만 접근 가능합니다."),
 
     // Penalty ErrorCode
+    EXIST_PENALTY(HttpStatus.BAD_REQUEST, "이미 페널티를 부여했습니다."),
+    DATABASE_LOCK_ERROR(HttpStatus.LOCKED, "락 획득 / 해제에 실패했습니다."),
+    LOCK_ACQUISITION_INTERRUPTED(HttpStatus.LOCKED, "스레드가 잠시 중단되었습니다."),
+    REDIS_LOCK_ACQUISITION_FAILED(HttpStatus.LOCKED, "Redis 연결에 문제가 발생했습니다."),
 
     // Party ErrorCode
     PARTY_NOT_FOUND(HttpStatus.NOT_FOUND, "파티를 찾을 수 없습니다."),

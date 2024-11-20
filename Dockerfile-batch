@@ -3,11 +3,11 @@ FROM openjdk:17-jdk-slim
 # 소스 코드 복사
 COPY . .
 
+# 환경변수파일 복사
+RUN cp ./src/main/resources/application.yml application.yml
+
 # 배치모듈의 빌드
 RUN ./module-batch/gradlew :module-batch:build -x test --no-daemon
-
-# 환경변수파일 복사
-RUN cp src/main/resources/application.properties application.properties
 
 # 배치모듈 JAR 파일 복사 (빌드 후 생성된 JAR 파일을 컨테이너 내로 복사)
 RUN cp module-batch/build/libs/*.jar app.jar
@@ -16,4 +16,4 @@ RUN cp module-batch/build/libs/*.jar app.jar
 RUN chmod +x /wait-for-it.sh
 
 # DB 서비스가 시작될 때까지 대기 후 애플리케이션 실행
-ENTRYPOINT ["/wait-for-it.sh", "mysql-test1:3306", "--", "java", "-Dspring.config.location=file:application.properties",  "-jar", "app.jar"]
+ENTRYPOINT ["/wait-for-it.sh", "database-1.cv666oysqi5w.ap-northeast-2.rds.amazonaws.com:3306", "--", "java", "-Dspring.config.location=file:application.yml", "-jar", "app.jar"]
