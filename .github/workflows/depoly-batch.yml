@@ -85,12 +85,13 @@ jobs:
             docker pull $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
             
             docker run -d --name app-batch -p 8081:8081 \
-              -e SPRING_CONFIG_LOCATION=classpath:/application-prod.yml
-              -e API_PORT=${{ secrets.API_PORT }} \
-              -e API_URL=${{ secrets.API_URL }} \
-              -e DB_URL=${{ secrets.DB_URL }} \
-              -e DB_NAME=${{ secrets.DB_NAME }} \
-              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-              -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
-              -e ITEM_API_KEY=${{ secrets.ITEM_API_KEY }} \
-              $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
+            -e SPRING_CONFIG_LOCATION=classpath:/application-prod.yml \
+            -e API_PORT=${{ secrets.API_PORT }} \
+            -e API_URL=${{ secrets.API_URL }} \
+            -e DB_URL=${{ secrets.DB_URL }} \
+            -e DB_NAME=${{ secrets.DB_NAME }} \
+            -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+            -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
+            -e ITEM_API_KEY=${{ secrets.ITEM_API_KEY }} \
+            $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
+
