@@ -1,13 +1,23 @@
-name: CI/CD
+name: batch CI/CD
 
-# main 브렌치 push or pull request 에 실행
+# 메인서버 배포후 배치서버 배포
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["509test CICD"]
+    types:
+      - completed
+
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+        type: choice
+        options:
+          - info
+          - warning
+          - debug
 
 jobs:
   build:
@@ -20,40 +30,61 @@ jobs:
       - name: gradlew 실행 권한 부여
         run: chmod +x ./gradlew
 
-      # 도커 로그인
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
+      - name: Write Profile
+        run: |
+          echo "${{ secrets.APPLICATION_PROD }}" > ./src/main/resources/application-prod.yml
+
+      # ECR 로그인
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
 
       # Docker 이미지 빌드 및 푸쉬(배치 모듈 도커 이미지 빌드)
-      - name: Build and push Docker image
+      - name: Build and push Docker image to Amazon ECR
         run: |
-          docker build -f Dockerfile-batch -t project509-batch:latest .
-          docker tag project509-batch:latest ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}
-          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}
+          REGION="ap-northeast-2"
+          ECR_REPOSITORY="rednotice-ecr"
+          
+          docker build -f Dockerfile-batch \
+          --build-arg RDS_ENDPOINT=${{ secrets.RDS_ENDPOINT }} \
+          -t project509-batch:latest .
+          docker tag project509-batch:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com/509test:latest-batch
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com/509test:latest-batch
 
   deploy:
+    name: Deploy to EC2
     runs-on: ubuntu-latest
     needs: build
+
     steps:
       - name: Docker image pull & Deploy to EC2
-        uses: appleboy/ssh-action@master
-        # EC2 접속
+        uses: appleboy/ssh-action@v0.1.6
         with:
-          host: ${{ secrets.EC2_IP }} # PUBLIC IP
-          username: ec2-user
-          key: ${{secrets.BATCH_EC2_KEY}} # SSH 비공개 키값
-          # Docker pull & run
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
           script: |
-            # EC2 내에서 Docker 로그인
-            echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-            # Docker 이미지 풀 및 실행
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}
-            sudo docker stop $(sudo docker ps -a -q)
-            sudo docker run -d \
-              -p 8080:8080 \
+            REGION="ap-northeast-2"    
+            AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID }}
+            ECR_REPOSITORY="509test"
+            IMAGE_TAG="latest-batch"   
+            
+            docker stop app-batch || true
+            docker rm app-batch || true
+            
+            aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
+            docker pull $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
+            
+            docker run -d --name app-batch -p 8081:8081 \
               -e API_PORT=${{ secrets.API_PORT }} \
               -e API_URL=${{ secrets.API_URL }} \
               -e RDS_ENDPOINT=${{ secrets.RDS_ENDPOINT }} \
@@ -61,7 +92,4 @@ jobs:
               -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
               -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
               -e ITEM_API_KEY=${{ secrets.ITEM_API_KEY }} \
-              ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}
-            # 중지된 컨테이너 제거, 사용하지 않는 도커 이미지 제거
-            sudo docker rm $(sudo docker ps --filter 'status=exited' -a -q)
-            sudo docker image prune -a -f
+              $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
