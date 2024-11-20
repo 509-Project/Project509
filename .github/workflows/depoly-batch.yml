@@ -55,7 +55,6 @@ jobs:
           ECR_REPOSITORY="rednotice-ecr"
           
           docker build -f Dockerfile-batch \
-          --build-arg RDS_ENDPOINT=${{ secrets.RDS_ENDPOINT }} \
           -t project509-batch:latest .
           docker tag project509-batch:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com/509test:latest-batch
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com/509test:latest-batch
@@ -88,7 +87,7 @@ jobs:
             docker run -d --name app-batch -p 8081:8081 \
               -e API_PORT=${{ secrets.API_PORT }} \
               -e API_URL=${{ secrets.API_URL }} \
-              -e RDS_ENDPOINT=${{ secrets.RDS_ENDPOINT }} \
+              -e DB_URL=${{ secrets.DB_URL }} \
               -e DB_NAME=${{ secrets.DB_NAME }} \
               -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
               -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
