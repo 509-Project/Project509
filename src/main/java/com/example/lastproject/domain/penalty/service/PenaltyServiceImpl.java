@@ -13,15 +13,18 @@ import com.example.lastproject.domain.partymember.repository.PartyMemberReposito
 import com.example.lastproject.domain.penalty.dto.request.PenaltyRequest;
 import com.example.lastproject.domain.penalty.entity.Penalty;
 import com.example.lastproject.domain.penalty.repository.PenaltyRepository;
+import com.example.lastproject.domain.user.entity.User;
+import com.example.lastproject.domain.user.repository.UserRepository;
 import com.example.lastproject.domain.user.service.PenaltyCountService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -30,7 +33,9 @@ public class PenaltyServiceImpl implements PenaltyService {
     private final PenaltyRepository penaltyRepository;
     private final PartyRepository partyRepository;
     private final PartyMemberRepository partyMemberRepository;
+    private final UserRepository userRepository;
     private final PenaltyCountService penaltyCountService;
+    private final LettuceLockService lettuceLockService;  // 락을 관리하는 서비스
 
     /**
      * 페널티 부여
@@ -48,7 +53,7 @@ public class PenaltyServiceImpl implements PenaltyService {
                         () -> new CustomException(ErrorCode.PARTY_NOT_FOUND)
                 );
 
-        // 해당 파티의 해당 유저아이디와 리더 롤을 가진 사람 찾기
+        // 해당 파티의 해당 유저 아이디와 리더 롤을 가진 사람 찾기
         Optional<PartyMember> partyLeader = partyMemberRepository
                 .findByPartyIdAndUserIdAndRole(
                         partyId,
@@ -61,43 +66,57 @@ public class PenaltyServiceImpl implements PenaltyService {
             throw new CustomException(ErrorCode.USER_IS_NOT_LEADER);
         }
 
+        // 페널티를 줄 유저 찾기
+        User penaltiedUser = userRepository.findById(request.getUserId()).orElseThrow(
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
         // 해당 파티의 선택된 유저 리스트에서 리더와 거절된 상태가 아닌 멤버 리스트 찾기
-        List<PartyMember> members = partyMemberRepository
-                .findByPartyIdAndUserIdInAndRoleNotAndInviteStatusNot(
+        PartyMember member = partyMemberRepository
+                .findByPartyIdAndUserIdAndRoleNotAndInviteStatusNot(
                         partyId,
-                        request.getUserIds(),
+                        penaltiedUser.getId(),
                         PartyMemberRole.LEADER,
                         PartyMemberInviteStatus.REJECTED
-                );
+                ).orElseThrow(() -> new CustomException(ErrorCode.PARTY_MEMBER_NOT_FOUND));
 
-        // 파티 멤버가 아닌 사람은 예외처리
-        for (PartyMember user : members) {
-            if (user.getRole() != PartyMemberRole.MEMBER) {
-                throw new CustomException(ErrorCode.PARTY_MEMBER_NOT_FOUND);
-            }
+        // 이미 페널티 내역이 있는지 체크
+        if (penaltyRepository.existsByUserIdAndPartyId(penaltiedUser, party)) {
+            throw new CustomException(ErrorCode.EXIST_PENALTY);
         }
 
-        // 조건에 해당하는 리스트가 비었다면 예외처리
-        if (members.isEmpty()) {
-            throw new CustomException(ErrorCode.PARTY_MEMBER_NOT_FOUND);
+        // 유저별 락 키
+        String lockKey = "penalty_lock:" + request.getUserId() + ":" + partyId;
+
+        boolean lockAcquired = lettuceLockService.acquireLock(lockKey, 5);
+
+        // 락 획득 실패 시 예외 발생
+        if (!lockAcquired) {
+            throw new CustomException(ErrorCode.DATABASE_LOCK_ERROR);
         }
 
-        List<Penalty> penalties = new ArrayList<>();
+        log.debug("{}에 락이 획득되었습니다.", LocalDateTime.now());
 
-        /*
-        지정된 유저를 대상으로 각각 페널티를 부여하고 리스트에 추가
-        부여된 페널티는 DB에 페널티 내역으로 저장되고, redis 에 user 의 페널티 카운트 키와 그 값이 저장됨
-         */
-        for (PartyMember user : members) {
-
-            Penalty penalty = new Penalty(party, user.getUser());
-            penalties.add(penalty);
-            penaltyCountService.setPenaltyCount(user.getId());
-            penaltyCountService.incrementPenaltyCount(user.getId());
+        // 0.1초 대기 후 재시도
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) {
+            // InterruptedException 처리 (스레드가 중단되었을 경우)
+            Thread.currentThread().interrupt();  // 현재 스레드의 인터럽트 상태를 설정
+            throw new CustomException(ErrorCode.LOCK_ACQUISITION_INTERRUPTED);
         }
 
-        // 추가한 페널티 리스트를 한번에 save
-        penaltyRepository.saveAll(penalties);
+        Penalty penalty = new Penalty(party, member.getUser());
+
+        // redis 에 유저에 대한 페널티 값을 저장(초기) + 증가
+        penaltyCountService.setPenaltyCount(penaltiedUser.getId());
+        penaltyCountService.incrementPenaltyCount(penaltiedUser.getId());
+
+        // DB에 페널티 내역 추가
+        penaltyRepository.save(penalty);
+
+        // 락 해제하기
+        lettuceLockService.releaseLock(lockKey);
+        log.debug("{}에 락이 해제되었습니다.", LocalDateTime.now());
     }
 
 }
