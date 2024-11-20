@@ -119,6 +119,7 @@ public class ApiDataReader implements ItemStreamReader<String> {
         try {
             JsonNode nodeTemp = objectMapper.readTree(jsonData);
             totalPage = nodeTemp.path(apiUrl).path("totalCnt").asInt();
+            System.out.println(totalPage);
         } catch (JsonProcessingException e) {
             throw new CustomException(ErrorCode.API_PARSE_ERROR);
         }
