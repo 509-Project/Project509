@@ -1,13 +1,27 @@
-name: CI/CD
+name: batch CI/CD
 
-# main 브렌치 pull request 에 배포실행
+# 메인서버 배포후 배치서버 배포
 on:
-  pull_request:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["509test CICD"]
+    types:
+      - completed
+
+      
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+        type: choice
+        options:
+          - info
+          - warning
+          - debug
 
 jobs:
-  CI:
+  build:
     runs-on: ubuntu-latest
     steps:
       # 최근 커밋된 코드 저장소 불러오기
@@ -17,16 +31,67 @@ jobs:
       - name: gradlew 실행 권한 부여
         run: chmod +x ./gradlew
 
-      # 도커 로그인
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
+      - name: Write Profile
+        run: |
+          echo "${{ secrets.APPLICATION_PROD }}" > ./src/main/resources/application.yml
+
+      # ECR 로그인
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
 
       # Docker 이미지 빌드 및 푸쉬(배치 모듈 도커 이미지 빌드)
-      - name: Build and push Docker image
+      - name: Build and push Docker image to Amazon ECR
         run: |
-          docker build -f Dockerfile-batch -t project509-batch:latest .
-          docker tag project509-batch:latest circledragon/cd-test:latest
-          docker push circledragon/cd-test:latest
+          REGION="ap-northeast-2"
+          ECR_REPOSITORY="rednotice-ecr"
+          
+          docker build -f Dockerfile-batch \
+          -t project509-batch:latest .
+          docker tag project509-batch:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com/509test:latest-batch
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com/509test:latest-batch
+
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Docker image pull & Deploy to EC2
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            REGION="ap-northeast-2"    
+            AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID }}
+            ECR_REPOSITORY="509test"
+            IMAGE_TAG="latest-batch"   
+            
+            docker stop app-batch || true
+            docker rm app-batch || true
+            
+            aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
+            docker pull $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
+            
+            docker run -d --name app-batch -p 8081:8081 \
+            -e SPRING_CONFIG_LOCATION=classpath:/application.yml \
+            -e API_PORT=${{ secrets.API_PORT }} \
+            -e API_URL=${{ secrets.API_URL }} \
+            -e DB_URL=${{ secrets.DB_URL }} \
+            -e DB_NAME=${{ secrets.DB_NAME }} \
+            -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+            -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
+            -e ITEM_API_KEY=${{ secrets.ITEM_API_KEY }} \
+            $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
+
