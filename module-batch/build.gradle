@@ -21,6 +21,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-batch'
     testImplementation 'org.springframework.boot:spring-boot-starter-batch'
 
+    // Jackson
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+
     // 루트 프로젝트 의존성
     implementation project(':')
 }
