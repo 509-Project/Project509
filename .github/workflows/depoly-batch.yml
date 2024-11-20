@@ -30,6 +30,10 @@ jobs:
       - name: gradlew 실행 권한 부여
         run: chmod +x ./gradlew
 
+      - name: Write Profile
+        run: |
+          echo "${{ secrets.APPLICATION_PROD }}" > ./src/main/resources/application-prod.yml
+
       # ECR 로그인
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
