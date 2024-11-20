@@ -87,5 +87,7 @@ allprojects {
         compileOnly 'com.googlecode.json-simple:json-simple:1.1.1'
 
         implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5-jakarta'
+
+        implementation 'com.googlecode.json-simple:json-simple:1.1.1'
     }
 }
