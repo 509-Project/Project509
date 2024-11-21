@@ -18,6 +18,14 @@ services:
     networks:
       - app-network
 
+  rabbitmq:
+    container_name: RabbitMQ
+    image: rabbitmq:latest
+    ports:
+      - "5672:5672"       # AMQP 포트
+      - "15672:15672"     # 관리 콘솔 포트
+    volumes:
+      - ./config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
 
   app1:
     image: project509-image:latest

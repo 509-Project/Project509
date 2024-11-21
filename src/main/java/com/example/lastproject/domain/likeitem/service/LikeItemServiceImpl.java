@@ -50,8 +50,8 @@ public class LikeItemServiceImpl implements LikeItemService {
      * @return 조회된 품목 리스트
      */
     public List<LikeItemResponse> getLikeItems(AuthUser authUser) {
-        long userId = authUser.getUserId();
-        List<LikeItemResponse> results = likeItemRepository.getBookmarkedItems(userId);
+        User user = User.fromAuthUser(authUser);
+        List<LikeItemResponse> results = likeItemRepository.getBookmarkedItems(user.getId());
 
         return results;
     }
