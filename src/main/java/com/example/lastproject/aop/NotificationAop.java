@@ -83,7 +83,7 @@ public class NotificationAop {
         }
 
         // 메시지 구성
-        String message = String.format("%s %s %s 파티가 생성되었습니다.",
+        String message = String.format("%s %s %s 품목 파티가 생성되었습니다.",
                 partyResponse.getMarketAddress(),
                 partyResponse.getMarketName(),
                 partyResponse.getCategory()
@@ -119,7 +119,7 @@ public class NotificationAop {
 
 
         // 메시지 구성
-        String message = String.format("%s %s %s 파티가 취소되었습니다.",
+        String message = String.format("%s %s %s 품목 파티가 취소되었습니다.",
                 partyResponse.getMarketAddress(),
                 partyResponse.getMarketName(),
                 partyResponse.getCategory()
@@ -153,19 +153,19 @@ public class NotificationAop {
         String region = party.getMarketAddress().trim().replace(" ", ".");
 
         // 메시지 구성
-        String message = String.format("%s %s %s 채팅이 취소되었습니다.",
+        String message = String.format("%s %s %s 품목 채팅이 취소되었습니다.",
                 party.getMarketAddress(),
                 party.getMarketName(),
                 party.getItem().getCategory()
         );
 
         // 지역에 대해 라우팅 키를 생성하고 메시지 전송
-        String routingKey = String.format("party.cancel.%s", region);
+        String routingKey = String.format("chat.create.%s", region);
         rabbitTemplate.convertAndSend(rabbitMqConfig.getExchangeName(), routingKey, message);
         log.info("Message sent to RabbitMQ with routing key: {}", routingKey);
 
         // 동적으로 큐 생성
-        rabbitMqConfig.createQueueWithDLX("party.cancel", region);
+        rabbitMqConfig.createQueueWithDLX("chat.create", region);
         notificationService.notifyUsersAboutPartyChatCreation(authUser, chatRoomResponse);
         log.info("Chat 생성 알림 전송 완료: {}", chatRoomResponse);
     }
