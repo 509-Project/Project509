@@ -5,6 +5,7 @@ import com.example.lastproject.common.exception.CustomException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ExecutionContext;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.util.LinkedList;
 import java.util.Objects;
@@ -111,7 +111,7 @@ public class ApiDataReader implements ItemStreamReader<String> {
                 .bodyToMono(String.class)
                 .block();
 
-        if (jsonData.isBlank()) {
+        if (StringUtils.isBlank(jsonData)) {
             throw new CustomException(ErrorCode.API_CONNECTION_ERROR);
         }
 

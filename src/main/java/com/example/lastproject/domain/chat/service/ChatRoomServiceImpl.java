@@ -45,12 +45,12 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
         //채팅방 생성 대상이 되는 파티가 존재하는지 검증
         Party party = getPartyById(partyId);
-//        대상 파티가 활성화된 상태인지 검증
+        //대상 파티가 활성화된 상태인지 검증
         validatePartyStatus(party, PartyStatus.JOINED);
 
         User user = User.fromAuthUser(authUser);
         //대상 파티의 파티장인지 검증
-        validateUserIsPartyLeader(partyId, user);
+        validateUserIsPartyLeader(party.getId(), user);
 
         //생성 및 저장
         ChatRoom chatRoom = new ChatRoom(party);
@@ -74,7 +74,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         // PartyMember 리스트에서 party ID 수집
         List<Long> partyIds = parties.stream()
                 .map(partyMember -> partyMember.getParty().getId())
-                .collect(Collectors.toList());
+                .toList();
 
         // 수집한 party ID 목록을 기반으로 모든 ChatRoom을 한 번의 쿼리로 가져옴
         List<ChatRoom> chatRooms = chatRoomRepository.findAllByParty_IdIn(partyIds);
@@ -82,7 +82,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         // 각 ChatRoom을 ChatRoomResponse로 매핑
         return chatRooms.stream()
                 .map(ChatRoomResponse::new)
-                .collect(Collectors.toList());
+                .toList();
 
     }
 
@@ -104,7 +104,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
         User user = User.fromAuthUser(authUser);
         //대상 파티의 파티장인지 검증
-        validateUserIsPartyLeader(partyId, user);
+        validateUserIsPartyLeader(party.getId(), user);
 
         //대상 채팅방 soft-delete
         chatRoom.deleteChatRoom();

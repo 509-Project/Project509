@@ -1,7 +1,7 @@
-package com.example.lastproject.domain.item.batch;
+package com.example.modulebatch.itembatchtest;
 
 import com.example.lastproject.common.exception.CustomException;
-import com.example.lastproject.config.ApiDataReader;
+import com.example.modulebatch.batchconfig.ApiDataReader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;

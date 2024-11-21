@@ -26,6 +26,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -67,9 +68,18 @@ class ChatRoomServiceImplTest {
         item = new Item("category", "productName");
 
         Long creatorId = 1L; // 실제 creatorId를 사용해야 합니다.
-        party = new Party("marketName", "marketAddress", item, 1, "itemUnit",
-                LocalDateTime.of(2024, 11, 1, 1, 0), LocalDateTime.of(2024, 11, 2, 1, 0), 4, creatorId);
-
+        Party party = new Party(
+                "marketName",
+                "marketAddress",
+                new BigDecimal(11.222),
+                new BigDecimal(33.444),
+                item,
+                1,
+                "itemUnit",
+                "2024-11-01 01:00:00", // startTime을 String 형식으로 수정
+                "2024-11-02 01:00:00", // endTime을 String 형식으로 수정
+                4,
+                creatorId);
         ReflectionTestUtils.setField(party, "id", 1L);
         ReflectionTestUtils.setField(party, "partyStatus", PartyStatus.JOINED);
 

@@ -1,18 +1,14 @@
 package com.example.lastproject.domain.penalty.dto.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class PenaltyRequest {
 
-    private List<Long> userIds;
-
-    public PenaltyRequest(List<Long> userIds) {
-        this.userIds = userIds;
-    }
+    private Long userId;
 
 }

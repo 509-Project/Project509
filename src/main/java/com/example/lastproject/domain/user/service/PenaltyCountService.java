@@ -34,8 +34,7 @@ public class PenaltyCountService {
      */
     public String getPenaltyCount(long userId) {
 
-        String key = "user:" + userId + ":penaltyCount";
-        String penaltyCount = redisTemplate.opsForValue().get(key);
+        String penaltyCount = redisTemplate.opsForValue().get(genKeyFromUserId(userId));
 
         if (penaltyCount == null) setPenaltyCount(userId);
         return penaltyCount;
@@ -47,7 +46,7 @@ public class PenaltyCountService {
      * @param userId 집계를 초기화할 사용자
      */
     public void setPenaltyCount(long userId) {
-        String key = "user:" + userId + ":penaltyCount";
+
         LocalDateTime get90DaysAgoDate = LocalDateTime.now().minusDays(90);
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_NOT_FOUND)
@@ -58,7 +57,13 @@ public class PenaltyCountService {
                 penaltyRepository.countByUserIdAndCreatedAtGreaterThanEqual(
                         user, get90DaysAgoDate)
         );
-        redisTemplate.opsForValue().set(key, penaltyCount, 24, TimeUnit.HOURS);
+        redisTemplate.opsForValue()
+                .set(
+                        genKeyFromUserId(userId),
+                        penaltyCount,
+                        24,
+                        TimeUnit.HOURS
+                );
     }
 
     /**
@@ -67,7 +72,11 @@ public class PenaltyCountService {
      * @param userId 집계를 증가시킬 사용자
      */
     public void incrementPenaltyCount(long userId) {
-        String key = "user:" + userId + ":penaltyCount";
-        redisTemplate.opsForValue().increment(key, 1);
+        redisTemplate.opsForValue().increment(genKeyFromUserId(userId), 1);
     }
+
+    private String genKeyFromUserId(long userId) {
+        return "user:" + userId + ":penaltyCount";
+    }
+
 }

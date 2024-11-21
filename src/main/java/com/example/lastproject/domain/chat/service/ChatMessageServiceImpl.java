@@ -70,7 +70,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
         //Dto에 매핑해서 반환
         return chatMessageList.stream()
                 .map(ChatMessageResponse::new)
-                .collect(Collectors.toList());
+                .toList();
 
     }
 

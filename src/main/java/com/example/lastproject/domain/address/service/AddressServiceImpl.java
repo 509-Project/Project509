@@ -1,11 +1,8 @@
-package com.example.lastproject.domain.market.service;
+package com.example.lastproject.domain.address.service;
 
 import com.example.lastproject.common.enums.ErrorCode;
 import com.example.lastproject.common.exception.CustomException;
-import com.example.lastproject.domain.market.dto.request.MarketRequestDto;
-import com.example.lastproject.domain.market.dto.response.AddressResponseDto;
-import com.example.lastproject.domain.market.entity.Market;
-import com.example.lastproject.domain.market.repository.MarketRepository;
+import com.example.lastproject.domain.address.dto.response.AddressResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -21,33 +18,15 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class MarketServiceImpl implements MarketService {
+public class AddressServiceImpl implements AddressService {
 
     private final ObjectMapper objectMapper;
-    private final MarketRepository marketRepository;
 
     @Qualifier("kakaoApi")
     private final WebClient webClient;
 
-    // 마켓 저장
-    @Transactional
-    public void saveMarket(MarketRequestDto requestDto) {
-        marketRepository.save(requestDto.toEntity());
-    }
-
-    // 마켓 삭제
-    @Transactional
-    public void deleteMarket(Long marketId) {
-
-        Market market = marketRepository.findById(marketId).orElseThrow(
-                () -> new CustomException(ErrorCode.MARKET_NOT_FOUND)
-        );
-
-        marketRepository.delete(market);
-    }
-
     // 주소 검색
-    public List<AddressResponseDto> searchAddress(String keyword) {
+    public List<AddressResponse> searchAddress(String keyword) {
 
         // 주소 검색 api 요청
         String jsonData = webClient.get()
@@ -61,7 +40,7 @@ public class MarketServiceImpl implements MarketService {
 
         try {
             // 필요한 배열만 추출
-            List<AddressResponseDto> responseDtoList = new ArrayList<>();
+            List<AddressResponse> responseDtoList = new ArrayList<>();
             JsonNode jsonNode = objectMapper.readTree(jsonData);
             ArrayNode arrayNode = (ArrayNode) jsonNode.get("documents");
 
@@ -72,7 +51,7 @@ public class MarketServiceImpl implements MarketService {
                     String longitude = value.get("x").asText();
                     String latitude = value.get("y").asText();
 
-                    responseDtoList.add(new AddressResponseDto(address, latitude, longitude));
+                    responseDtoList.add(new AddressResponse(address, latitude, longitude));
                 }
                 return responseDtoList;
             } else {

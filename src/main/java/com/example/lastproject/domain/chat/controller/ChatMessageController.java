@@ -1,6 +1,8 @@
 package com.example.lastproject.domain.chat.controller;
 
 import com.example.lastproject.common.dto.AuthUser;
+import com.example.lastproject.common.enums.ErrorCode;
+import com.example.lastproject.common.exception.CustomException;
 import com.example.lastproject.domain.chat.dto.ChatMessageRequest;
 import com.example.lastproject.domain.chat.dto.ChatMessageResponse;
 import com.example.lastproject.domain.chat.service.ChatMessageService;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -33,7 +36,9 @@ public class ChatMessageController {
     public void sendMessage(@DestinationVariable("chatRoomId") Long chatRoomId, @Payload ChatMessageRequest chatMessage, SimpMessageHeaderAccessor headerAccessor) {
 
         // WebSocket 세션에서 AuthUser 객체를 가져옴
-        AuthUser authUser = (AuthUser) headerAccessor.getSessionAttributes().get("authUser");
+        AuthUser authUser = Optional.ofNullable(headerAccessor.getSessionAttributes())
+                .map(attrs -> (AuthUser) attrs.get("authUser"))
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         chatMessageService.sendMessage(chatRoomId, chatMessage, authUser);
     }
