@@ -71,32 +71,38 @@
       <br/>
       <img src="src/main/resources/assets/parse_after.png" width="750">
 
-
-- 요구사항 : 정형화된 품목 카테고리 필요
-- 기술결정 : WebClient를 통해 API 요청을 보내고 받아온 데이터를 비동기 처리 & 데이터 파싱 및 DB 저장은 Spring batch를 활용
+<details>
+  <summary>요구사항</summary>
+  정형화된 품목 카테고리 필요
+</details>
 
 <details>
   <summary>대안비교</summary>
   <ul>
     <li>WebClient
       <ul>
-        <li>장점: 싱글 스레드 기반의 비동기방식으로 동작해 적은 자원사용과 높은 효율</li>
-        <li>단점: 이벤트루프기반의 비동기 동작하기 때문에 어려운 디버깅 추적</li>
+        <li>장점: 높은 동시성 처리와 낮은 지연 시간 환경에서 뛰어난 성능, 대규모 트래픽을 처리할 때 성능이 우수</li>
+        <li>단점: RestTemplate보다 설정과 사용이 복잡, 비동기 및 반응형 환경을 사용하지 않았을 때 복잡도 증가</li>
       </ul>
     </li>
     <li>RestTemplate
       <ul>
         <li>장점: Spring의 여러 기능들과 통합 용이, 직관적인 API 제공</li>
-        <li>단점: 동기식 처리로 대용량 처리시 병목현상 발생, 비동기 환경에서는 블로킹으로 인한 성능 제한</li>
+        <li>단점: 서버로부터 응답이 올 때까지 호출 스레드가 블로킹(동기식 처리), 비동기 시스템에서는 성능 한계</li>
       </ul>
     </li>
     <li>OpenFeignClient
       <ul>
         <li>장점: HTTP 요청의 로직을 구현할 필요 없이 단순히 메서드를 정의, HTTP 요청 헤더나 파라미터 등을 쉽게 수정</li>
-        <li>단점: 제한된 설정으로 제한된 성능최적화, Spring Cloud 라이브러리와의 통합이 필요</li>
+        <li>단점: 선언적인 방식으로 인한 상대적인 속도 저하, Spring Cloud 라이브러리와의 통합이 필요</li>
       </ul>
     </li>
   </ul>
+</details>
+
+<details>
+  <summary>기술결정</summary>
+  WebClient를 통해 API 요청을 보내고 받아온 데이터를 비동기 처리 & 데이터 파싱 및 DB 저장은 Spring batch를 활용
 </details>
 
 > ### 다중서버 채팅 동기화
@@ -108,8 +114,11 @@
     - 상황 2 - 100명의 유저가 동시다발적으로 채팅방을 생성하고 채팅메세지를 보낼 때 채팅 메시지 전송 속도 평균 <span style="color:orange; font-weight:bold;">34% 개선</span>
       <img src="src/main/resources/assets/chat_sync_2.png" width="750">
 
-- 요구사항 : 다중서버에서 채팅 동기화를 위한 외부 메세지 브로커를 구현 필요
-- 기술결정 : 채팅 메세지에 고도화된 기능이 필요하지 않기 때문에, 소규모이며 실시간 응답성이 가장 빠른 Redis로 선택
+<details>
+  <summary>요구사항</summary>
+  다중서버에서 채팅 동기화를 위한 외부 메세지 브로커를 구현 필요
+</details>
+
 <details>
   <summary>대안비교</summary>
   <ul>
@@ -172,24 +181,14 @@
 > ### CI/CD 파이프라인 구축
 
 - 요구사항 : CI/CD 파이프라인을 구축하기 위해 적합한 도구를 선정
-- 기술결정 : GitHub Actions이 GitHub와의 통합이 매끄럽고 설정이 간단해 더 효율적이라고 판단
-<details>
-  <summary>대안비교</summary>
-  <ul>
-    <li>Github Actions
-      <ul>
-        <li>장점: GitHub과 연동되어 있어 설정이 간편, GitHub Marketplace에 있는 액션 활용가능으로 비용이 효율적, GitHub 기반 프로젝트에 최적화</li>
-        <li>단점: 복잡한 파이프라인을 구현하기 힘듦, 작업 커스터마이징이 어려움</li>
-      </ul>
-    </li>
-    <li>Jenkins
-      <ul>
-        <li>장점: 높은 유연성과 확장성을 제공, GitHub 외의 다양한 버전 관리 시스템과 연동가능</li>
-        <li>단점: 자체 서버 설치 및 운영이 필요하므로 유지 관리 비용이 증가, 초기 설정이 GitHub Actions보다 복잡</li>
-      </ul>
-    </li>
-  </ul>
-</details>
+    - 대안비교
+        - Github Actions
+            - 장점 : GitHub과 연동되어 있어 설정이 간편, GitHub Marketplace에 있는 액션 활용가능으로 비용이 효율적, GitHub 기반 프로젝트에 최적화
+            - 단점 : 복잡한 파이프라인을 구현하기 힘듦, 작업 커스터마이징이 어려움
+        - Jenkins
+            - 장점 : 높은 유연성과 확장성을 제공, GitHub 외의 다양한 버전 관리 시스템과 연동가능
+            - 단점 : 자체 서버 설치 및 운영이 필요하므로 유지 관리 비용이 증가, 초기 설정이 GitHub Actions보다 복잡
+    - 기술결정 : GitHub Actions이 GitHub와의 통합이 매끄럽고 설정이 간단해 더 효율적이라고 판단
 
 > ### 알림 데이터의 실시간 동기화
 
@@ -234,7 +233,7 @@
 > ### API 요청 데이터 제한 & 처리지연
 
 - 문제상황
-    - API 서버에서 데이터 요청 회당 1000건 제한으로 여러 번의 요청이 필요, 직렬 동기 처리로 병목현상 발생
+    - API 서버에서 데이터 요청 회당 1000건 제한으로 여러 번의 요청이 필요, 직렬 동기 처리로 지연 발생
     - 데이터 파싱과 DB 저장시 처리시간 지연
     - 중복 검증 단계에 MySQL DB 접근으로 처리시간 지연
 - 해결방안
@@ -247,11 +246,11 @@
 - 문제 상황
     - RDS에 환경변수가 적용 안 되는 문제가 발생
     - 테스트하는 과정에서 docker 이미지가 계속 쌓이는 것을 발견
-    - 테스트 과정에서 Docker 이미지가 계속 쌓이는 현상을 발견
-    - Docker 이미지는 여러 층(Layer)으로 구성되어 있어, 쌓이는 이미지가 스토리지와 성능에 영향을 미침
       <br/>
       <img src="src/main/resources/assets/deploy_1.png" width="750">
 - 해결 방안
+    - 테스트 과정에서 Docker 이미지가 계속 쌓이는 현상을 발견
+    - Docker 이미지는 여러 층(Layer)으로 구성되어 있어, 쌓이는 이미지가 스토리지와 성능에 영향을 미침
     - EC2 터미널에 접속해 태그 없는 이미지를 삭제하는 명령어 사용
     - docker rmi $(docker images -f "dangling=true" -q)
     - 불필요한 Docker 이미지 정리 후 RDS 환경변수가 정상적으로 적용되는 것을 확인
