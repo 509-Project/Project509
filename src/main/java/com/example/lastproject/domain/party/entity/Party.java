@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Entity
@@ -70,7 +71,9 @@ public class Party extends Timestamped {
     @Column(name = "creator_id", nullable = false)
     private Long creatorId;
 
-    public Party(String marketName, String marketAddress, BigDecimal latitude, BigDecimal longitude, Item item, int itemCount, String itemUnit, LocalDateTime startTime, LocalDateTime endTime, int membersCount, Long creatorId) {
+    public Party(String marketName, String marketAddress, BigDecimal latitude, BigDecimal longitude,
+                 Item item, int itemCount, String itemUnit, String startTime, String endTime,
+                 int membersCount, Long creatorId) {
         this.marketName = marketName;
         this.marketAddress = marketAddress;
         this.latitude = latitude;
@@ -78,8 +81,9 @@ public class Party extends Timestamped {
         this.item = item;
         this.itemCount = itemCount;
         this.itemUnit = itemUnit;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        this.startTime = LocalDateTime.parse(startTime, formatter);
+        this.endTime = LocalDateTime.parse(endTime, formatter);
         this.membersCount = membersCount;
         this.partyStatus = PartyStatus.OPEN;
         this.creatorId = creatorId;

@@ -28,6 +28,7 @@ public class WebSocketEventListener {
     private static final Logger logger = LoggerFactory.getLogger(WebSocketEventListener.class);
     private final SimpMessageSendingOperations messagingTemplate;
     private final RedisMessageListener redisMessageListener;
+    private final String CHAT_ROOM_ID = "chatRoomId";
 
     /**
      * 새로운 유저가 들어왔을 때 호출되는 메서드
@@ -45,13 +46,17 @@ public class WebSocketEventListener {
 
         if (email != null && chatRoomId != null) {
             // 세션 속성에 chatRoomId 저장(아래 SessionDisconnectEvent에서 사용하기 위함. 저장해놓지 않으면 SessionDisconnectEvent에서 사용할 수 없음)
-            headerAccessor.getSessionAttributes().put("chatRoomId", chatRoomId);
-            sendChatMessage(chatRoomId, email, ChatMessageRequest.MessageType.JOIN);
-
+            if (headerAccessor.getSessionAttributes() != null) {
+                headerAccessor.getSessionAttributes().put(CHAT_ROOM_ID, chatRoomId);
+                sendChatMessage(chatRoomId, email, ChatMessageRequest.MessageType.JOIN);
+                //연결 시, Redis에 Topic으로 추가
+                redisMessageListener.enterChattingRoom(chatRoomId);
+            }
+            else {
+                logger.warn("Session attributes are null. Unable to store chatRoomId.");
+            }
         }
 
-        //연결 시, Redis에 Topic으로 추가
-        redisMessageListener.enterChattingRoom(chatRoomId);
 
     }
 
@@ -67,7 +72,10 @@ public class WebSocketEventListener {
 
         //헤더에서 채팅방을 나간 유저의 email과 chatRoomId를 추출
         String email = getEmailFromSession(headerAccessor);
-        Long chatRoomId = (Long) headerAccessor.getSessionAttributes().get("chatRoomId");
+
+        Long chatRoomId = Optional.ofNullable(headerAccessor.getSessionAttributes())
+                .map(attrs -> (Long) attrs.get(CHAT_ROOM_ID))
+                .orElse(null);
 
         if (email != null && chatRoomId != null) {
             sendChatMessage(chatRoomId, email, ChatMessageRequest.MessageType.LEAVE);
@@ -93,7 +101,7 @@ public class WebSocketEventListener {
     private Long getChatRoomIdFromHeader(StompHeaderAccessor headerAccessor) {
 
         try {
-            return Optional.ofNullable(headerAccessor.getFirstNativeHeader("chatRoomId"))
+            return Optional.ofNullable(headerAccessor.getFirstNativeHeader(CHAT_ROOM_ID))
                     .map(Long::parseLong)
                     .orElse(null);
         } catch (NumberFormatException e) {

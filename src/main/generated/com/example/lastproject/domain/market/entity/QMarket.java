@@ -1,4 +1,4 @@
-package com.example.lastproject.domain.market.entity;
+package com.example.lastproject.domain.address.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
