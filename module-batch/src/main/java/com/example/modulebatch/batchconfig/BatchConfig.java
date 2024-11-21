@@ -201,9 +201,9 @@ public class BatchConfig {
     }
 
     // 서버 시작시 기존 데이터베이스에서 데이터를 가져와 Hash set 에 저장
-//    @PostConstruct
-//    public void loadDataToCache() {
-//        itemCache.addAll(itemRepository.findAllByProductNames());
-//    }
+    @PostConstruct
+    public void loadDataToCache() {
+        itemCache.addAll(itemRepository.findAllByProductNames());
+    }
 
 }
