@@ -1,0 +1,76 @@
+spring:
+  application:
+    name: project509
+  profiles:
+    active: producer
+
+  datasource:
+    hikari:
+      maximum-pool-size: 200
+      minimum-idle: 10
+      idle-timeout: 30000
+      connection-timeout: 30000
+      max-lifetime: 1800000  # 최대 생애 주기 설정
+    url: jdbc:mysql://localhost:3306/project509
+    username: gayeon
+    password: 12345
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+#        show_sql: true
+#        format_sql: true
+#        use_sql_comments: true
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: 1234
+    cache:
+      channel:
+        size: 1
+        checkout-timeout: 0
+    listener:
+      simple:
+        acknowledge-mode: auto
+        retry:
+          enabled: true # 재시도
+          initial-interval: 3000 # 처음 메세지 처리 실패시 N초 후에 다시 해당 메세지를 처리
+          max-interval: 10000 # 최대 N초 후에 실패한 메세지를 처리
+          max-attempts: 3 # 최대 N번까지만 메세지 처리를 시도. 만약 N을 넘어가면 해당 메세지는 dlx exchange로 넘긴다.
+          multiplier: 2 # 동일 메세지에 대한 처리 시도 횟수가 증가할 수록 interval 시간에 N을 곱한다. 예를 들어 처음엔 3초를 기다린 후 재시도했다면 다음 횟수에서는 6초를, 다음 횟수에서는 12초를 기다린 후 메세지 처리를 시도한다. 만약 initial-interval * multiplier > max-interval 일 경우에는 max-interval 값을 사용한다.
+        auto-startup: true
+    connection-timeout: 15000  # 타임아웃 설정 (밀리초)
+
+rabbitmq:
+  exchange:
+    name: party.exchange
+  dead-letter-exchange:
+    name: party.dlx
+
+
+jwt:
+  secret:
+    key: 7Iqk7YyM66W07YOA7L2U65Sp7YG065+9U3ByaW5n6rCV7J2Y7Yqc7YSw7LWc7JuQ67mI7J6F64uI64ukLg==
+
+client:
+  basic-url: http://localhost:8080
+
+allowedOrigin : http://localhost:8080
+
+
+
+ITEM_API_KEY : 3bc2f328cfdd21307bbe428fa23d37a1cd8e8470d61d3c1117e049ef305384aa
+
+API_PORT : http://211.237.50.150:7080/openapi
+
+API_URL : Grid_20151207000000000328_1
+
+KAKAO_API_KEY : KakaoAK c6f4ef93d1ba43b887ff2a3625991863
+
+KAKAO_URL : https://dapi.kakao.com/v2/local/search/address.json
+

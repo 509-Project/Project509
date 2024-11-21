@@ -61,18 +61,24 @@
 
 ## 📯기술적 의사결정
 
+
 <details>
   <summary><span style="font-size:1.2em"><strong>공공데이터 파싱을 위한 의사결정 Spring batch / WebClient</strong></span></summary>
 
 - 성능 개선사항
+
 - 10,000 건 데이터 기준 테스트 결과 : 1분 15초 → 1.7초로 <span style="color:orange; font-weight:bold;">97% 개선</span>
-    - 적용 전  
+   <img src="src/main/resources/assets/batch_result.png" width="750">
       <br/>
+
       <img src="src/main/resources/assets/parse_before.png" width="750">
     - 적용 후  
       <br/>
       <img src="src/main/resources/assets/parse_after.png" width="750">
 - 요구사항 : 정형화된 품목 카테고리 필요
+
+      
+
 
 | 대안 | 장점 | 단점 |
 | --- | ---- | --- |

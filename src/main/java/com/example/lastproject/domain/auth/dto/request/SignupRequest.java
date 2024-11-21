@@ -24,7 +24,7 @@ public class SignupRequest {
 
     private String nickname;
 
-    @NotBlank(message = "마켓 주소는 공백일 수 없습니다.")
+    @NotBlank(message = "주소는 공백일 수 없습니다.")
     private String address;
 
     @NotNull(message = "위도는 공백일 수 없습니다.")
