@@ -1,10 +1,6 @@
 spring:
   application:
     name: project509
-  sql:
-    init:
-      mode: always
-      data-locations: classpath:batch.sql
   profiles:
     active: producer
 

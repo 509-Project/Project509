@@ -10,6 +10,9 @@ import com.example.lastproject.domain.notification.entity.Notification;
 import com.example.lastproject.domain.notification.entity.NotificationType;
 import com.example.lastproject.domain.notification.repository.EmitterRepository;
 import com.example.lastproject.domain.notification.repository.NotificationRepository;
+import com.example.lastproject.domain.party.dto.response.PartyResponse;
+import com.example.lastproject.domain.party.entity.Party;
+import com.example.lastproject.domain.party.repository.PartyRepository;
 import com.example.lastproject.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +33,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final EmitterRepository emitterRepository;
+    private final PartyRepository partyRepository;
 
     // 연결 지속시간 한시간
     private static final Long DEFAULT_TIMEOUT = 30 * 60 * 1000L;
@@ -138,10 +142,6 @@ public class NotificationServiceImpl implements NotificationService {
 
         // 유저의 모든 SseEmitter 가져옴
         Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartWithByUserId(receiverId);
-
-        // 이부분에서........................
-
-
         emitters.forEach(
                 (key, emitter) -> {
                     // 데이터 캐시 저장 (유실된 데이터 처리 위함)
@@ -163,13 +163,22 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public void notifyUsersAboutPartyCreation(AuthUser authUser, String itemName, Long partyId) {
         User receiver = User.fromAuthUser(authUser);
-        String content = String.format("참가 신청한 '%s' 품목의 파티가 생성되었습니다.", itemName);
+
+        Party party = validatePartyExists(partyId);
+
+        // 메시지 구성
+        String message = String.format("%s %s %s 품목의 파티가 생성되었습니다.",
+                party.getMarketAddress(),
+                party.getMarketName(),
+                party.getItem().getCategory()
+        );
+
         String notificationUrl = String.format("%s/parties/%d", clientBasicUrl, partyId); // URL 생성
 
         // Notification 엔티티 생성
         Notification notification = Notification.builder()
                 .notificationType(NotificationType.PARTY_CREATE)
-                .content(content)
+                .content(message)
                 .url(notificationUrl)
                 .receiver(receiver)
                 .isRead(false) // 기본값 설정
@@ -185,15 +194,24 @@ public class NotificationServiceImpl implements NotificationService {
      */
     @Transactional
     @Override
-    public void notifyUsersAboutPartyCancellation(AuthUser authUser) {
+    public void notifyUsersAboutPartyCancellation(AuthUser authUser, Long partyId) {
         User receiver = User.fromAuthUser(authUser);
-        String content = "참가 신청한 파티가 취소되었습니다.";
+
+        Party party = validatePartyExists(partyId);
+
+        // 메시지 구성
+        String message = String.format("%s %s %s 품목의 파티가 취소되었습니다.",
+                party.getMarketAddress(),
+                party.getMarketName(),
+                party.getItem().getCategory()
+        );
+
         String redirectUrl = clientBasicUrl + "/parties";
 
         // Notification 엔티티 생성
         Notification notification = Notification.builder()
                 .notificationType(NotificationType.PARTY_CANCEL)
-                .content(content)
+                .content(message)
                 .url(redirectUrl)
                 .receiver(receiver)
                 .isRead(false) // 기본값 설정
@@ -211,19 +229,32 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public void notifyUsersAboutPartyChatCreation(AuthUser authUser, ChatRoomResponse chatRoomResponse) {
         User receiver = User.fromAuthUser(authUser);
-        String content = "참가 신청한 파티의 채팅창이 생성되었습니다.";
+
+        Party party = getParty(chatRoomResponse.getPartyId());
+
         String redirectUrl = clientBasicUrl + "/chat/history/" + chatRoomResponse.getId();
+
+        // 메시지 구성
+        String message = String.format("%s %s %s 품목의 채팅이 취소되었습니다.",
+                party.getMarketAddress(),
+                party.getMarketName(),
+                party.getItem().getCategory()
+        );
 
         // Notification 엔티티 생성
         Notification notification = Notification.builder()
                 .notificationType(NotificationType.CHAT_CREATE)
-                .content(content)
+                .content(message)
                 .url(redirectUrl)
                 .receiver(receiver)
                 .isRead(false) // 기본값 설정
                 .build();
 
         send(authUser, notification);
+    }
+
+    private Party getParty(Long partyId) {
+        return validatePartyExists(partyId);
     }
 
     /**
@@ -283,6 +314,11 @@ public class NotificationServiceImpl implements NotificationService {
         if (!notification.getReceiver().getId().equals(authUser.getUserId())) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_ACCESS);
         }
+    }
+
+    private Party validatePartyExists(Long partyId) {
+        return partyRepository.findById(partyId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PARTY_NOT_FOUND));
     }
 
 }
