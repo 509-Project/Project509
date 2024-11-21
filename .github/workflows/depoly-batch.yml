@@ -2,10 +2,17 @@ name: batch CI/CD
 
 # main 브렌치 push or pull request 에 실행
 on:
-  workflow_run:
-    workflows: ["509test CICD"]
-    types:
-      - completed
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+        type: choice
+        options:
+          - info
+          - warning
+          - debug
 
 jobs:
   build:
@@ -17,6 +24,19 @@ jobs:
 
       - name: gradlew 실행 권한 부여
         run: chmod +x ./gradlew
+
+      - name: Write Profile
+        run: |
+          echo "${{ secrets.APPLICATION_BATCH }}" > ./src/main/resources/application.properties
+
+      - name: Copy Profiles to EC2
+        uses: appleboy/scp-action@v0.1.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: ./src/main/resources/application.properties
+          target: /home/ubuntu/project509/batch/
 
       # 도커 로그인
       - name: Log in to Docker Hub
@@ -56,11 +76,12 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}
             
             docker run -d --name app-batch -p 8081:8081 \
+            -e SPRING_CONFIG_LOCATION=classpath:/application.properties \
             -e API_PORT=${{ secrets.API_PORT }} \
             -e API_URL=${{ secrets.API_URL }} \
-            -e RDS_ENDPOINT=${{ secrets.RDS_ENDPOINT }} \
-            -e DB_NAME=${{ secrets.DB_NAME }} \
-            -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-            -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
+#            -e RDS_ENDPOINT=${{ secrets.RDS_ENDPOINT }} \
+#            -e DB_NAME=${{ secrets.DB_NAME }} \
+#            -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+#            -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
             -e ITEM_API_KEY=${{ secrets.ITEM_API_KEY }} \
             ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}
