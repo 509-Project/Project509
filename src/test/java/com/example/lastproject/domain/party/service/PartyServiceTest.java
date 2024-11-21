@@ -26,7 +26,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -70,13 +72,25 @@ class PartyServiceTest {
         user = new User(/* ... 초기화 ... */);
         item = new Item(/* ... 초기화 ... */);
         party = new Party(/* ... 초기화 ... */);
+        String startTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String endTime = LocalDateTime.now().plusHours(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        party = new Party(
+                "이마트", "마켓 주소", new BigDecimal("37.5665"),
+                new BigDecimal("126.9780"), item, 10, "kg",
+                startTime, endTime, 3, user.getId()
+        );
 
         partyCreateRequest = new PartyCreateRequest(
-                "이마트", "마켓 주소", 1L, 10, "kg", LocalDateTime.now(), LocalDateTime.now().plusHours(1), 3
+                "이마트", "마켓 주소", new BigDecimal("37.5665"), new BigDecimal("126.9780"),
+                1L, 10, "kg", startTime, endTime, 3
         );
 
         partyUpdateRequest = new PartyUpdateRequest(
-                1L, 10, "kg", LocalDateTime.now().plusMinutes(10), LocalDateTime.now().plusHours(2), 3
+                1L, 10, "kg",
+                LocalDateTime.now().plusMinutes(10).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                LocalDateTime.now().plusHours(2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                3
         );
 
         when(itemRepository.findById(1L)).thenReturn(Optional.of(item));
@@ -140,7 +154,26 @@ class PartyServiceTest {
     void getMembersAfterPartyClosed_success() {
 
         item = new Item(/* Item 객체 초기화 */);
-        party = new Party("이마트", "마켓 주소", item, 10, "kg", LocalDateTime.now(), LocalDateTime.now().plusHours(1), 3, user.getId());
+
+        // LocalDateTime을 String으로 포맷팅
+        String startTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String endTime = LocalDateTime.now().plusHours(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        // 수정된 파티 객체 생성
+        party = new Party(
+                "이마트",
+                "마켓 주소",
+                new BigDecimal("37.5665"),
+                new BigDecimal("126.9780"),
+                item,
+                10,
+                "kg",
+                startTime, // String 타입으로 전달
+                endTime,   // String 타입으로 전달
+                3,
+                user.getId()
+        );
+
         party.completeParty(); // 파티 상태를 DONE으로 설정
 
         // Mocking repository 호출
@@ -170,6 +203,7 @@ class PartyServiceTest {
     @Test
     void cancelParty_success() {
         when(partyRepository.findById(1L)).thenReturn(Optional.of(party));
+        when(partyRepository.save(any())).thenReturn(party);
 
         partyService.cancelParty(1L);
 
