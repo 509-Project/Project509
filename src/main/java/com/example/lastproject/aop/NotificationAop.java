@@ -29,7 +29,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class RabbitmqAop {
+public class NotificationAop {
 
     private final RabbitTemplate rabbitTemplate;
     private final RabbitMqProducerConfig rabbitMqConfig;
