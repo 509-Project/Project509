@@ -79,9 +79,5 @@ jobs:
             -e SPRING_CONFIG_LOCATION=classpath:/application.properties \
             -e API_PORT=${{ secrets.API_PORT }} \
             -e API_URL=${{ secrets.API_URL }} \
-#            -e RDS_ENDPOINT=${{ secrets.RDS_ENDPOINT }} \
-#            -e DB_NAME=${{ secrets.DB_NAME }} \
-#            -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-#            -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
             -e ITEM_API_KEY=${{ secrets.ITEM_API_KEY }} \
             ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}
