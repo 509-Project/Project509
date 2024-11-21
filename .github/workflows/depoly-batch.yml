@@ -1,18 +1,5 @@
 name: batch CI/CD
 
-# main 브렌치 push or pull request 에 실행
-on:
-  workflow_dispatch:
-    inputs:
-      logLevel:
-        description: 'Log level'
-        required: true
-        default: 'warning'
-        type: choice
-        options:
-          - info
-          - warning
-          - debug
 
 jobs:
   build:
