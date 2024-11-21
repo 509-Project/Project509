@@ -68,7 +68,8 @@
 - 성능 개선사항
 
 - 10,000 건 데이터 기준 테스트 결과 : 1분 15초 → 1.7초로 <span style="color:orange; font-weight:bold;">97% 개선</span>
-   <img src="src/main/resources/assets/batch_result.png" width="750">
+  <br/>
+<img src="src/main/resources/assets/batch_result.png" width="750">
       <br/>
 - 요구사항 : 정형화된 품목 카테고리 필요
 
@@ -89,10 +90,10 @@
 
 - 성능개선 사항
     - 상황 1 - 1명의 유저가 같은 채팅방에서 다량의 메세지를 보낼 때 채팅 메시지 전송 속도 평균 <span style="color:orange; font-weight:bold;">45% 개선</span>
-      <img src="src/main/resources/assets/chat_sync_1.png" width="750">
+      <img src="src/main/resources/assets/1.png" width="750">
 
     - 상황 2 - 100명의 유저가 동시다발적으로 채팅방을 생성하고 채팅메세지를 보낼 때 채팅 메시지 전송 속도 평균 <span style="color:orange; font-weight:bold;">34% 개선</span>
-      <img src="src/main/resources/assets/chat_sync_2.png" width="750">
+      <img src="src/main/resources/assets/2.png" width="750">
 - 요구사항 : 다중서버에서 채팅 동기화를 위한 외부 메세지 브로커를 구현 필요
 
 | 대안 | 장점 | 단점 |
@@ -109,9 +110,10 @@
   <summary><span style="font-size:1.2em"><strong>Redis 캐싱을 이용한 페널티 집계값 조회 성능 개선</strong></span></summary>
 
 - 성능 개선 사항
-- 평균 응답 시간 <span style="color:orange; font-weight:bold;">2% 감소</span>, 최대 응답 시간 <span style="color:orange; font-weight:bold;">52% 감소</span>
-- 표준 편차 <span style="color:orange; font-weight:bold;">22% 감소</span>, 초당 처리 요청 수 <span style="color:orange; font-weight:bold;">2% 증가</span>
-    - 전후 비교
+  - 최대 응답 시간 <span style="color:orange; font-weight:bold;">52% 감소</span>
+  - 표준 편차 <span style="color:orange; font-weight:bold;">22% 감소</span>
+  - 평균 응답 시간 <span style="color:orange; font-weight:bold;">2% 감소</span>
+  - 전후 비교
       <br/>
       <img src="src/main/resources/assets/redis_graph.png" width="750">
 - 요구사항 : DB 데이터의 조회가 반복될 경우 성능 저하로 인해 응답 속도나 서버 부하에 문제가 생길 수 있다고 판단
@@ -182,14 +184,10 @@
     - 테스트하는 과정에서 docker 이미지가 계속 쌓이는 것을 발견
     - 테스트 과정에서 Docker 이미지가 계속 쌓이는 현상을 발견
     - Docker 이미지는 여러 층(Layer)으로 구성되어 있어, 쌓이는 이미지가 스토리지와 성능에 영향을 미침
-      <br/>
-      <img src="src/main/resources/assets/deploy_1.png" width="750">
 - 해결 방안
     - EC2 터미널에 접속해 태그 없는 이미지를 삭제하는 명령어 사용
     - docker rmi $(docker images -f "dangling=true" -q)
     - 불필요한 Docker 이미지 정리 후 RDS 환경변수가 정상적으로 적용되는 것을 확인
-      <br/>
-      <img src="src/main/resources/assets/deploy_2.png" width="750">
 
 > ### JPA 쿼리메서드를 사용한 DB 조회의 성능 저하
 
@@ -249,8 +247,10 @@
 
 ## 👨‍👩‍👧‍👦 팀원들 Our Team
 
-| 권이슬 | 김나영 | 박대현 | 이가연 | 최원용 |
-|:---:|:---:|:---:|:---:|:---:|
+|                 권이슬                 |                김나영                 |             박대현              |                  이가연                   |                  최원용                   |
+|:-----------------------------------:|:----------------------------------:|:----------------------------:|:--------------------------------------:|:--------------------------------------:|
+| [github](https://github.com/cbb715) | [github](https://github.com/abxl1) | [github](github.com/pdhpark) | [github](https://github.com/dlrkdus12) | [github](https://github.com/dnjsdyd78) |
+
 
 ### 📒 팀 노션 Team Project Notion
 
