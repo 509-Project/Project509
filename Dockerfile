@@ -8,4 +8,4 @@ COPY wait-for-it.sh /wait-for-it.sh
 RUN chmod +x /wait-for-it.sh
 
 # wait-for-it.sh를 통해 db 서비스가 시작될 때까지 대기한 후 애플리케이션 시작
-CMD ["/wait-for-it.sh", "database-1.cv666oysqi5w.ap-northeast-2.rds.amazonaws.com:3306", "--", "java", "-jar", "app.jar"]
+CMD ["/wait-for-it.sh", "database-2.cv666oysqi5w.ap-northeast-2.rds.amazonaws.com:3306", "--", "java", "-jar", "app.jar"]
