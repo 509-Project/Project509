@@ -18,6 +18,14 @@ public class NotificationServiceSimulation extends Simulation {
 
     // 미리 발급된 JWT 토큰을 하드코딩
     String hardCodedJwtToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ1c2VyNEA1MDkuY29tIiwidXNlclJvbGUiOiJST0xFX1VTRVIiLCJleHAiOjE3MzE4NTU1MjgsImlhdCI6MTczMTg1MTkyOH0.1Fs5kdnjM92MosRQk_lfFLg30Q6vQcAtrTgYdihyNEo"; // 여기에 실제 JWT 토큰을 입력하세요.
+    String hardCodedJwtToken2 = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ1c2VyNEA1MDkuY29tIiwidXNlclJvbGUiOiJST0xFX1VTRVIiLCJleHAiOjE3MzE4NTU1MjgsImlhdCI6MTczMTg1MTkyOH0.1Fs5kdnjM92MosRQk_lfFLg30Q6vQcAtrTgYdihyNEo"; // 여기에 실제 JWT 토큰을 입력하세요.
+    String hardCodedJwtToken3 = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ1c2VyNEA1MDkuY29tIiwidXNlclJvbGUiOiJST0xFX1VTRVIiLCJleHAiOjE3MzE4NTU1MjgsImlhdCI6MTczMTg1MTkyOH0.1Fs5kdnjM92MosRQk_lfFLg30Q6vQcAtrTgYdihyNEo"; // 여기에 실제 JWT 토큰을 입력하세요.
+    String hardCodedJwtToken4 = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ1c2VyNEA1MDkuY29tIiwidXNlclJvbGUiOiJST0xFX1VTRVIiLCJleHAiOjE3MzE4NTU1MjgsImlhdCI6MTczMTg1MTkyOH0.1Fs5kdnjM92MosRQk_lfFLg30Q6vQcAtrTgYdihyNEo"; // 여기에 실제 JWT 토큰을 입력하세요.
+    String hardCodedJwtToken5 = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ1c2VyNEA1MDkuY29tIiwidXNlclJvbGUiOiJST0xFX1VTRVIiLCJleHAiOjE3MzE4NTU1MjgsImlhdCI6MTczMTg1MTkyOH0.1Fs5kdnjM92MosRQk_lfFLg30Q6vQcAtrTgYdihyNEo"; // 여기에 실제 JWT 토큰을 입력하세요.
+    String hardCodedJwtToken6 = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ1c2VyNEA1MDkuY29tIiwidXNlclJvbGUiOiJST0xFX1VTRVIiLCJleHAiOjE3MzE4NTU1MjgsImlhdCI6MTczMTg1MTkyOH0.1Fs5kdnjM92MosRQk_lfFLg30Q6vQcAtrTgYdihyNEo"; // 여기에 실제 JWT 토큰을 입력하세요.
+    String hardCodedJwtToken7 = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ1c2VyNEA1MDkuY29tIiwidXNlclJvbGUiOiJST0xFX1VTRVIiLCJleHAiOjE3MzE4NTU1MjgsImlhdCI6MTczMTg1MTkyOH0.1Fs5kdnjM92MosRQk_lfFLg30Q6vQcAtrTgYdihyNEo"; // 여기에 실제 JWT 토큰을 입력하세요.
+    String hardCodedJwtToken8 = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ1c2VyNEA1MDkuY29tIiwidXNlclJvbGUiOiJST0xFX1VTRVIiLCJleHAiOjE3MzE4NTU1MjgsImlhdCI6MTczMTg1MTkyOH0.1Fs5kdnjM92MosRQk_lfFLg30Q6vQcAtrTgYdihyNEo"; // 여기에 실제 JWT 토큰을 입력하세요.
+    String hardCodedJwtToken9 = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ1c2VyNEA1MDkuY29tIiwidXNlclJvbGUiOiJST0xFX1VTRVIiLCJleHAiOjE3MzE4NTU1MjgsImlhdCI6MTczMTg1MTkyOH0.1Fs5kdnjM92MosRQk_lfFLg30Q6vQcAtrTgYdihyNEo"; // 여기에 실제 JWT 토큰을 입력하세요.
 
 //    // 유저 정보 (이메일, 비밀번호)를 CSV에서 가져오기
 //    FeederBuilder<String> userFeeder = csv("mockData.csv").circular();
