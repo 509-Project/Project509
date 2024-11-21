@@ -7,6 +7,7 @@ import com.example.lastproject.domain.chat.dto.ChatRoomResponse;
 import com.example.lastproject.domain.likeitem.dto.response.LikeItemResponse;
 import com.example.lastproject.domain.likeitem.repository.LikeItemQueryRepository;
 import com.example.lastproject.domain.notification.rabbitmq.config.RabbitMqProducerConfig;
+import com.example.lastproject.domain.notification.service.NotificationService;
 import com.example.lastproject.domain.party.dto.response.PartyResponse;
 import com.example.lastproject.domain.party.entity.Party;
 import com.example.lastproject.domain.party.repository.PartyQueryRepositoryImpl;
@@ -36,6 +37,7 @@ public class RabbitmqAop {
     private final PartyQueryRepositoryImpl partyQueryRepository;
     private final LikeItemQueryRepository likeItemQueryRepository;  // 찜한 품목 조회를 위한 repository 추가
     private final PartyRepository partyRepository;
+    private final NotificationService notificationService;
 
     @Pointcut("execution(* com.example.lastproject.domain.party.service.PartyService.createParty(..))")
     private void partyCreate() {
@@ -97,6 +99,7 @@ public class RabbitmqAop {
 
         // 동적으로 큐 생성
         rabbitMqConfig.createQueueWithDLX("party.create", region);
+        notificationService.notifyUsersAboutPartyCreation(authUser, partyResponse.getCategory(), partyResponse.getId());
         log.info("Party 생성 알림 전송 완료: {}", partyResponse);
     }
 
@@ -107,6 +110,9 @@ public class RabbitmqAop {
             log.warn("Party cancellation returned null, skipping event publishing.");
             return;
         }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        AuthUser authUser = (AuthUser) authentication.getPrincipal();
 
         // 공백 제거 후 점으로 변환
         String region = partyResponse.getMarketAddress().trim().replace(" ", ".");
@@ -126,6 +132,7 @@ public class RabbitmqAop {
 
         // 동적으로 큐 생성
         rabbitMqConfig.createQueueWithDLX("party.cancel", region);
+        notificationService.notifyUsersAboutPartyCancellation(authUser);
         log.info("Party 취소 알림 전송 완료: 파티: {}", partyResponse);
     }
 
@@ -135,6 +142,9 @@ public class RabbitmqAop {
             log.warn("Chat room creation returned null, skipping event publishing.");
             return;
         }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        AuthUser authUser = (AuthUser) authentication.getPrincipal();
 
         // 파티 정보를 조회 (예: Repository를 통해 파티 정보 가져오기)
         Party party = validatePartyExists(chatRoomResponse.getPartyId());
@@ -156,7 +166,7 @@ public class RabbitmqAop {
 
         // 동적으로 큐 생성
         rabbitMqConfig.createQueueWithDLX("party.cancel", region);
-
+        notificationService.notifyUsersAboutPartyChatCreation(authUser, chatRoomResponse);
         log.info("Chat 생성 알림 전송 완료: {}", chatRoomResponse);
     }
 

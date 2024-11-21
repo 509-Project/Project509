@@ -55,12 +55,10 @@ public class NotificationServiceImpl implements NotificationService {
         emitter.onTimeout(() -> emitterRepository.deleteById(emitterId));
 
         if (!lastEventId.isEmpty()) {
-//            Map<String, Object> events = emitterRepository.findAllEventCacheStartWithByUserId(String.valueOf(authUser.getUserId()));
-//            events.entrySet().stream()
-//                    .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
-//                    .forEach(entry -> sendToClient(emitter, entry.getKey(), entry.getKey(), entry.getValue()));
-
-
+            Map<String, Object> events = emitterRepository.findAllEventCacheStartWithByUserId(String.valueOf(authUser.getUserId()));
+            events.entrySet().stream()
+                    .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
+                    .forEach(entry -> sendToClient(emitter, entry.getKey(), entry.getKey(), entry.getValue()));
         } else {
             // 최초 연결시 더미데이터가 없으면 503 오류가 발생하기 때문에 해당 더미 데이터 생성
             String eventId = makeTimeIncludeId(authUser);
@@ -105,7 +103,6 @@ public class NotificationServiceImpl implements NotificationService {
      * 알림을 저장하고, 저장된 알림을 클라이언트에게 전송합니다.
      *
      * @param authUser 요청을 보낸 인증된 사용자 정보
-     * @param
      */
     @Override
     public void send(AuthUser authUser, Notification notification) {
@@ -141,6 +138,9 @@ public class NotificationServiceImpl implements NotificationService {
 
         // 유저의 모든 SseEmitter 가져옴
         Map<String, SseEmitter> emitters = emitterRepository.findAllEmitterStartWithByUserId(receiverId);
+
+        // 이부분에서........................
+
 
         emitters.forEach(
                 (key, emitter) -> {

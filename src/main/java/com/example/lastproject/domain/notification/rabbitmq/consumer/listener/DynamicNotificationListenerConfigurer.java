@@ -1,4 +1,4 @@
-package com.example.lastproject.domain.notification.rabbitmq.consumer;
+package com.example.lastproject.domain.notification.rabbitmq.consumer.listener;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
