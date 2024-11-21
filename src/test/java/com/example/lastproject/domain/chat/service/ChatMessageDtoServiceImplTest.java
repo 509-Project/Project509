@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ChatMessageServiceImplTest {
+class ChatMessageDtoServiceImplTest {
 
     @InjectMocks
     private ChatMessageServiceImpl chatMessageService;

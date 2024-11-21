@@ -1,9 +1,2 @@
 rootProject.name = 'Project509'
 include ':module-batch'
-
-include ':module-rabbitmq'
-include ':module-rabbitmq:module-rabbitmq-consumer'
-include ':module-rabbitmq:module-rabbitmq-producer'
-
-findProject('::module-rabbitmq:module-rabbitmq-consumer')?.name = 'module-rabbitmq-consumer'
-findProject('::module-rabbitmq:module-rabbitmq-producer')?.name = 'module-rabbitmq-producer'

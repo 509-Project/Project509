@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @EnableAsync
 @RequiredArgsConstructor
 @Slf4j
-public class NotificationAop {
+public class SseAop {
 
     private final NotificationService notificationService;
 

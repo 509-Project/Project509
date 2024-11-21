@@ -4,8 +4,8 @@ import com.example.lastproject.common.dto.AuthUser;
 import com.example.lastproject.common.enums.ErrorCode;
 import com.example.lastproject.common.exception.CustomException;
 import com.example.lastproject.domain.chat.dto.ChatRoomResponse;
-import com.example.lastproject.domain.notification.dto.response.NotificationListResponse;
-import com.example.lastproject.domain.notification.dto.response.NotificationResponse;
+import com.example.lastproject.domain.notification.dto.NotificationListResponse;
+import com.example.lastproject.domain.notification.dto.NotificationResponse;
 import com.example.lastproject.domain.notification.entity.Notification;
 import com.example.lastproject.domain.notification.entity.NotificationType;
 import com.example.lastproject.domain.notification.repository.EmitterRepository;
@@ -55,10 +55,12 @@ public class NotificationServiceImpl implements NotificationService {
         emitter.onTimeout(() -> emitterRepository.deleteById(emitterId));
 
         if (!lastEventId.isEmpty()) {
-            Map<String, Object> events = emitterRepository.findAllEventCacheStartWithByUserId(String.valueOf(authUser.getUserId()));
-            events.entrySet().stream()
-                    .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
-                    .forEach(entry -> sendToClient(emitter, entry.getKey(), entry.getKey(), entry.getValue()));
+//            Map<String, Object> events = emitterRepository.findAllEventCacheStartWithByUserId(String.valueOf(authUser.getUserId()));
+//            events.entrySet().stream()
+//                    .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
+//                    .forEach(entry -> sendToClient(emitter, entry.getKey(), entry.getKey(), entry.getValue()));
+
+
         } else {
             // 최초 연결시 더미데이터가 없으면 503 오류가 발생하기 때문에 해당 더미 데이터 생성
             String eventId = makeTimeIncludeId(authUser);

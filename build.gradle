@@ -49,7 +49,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
 
-    implementation project(':module-rabbitmq:module-rabbitmq-producer')
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
 
 }
 
@@ -100,7 +100,6 @@ allprojects {
         compileOnly 'com.googlecode.json-simple:json-simple:1.1.1'
 
         implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5-jakarta'
-        implementation 'org.springframework.boot:spring-boot-starter-amqp'
 
 
     }

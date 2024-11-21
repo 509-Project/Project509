@@ -1,4 +1,4 @@
-package com.example.lastproject.domain.notification.dto.response;
+package com.example.lastproject.domain.notification.dto;
 
 import com.example.lastproject.domain.notification.entity.Notification;
 import com.example.lastproject.domain.notification.entity.NotificationType;

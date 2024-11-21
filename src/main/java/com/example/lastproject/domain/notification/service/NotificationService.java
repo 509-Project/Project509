@@ -2,7 +2,7 @@ package com.example.lastproject.domain.notification.service;
 
 import com.example.lastproject.common.dto.AuthUser;
 import com.example.lastproject.domain.chat.dto.ChatRoomResponse;
-import com.example.lastproject.domain.notification.dto.response.NotificationListResponse;
+import com.example.lastproject.domain.notification.dto.NotificationListResponse;
 import com.example.lastproject.domain.notification.entity.Notification;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 

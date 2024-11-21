@@ -2,7 +2,7 @@ package com.example.lastproject.domain.notification.controller;
 
 import com.example.lastproject.common.dto.AuthUser;
 import com.example.lastproject.common.enums.CustomMessage;
-import com.example.lastproject.domain.notification.dto.response.NotificationListResponse;
+import com.example.lastproject.domain.notification.dto.NotificationListResponse;
 import com.example.lastproject.domain.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

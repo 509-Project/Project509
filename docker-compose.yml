@@ -19,7 +19,8 @@ services:
       - app-network
 
   rabbitmq:
-    image: rabbitmq:3.13-management
+    container_name: RabbitMQ
+    image: rabbitmq:latest
     ports:
       - "5672:5672"       # AMQP 포트
       - "15672:15672"     # 관리 콘솔 포트
