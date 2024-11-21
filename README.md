@@ -54,7 +54,18 @@
 ## 📯기술적 의사결정
 
 >### 공공데이터 파싱을 위한 의사결정 Spring batch / WebClient
-- 요구사항 : 정형화된 품목 카테고리 필요
+- 성능 개선
+  - 10,000 건 데이터 기준 테스트 결과 : 1분 15초 → 3.2초로 95% 개선
+    - 적용 전
+      <br/>
+      <img src="src/main/resources/assets/parse_before.png" width="600">
+    - 적용 후
+      <br/>
+      <img src="src/main/resources/assets/parse_after.png" width="600">
+
+<pre>
+<details>
+  <summary>요구사항 : 정형화된 품목 카테고리 필요</summary>
   - 대안비교
     - WebClient
       - 장점 : 높은 동시성 처리와 낮은 지연 시간 환경에서 뛰어난 성능, 대규모 트래픽을 처리할 때 성능이 우수
@@ -66,14 +77,43 @@
       - 장점 : HTTP 요청의 로직을 구현할 필요 없이 단순히 메서드를 정의, HTTP 요청 헤더나 파라미터 등을 쉽게 수정
       - 단점 : 선언적인 방식으로 인한 상대적인 속도 저하, Spring Cloud 라이브러리와의 통합이 필요
   - 기술결정 : WebClient를 통해 API 요청을 보내고 받아온 데이터를 비동기 처리 & 데이터 파싱 및 DB 저장은 Spring batch를 활용
-  - 성능 개선
-    - 10,000 건 데이터 기준 테스트 결과 : 1분 15초 → 3.2초로 95% 개선
-      - 적용 전
-      <br/> 
-      <img src="src/main/resources/assets/파싱_전.png" width="600">
-      - 적용 후
+</details>
+</pre>
+
+>### 공공데이터 파싱을 위한 의사결정 Spring batch / WebClient
+- 성능 개선
+  - 10,000 건 데이터 기준 테스트 결과 : 1분 15초 → 3.2초로 95% 개선
+    - 적용 전
       <br/>
-      <img src="src/main/resources/assets/파싱_후.png" width="600">
+      <img src="src/main/resources/assets/parse_before.png" width="600">
+    - 적용 후
+      <br/>
+      <img src="src/main/resources/assets/parse_after.png" width="600">
+
+<pre>
+<details>
+<summary><b>대안비교</b></summary>
+#### WebClient
+- **장점**: 높은 동시성 처리와 낮은 지연 시간 환경에서 뛰어난 성능, 대규모 트래픽을 처리할 때 성능이 우수
+- **단점**: RestTemplate보다 설정과 사용이 복잡, 비동기 및 반응형 환경을 사용하지 않았을 때 복잡도 증가
+#### RestTemplate
+- **장점**: Spring의 여러 기능들과 통합 용이, 직관적인 API 제공
+- **단점**: 서버로부터 응답이 올 때까지 호출 스레드가 블로킹 ( 동기식 처리 ), 비동기 시스템에서는 성능 한계
+#### OpenFeignClient
+- **장점**: HTTP 요청의 로직을 구현할 필요 없이 단순히 메서드를 정의, HTTP 요청 헤더나 파라미터 등을 쉽게 수정
+- **단점**: 선언적인 방식으로 인한 상대적인 속도 저하, Spring Cloud 라이브러리와의 통합이 필요
+</details>
+<details>
+<summary><b>기술결정</b></summary>
+- WebClient를 통해 API 요청을 보내고 받아온 데이터를 비동기 처리
+- 데이터 파싱 및 DB 저장은 Spring Batch를 활용
+</details>
+</pre>
+
+
+
+
+
 
 >### 다중서버 채팅 동기화
 - 요구사항 : 다중서버에서 채팅 동기화를 위한 외부 메세지 브로커를 구현 필요
@@ -91,10 +131,10 @@
   - 성능 개선
     - 상황 1 - 1명의 유저가 같은 채팅방에서 다량의 메세지를 보낼 때
       <br/>
-      <img src="src/main/resources/assets/상황_1.png" width="600">
+      <img src="src/main/resources/assets/chat_sync_1.png" width="600">
     - 상황 2 - 100명의 유저가 동시다발적으로 채팅방을 생성하고 채팅메세지를 보낼 때
       <br/>
-      <img src="src/main/resources/assets/상황_2.png" width="600">
+      <img src="src/main/resources/assets/chat_sync_2.png" width="600">
 
 >### CI/CD 파이프라인 구축
 - 요구사항 : CI/CD 파이프라인을 구축하기 위해 적합한 도구를 선정
@@ -123,6 +163,7 @@
 
 >### Redis 캐싱을 이용한 페널티 집계값 조회 성능 개선
 - 요구사항 : DB 데이터의 조회가 반복될 경우 성능 저하로 인해 응답 속도나 서버 부하에 문제가 생길 수 있다고 판단
+- 평균 응답 시간 2% 감소, 최대 응답 시간 52% 감소, 표준 편차 22% 감소, 초당 처리 요청 수 2% 증가
   - 대안비교
     - RDBMS ( 데이터베이스 )
       - 장점 : 데이터의 일관성을 보장하기 위한 트랜잭션을 지원하는 등의 특징
@@ -137,7 +178,7 @@
   - 성능 개선
     - 적용 후
     <br/>
-    <img src="src/main/resources/assets/비교그래프.png" width="600">
+    <img src="src/main/resources/assets/redis_graph.png" width="600">
 
 ## ❓ 트러블 슈팅 Trouble Shooting
 
@@ -163,7 +204,7 @@
   - RDS에 환경변수가 적용 안 되는 문제가 발생 
   - 테스트하는 과정에서 docker 이미지가 계속 쌓이는 것을 발견 
   <br/>
-  <img src="src/main/resources/assets/CI:CD_전.png" width="600">
+  <img src="src/main/resources/assets/deploy_1.png" width="600">
 - 해결 방안 
   - 테스트 과정에서 Docker 이미지가 계속 쌓이는 현상을 발견 
   - Docker 이미지는 여러 층(Layer)으로 구성되어 있어, 쌓이는 이미지가 스토리지와 성능에 영향을 미침
@@ -171,7 +212,7 @@
   - docker rmi $(docker images -f "dangling=true" -q)
   - 불필요한 Docker 이미지 정리 후 RDS 환경변수가 정상적으로 적용되는 것을 확인
   <br/>
-  <img src="src/main/resources/assets/CI:CD_후.png" width="600">
+  <img src="src/main/resources/assets/deploy_2.png" width="600">
 
 >### JPA 쿼리메서드를 사용한 DB 조회의 성능 저하
 - 문제상황
@@ -229,4 +270,12 @@
 * https://www.notion.so/teamsparta/6-93f92b3fa6bb4f04848b0c0079992349
 
 ### 🎁 서비스 링크 Website Link
-* 
+
+[//]: # (* http://project-509.com)
+
+
+
+
+
+
+
