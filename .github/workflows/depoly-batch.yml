@@ -1,18 +1,11 @@
 name: batch CI/CD
 
-# main 브렌치 push or pull request 에 실행
+# 메인서버 배포후 배치서버 배포
 on:
-  workflow_dispatch:
-    inputs:
-      logLevel:
-        description: 'Log level'
-        required: true
-        default: 'warning'
-        type: choice
-        options:
-          - info
-          - warning
-          - debug
+  workflow_run:
+    workflows: ["509test CICD"]
+    types:
+      - completed
 
 jobs:
   build:
@@ -66,6 +59,7 @@ jobs:
     steps:
       - name: Docker image pull & Deploy to EC2
         uses: appleboy/ssh-action@master
+
         # EC2 접속
         with:
           host: ${{ secrets.EC2_HOST }} # PUBLIC IP
@@ -84,8 +78,10 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}
             
             docker run -d --name app-batch -p 8081:8081 \
-            -e SPRING_CONFIG_LOCATION=classpath:/application.properties \
             -e API_PORT=${{ secrets.API_PORT }} \
             -e API_URL=${{ secrets.API_URL }} \
             -e ITEM_API_KEY=${{ secrets.ITEM_API_KEY }} \
             ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}
+            
+            # 태그 없는 도커이미지 삭제
+            docker rmi $(docker images -f "dangling=true" -q)
