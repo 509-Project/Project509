@@ -70,11 +70,6 @@
 - 10,000 건 데이터 기준 테스트 결과 : 1분 15초 → 1.7초로 <span style="color:orange; font-weight:bold;">97% 개선</span>
    <img src="src/main/resources/assets/batch_result.png" width="750">
       <br/>
-
-      <img src="src/main/resources/assets/parse_before.png" width="750">
-    - 적용 후  
-      <br/>
-      <img src="src/main/resources/assets/parse_after.png" width="750">
 - 요구사항 : 정형화된 품목 카테고리 필요
 
       
