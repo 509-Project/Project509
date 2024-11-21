@@ -2,7 +2,7 @@ package com.example.lastproject.domain.party.entity;
 
 import com.example.lastproject.common.Timestamped;
 import com.example.lastproject.domain.item.entity.Item;
-import com.example.lastproject.domain.market.entity.Market;
+//import com.example.lastproject.domain.market.entity.Market;
 import com.example.lastproject.domain.party.enums.PartyStatus;
 import com.example.lastproject.domain.partymember.entity.PartyMember;
 import jakarta.persistence.*;
@@ -56,9 +56,9 @@ public class Party extends Timestamped {
     @Column(name = "members_count", nullable = false)
     private int membersCount;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "market_id")
-    private Market market;
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "market_id")
+//    private Market market;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

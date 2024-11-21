@@ -6,8 +6,7 @@ import com.example.lastproject.common.enums.ErrorCode;
 import com.example.lastproject.common.exception.CustomException;
 import com.example.lastproject.domain.item.entity.Item;
 import com.example.lastproject.domain.item.repository.ItemRepository;
-import com.example.lastproject.domain.market.entity.Market;
-import com.example.lastproject.domain.market.service.MarketServiceImpl;
+//import com.example.lastproject.domain.market.entity.Market;
 import com.example.lastproject.domain.party.dto.request.PartyCreateRequest;
 import com.example.lastproject.domain.party.dto.request.PartyUpdateRequest;
 import com.example.lastproject.domain.party.dto.response.NearbyPartyResponse;
@@ -43,7 +42,6 @@ public class PartyService {
     private final ItemRepository itemRepository;
     private final PartyMemberRepository partyMemberRepository;
     private final UserRepository userRepository;
-    private final MarketServiceImpl marketService;
 
     // 공통으로 사용하는 partyId로 Party 객체를 조회하는 메서드
     private Party findPartyById(Long partyId) {
@@ -110,8 +108,6 @@ public class PartyService {
 
         // 파티 저장
         partyRepository.save(party);
-
-        marketService.saveMarket(new Market(party));
 
         // 파티 멤버 리더 역할
         PartyMember partyMember = new PartyMember(
