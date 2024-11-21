@@ -46,8 +46,8 @@ public class ItemBatchScheduleConfig {
     /**
      * 서버 준비가 완료되면 품목업데이트 실행
      */
-    @EventListener(ApplicationReadyEvent.class)
-    private void init() {
-        runItemApiJob();
-    }
+//    @EventListener(ApplicationReadyEvent.class)
+//    private void init() {
+//        runItemApiJob();
+//    }
 }

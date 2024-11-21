@@ -179,10 +179,9 @@ public class BatchConfig {
         return new ItemWriter<List<Item>>() {
             @Override
             public void write(Chunk<? extends List<Item>> chunk) throws Exception {
-//                for (List<Item> items : chunk) {
-//                    itemRepository.saveAll(items);
-//                }
-                itemRepository.save(chunk.getItems().get(0).get(0));
+                for (List<Item> items : chunk) {
+                    itemRepository.saveAll(items);
+                }
             }
         };
     }
