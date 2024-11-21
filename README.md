@@ -63,13 +63,13 @@
 
 >### 공공데이터 파싱을 위한 의사결정 Spring batch / WebClient
 - 성능 개선 사항
-- 10,000 건 데이터 기준 테스트 결과 : 1분 15초 → 3.2초로 <span style="color:orange; font-weight:bold;">95% 개선</span>
+- 10,000 건 데이터 기준 테스트 결과 : 1분 15초 → 1.7초로 <span style="color:orange; font-weight:bold;">97% 개선</span>
     - 적용 전  
       <br/>
-      <img src="src/main/resources/assets/parse_before.png" width="600">
+      <img src="src/main/resources/assets/parse_before.png" width="750">
     - 적용 후  
       <br/>
-      <img src="src/main/resources/assets/parse_after.png" width="600">
+      <img src="src/main/resources/assets/parse_after.png" width="750">
 
 <details>
   <summary>요구사항</summary>
@@ -109,10 +109,10 @@
 
 - 성능개선 사항
     - 상황 1 - 1명의 유저가 같은 채팅방에서 다량의 메세지를 보낼 때 채팅 메시지 전송 속도 평균 <span style="color:orange; font-weight:bold;">45% 개선</span>
-      <img src="src/main/resources/assets/chat_sync_1.png" width="600">
+      <img src="src/main/resources/assets/chat_sync_1.png" width="750">
 
     - 상황 2 - 100명의 유저가 동시다발적으로 채팅방을 생성하고 채팅메세지를 보낼 때 채팅 메시지 전송 속도 평균 <span style="color:orange; font-weight:bold;">34% 개선</span>
-      <img src="src/main/resources/assets/chat_sync_2.png" width="600">
+      <img src="src/main/resources/assets/chat_sync_2.png" width="750">
 
 <details>
   <summary>요구사항</summary>
@@ -143,12 +143,40 @@
   </ul>
 </details>
 
+> ### Redis 캐싱을 이용한 페널티 집계값 조회 성능 개선
+
+- 성능 개선 사항
+- 평균 응답 시간 <span style="color:orange; font-weight:bold;">2% 감소</span>, 최대 응답 시간 <span style="color:orange; font-weight:bold;">52% 감소</span>
+- 표준 편차 <span style="color:orange; font-weight:bold;">22% 감소</span>, 초당 처리 요청 수 <span style="color:orange; font-weight:bold;">2% 증가</span>
+  - 전후 비교
+    <br/>
+    <img src="src/main/resources/assets/redis_graph.png" width="750">
+- 요구사항 : DB 데이터의 조회가 반복될 경우 성능 저하로 인해 응답 속도나 서버 부하에 문제가 생길 수 있다고 판단
+- 기술결정 : 조회 빈도가 높은 유저의 페널티 집계값을 빠르고 원활하게 조회하려면 Redis 캐싱이 성능의 최적화에 유리할 것이라고 판단
+
 <details>
-  <summary>기술결정</summary>
-  채팅 메세지에 고도화된 기능이 필요하지 않기 때문에, 소규모이며 실시간 응답성이 가장 빠른 Redis로 선택
+  <summary>대안비교</summary>
+  <ul>
+    <li>RDBMS ( 데이터베이스 )
+      <ul>
+        <li>장점: 데이터의 일관성을 보장하기 위한 트랜잭션을 지원하는 등의 특징</li>
+        <li>단점: 캐싱이 아닌 DB의 직접적인 조회는 데이터의 사이즈가 커진 서비스의 성능과 확장성 면에서 비효율적</li>
+      </ul>
+    </li>
+    <li>Memcached
+      <ul>
+        <li>장점: 메모리 기반 캐시로, 단순한 키-값 저장소로 자주 쓰임, 캐시된 데이터의 만료 시간 설정도 가능</li>
+        <li>단점: Redis에 비해 기능이 제한적이고 데이터가 비영속적</li>
+      </ul>
+    </li>
+    <li>Redis
+      <ul>
+        <li>장점: 트래픽이 많고 조회 빈도가 높은 유저의 페널티 집계값을 빠르고 원활하게 조회하려면 Redis 캐싱이 성능의 최적화와 빠른 속도, 유연성 면에서 유리할 것이라고 판단</li>
+        <li>단점: 설정과 운영이 가장 복잡하며, 메시지 지연(latency)이 Redis와 RabbitMQ에 비해 높은 편</li>
+      </ul>
+    </li>
+  </ul>
 </details>
-
-
 
 > ### CI/CD 파이프라인 구축
 
@@ -165,40 +193,32 @@
 > ### 알림 데이터의 실시간 동기화
 
 - 요구사항 : 사용자 경험을 향상시키기 위해 빠르고 안정적으로 데이터 전달 필요
-    - 대안비교
-        - WebSocket
-            - 장점 : 클라이언트와 서버 간에 양방향 통신이 가능한 지속적인 연결을 제공
-            - 단점 : 구현이 복잡하고 높은 리소스를 소모
-        - Long Polling
-            - 장점 : 클라이언트가 서버에 데이터를 요청하면, 서버는 즉시 응답을 보내지 않고 데이터가 준비될 때까지 대기 상태를 유지. 양방향 통신이 가능하고 실시간 데이터 처리가 가능.
-            - 단점 : 빈번한 연결과 응답을 반복하여 서버 부하가 증가
-        - SSE
-            - 장점 : 서버 리소스 소모 적음, Keep-Alive로 연결 유지 비용 낮음, 단순하고 간편한 구현
-            - 단점 : 바이너리 데이터 전송 제한, 단방향 통신
-    - 기술결정 : 서버에서 클라이언트로만 데이터 푸시가 필요한 경우에 적합하고, 사용자가 적은 리소스로 연결을 유지하기 때문에 SSE 방식 선택
+- 기술결정 : 서버에서 클라이언트로만 데이터 푸시가 필요한 경우에 적합하고, 사용자가 적은 리소스로 연결을 유지하기 때문에 SSE 방식 선택
+<details>
+  <summary>대안비교</summary>
+  <ul>
+    <li>WebSocket
+      <ul>
+        <li>장점: 클라이언트와 서버 간에 양방향 통신이 가능한 지속적인 연결을 제공</li>
+        <li>단점: 구현이 복잡하고 높은 리소스를 소모</li>
+      </ul>
+    </li>
+    <li>Long Polling
+      <ul>
+        <li>장점: 클라이언트가 서버에 데이터를 요청하면, 서버는 즉시 응답을 보내지 않고 데이터가 준비될 때까지 대기 상태를 유지. 양방향 통신이 가능하고 실시간 데이터 처리가 가능.</li>
+        <li>단점: 빈번한 연결과 응답을 반복하여 서버 부하가 증가</li>
+      </ul>
+    </li>
+    <li>SSE
+      <ul>
+        <li>장점: 서버 리소스 소모 적음, Keep-Alive로 연결 유지 비용 낮음, 단순하고 간편한 구현</li>
+        <li>단점: 바이너리 데이터 전송 제한, 단방향 통신</li>
+      </ul>
+    </li>
+  </ul>
+</details>
 
-> ### Redis 캐싱을 이용한 페널티 집계값 조회 성능 개선
-
-- 요구사항 : DB 데이터의 조회가 반복될 경우 성능 저하로 인해 응답 속도나 서버 부하에 문제가 생길 수 있다고 판단
-- 평균 응답 시간 2% 감소, 
-- 최대 응답 시간 52% 감소, 
-- 표준 편차 22% 감소, 
-- 초당 처리 요청 수 2% 증가
-    - 대안비교
-        - RDBMS ( 데이터베이스 )
-            - 장점 : 데이터의 일관성을 보장하기 위한 트랜잭션을 지원하는 등의 특징
-            - 단점 : 캐싱이 아닌 DB의 직접적인 조회는 데이터의 사이즈가 커진 서비스의 성능과 확장성 면에서 비효율적
-        - Memcached
-            - 장점 : 메모리 기반 캐시로, 단순한 키-값 저장소로 자주 쓰임, 캐시된 데이터의 만료 시간 설정도 가능
-            - 단점 : Redis에 비해 기능이 제한적이고 데이터가 비영속적
-        - Redis
-            - 장점 : 트래픽이 많고 조회 빈도가 높은 유저의 페널티 집계값을 빠르고 원활하게 조회하려면 Redis 캐싱이 성능의 최적화와 빠른 속도, 유연성 면에서 유리할 것이라고 판단
-            - 단점 : 설정과 운영이 가장 복잡하며, 메시지 지연(latency)이 Redis와 RabbitMQ에 비해 높은 편
-    - 기술결정 : 채팅 메세지에 고도화된 기능이 필요하지 않기 때문에, 소규모이며 실시간 응답성이 가장 빠른 Redis로 선택
-    - 성능 개선
-        - 적용 후
-          <br/>
-          <img src="src/main/resources/assets/redis_graph.png" width="600">
+> ### 알림 SSE (작성 예정)
 
 ## ❓ 트러블 슈팅 Trouble Shooting
 
@@ -227,7 +247,7 @@
     - RDS에 환경변수가 적용 안 되는 문제가 발생
     - 테스트하는 과정에서 docker 이미지가 계속 쌓이는 것을 발견
       <br/>
-      <img src="src/main/resources/assets/deploy_1.png" width="600">
+      <img src="src/main/resources/assets/deploy_1.png" width="750">
 - 해결 방안
     - 테스트 과정에서 Docker 이미지가 계속 쌓이는 현상을 발견
     - Docker 이미지는 여러 층(Layer)으로 구성되어 있어, 쌓이는 이미지가 스토리지와 성능에 영향을 미침
@@ -235,7 +255,7 @@
     - docker rmi $(docker images -f "dangling=true" -q)
     - 불필요한 Docker 이미지 정리 후 RDS 환경변수가 정상적으로 적용되는 것을 확인
       <br/>
-      <img src="src/main/resources/assets/deploy_2.png" width="600">
+      <img src="src/main/resources/assets/deploy_2.png" width="750">
 
 > ### JPA 쿼리메서드를 사용한 DB 조회의 성능 저하
 
