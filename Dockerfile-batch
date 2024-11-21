@@ -3,9 +3,6 @@ FROM openjdk:17-jdk-slim
 # 소스 코드 복사
 COPY . .
 
-# 환경변수파일 복사
-RUN cp src/main/resources/application.properties application.properties
-
 # 배치모듈의 빌드
 RUN ./module-batch/gradlew :module-batch:build -x test --no-daemon
 
