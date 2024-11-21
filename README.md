@@ -63,13 +63,11 @@
 
 >### 공공데이터 파싱을 위한 의사결정 Spring batch / WebClient
 - 성능 개선 사항
+- 기존 동기/직렬방식의 API 요청 데이터 처리방식을 Spring batch / WebClient 을 활용한 비동기/병렬방식으로 변경하여 성능개선
 - 10,000 건 데이터 기준 테스트 결과 : 1분 15초 → 1.7초로 <span style="color:orange; font-weight:bold;">97% 개선</span>
-    - 적용 전  
+   <img src="src/main/resources/assets/batch_result.png" width="750">
       <br/>
-      <img src="src/main/resources/assets/parse_before.png" width="750">
-    - 적용 후  
-      <br/>
-      <img src="src/main/resources/assets/parse_after.png" width="750">
+      
 
 
 - 요구사항 : 정형화된 품목 카테고리 필요
