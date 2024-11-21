@@ -27,7 +27,10 @@ jobs:
 
       - name: Write Profile
         run: |
-          echo "${{ secrets.APPLICATION_BATCH }}" > ./src/main/resources/application.properties
+          echo "${{ secrets.APPLICATION_BATCH }}" > ./module-batch/src/main/resources/application.properties
+
+      - name: Build with Gradle
+        run: ./module-batch/gradlew :module-batch:build -x test --no-daemon
 
       - name: Copy Profiles to EC2
         uses: appleboy/scp-action@v0.1.3
