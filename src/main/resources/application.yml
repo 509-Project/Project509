@@ -9,12 +9,12 @@ spring:
     active: producer
 
   datasource:
-#    hikari:
-#      maximum-pool-size: 200
-#      minimum-idle: 10
-#      idle-timeout: 30000
-#      connection-timeout: 30000
-#      max-lifetime: 1800000  # 최대 생애 주기 설정
+    hikari:
+      maximum-pool-size: 200
+      minimum-idle: 10
+      idle-timeout: 30000
+      connection-timeout: 30000
+      max-lifetime: 1800000  # 최대 생애 주기 설정
     url: jdbc:mysql://localhost:3306/project509
     username: gayeon
     password: 12345

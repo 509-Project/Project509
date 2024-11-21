@@ -94,7 +94,7 @@ public class NotificationAop {
 
         // 지역에 대해 라우팅 키를 생성하고 메시지 전송
         String routingKey = String.format("party.create.%s", region);
-        rabbitTemplate.convertAndSend(rabbitMqConfig.getExchangeName(), routingKey, message);
+//        rabbitTemplate.convertAndSend(rabbitMqConfig.getExchangeName(), routingKey, message);
         log.info("Message sent to RabbitMQ with routing key: {}", routingKey);
 
         // 동적으로 큐 생성
@@ -132,7 +132,7 @@ public class NotificationAop {
 
         // 동적으로 큐 생성
         rabbitMqConfig.createQueueWithDLX("party.cancel", region);
-        notificationService.notifyUsersAboutPartyCancellation(authUser);
+//        notificationService.notifyUsersAboutPartyCancellation(authUser);
         log.info("Party 취소 알림 전송 완료: 파티: {}", partyResponse);
     }
 
@@ -166,7 +166,7 @@ public class NotificationAop {
 
         // 동적으로 큐 생성
         rabbitMqConfig.createQueueWithDLX("party.cancel", region);
-        notificationService.notifyUsersAboutPartyChatCreation(authUser, chatRoomResponse);
+//        notificationService.notifyUsersAboutPartyChatCreation(authUser, chatRoomResponse);
         log.info("Chat 생성 알림 전송 완료: {}", chatRoomResponse);
     }
 
