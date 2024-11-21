@@ -3,9 +3,6 @@ FROM openjdk:17-jdk-slim
 # 소스 코드 복사
 COPY . .
 
-# 배치모듈의 빌드
-RUN ./module-batch/gradlew :module-batch:build -x test --no-daemon
-
 # 배치모듈 JAR 파일 복사 (빌드 후 생성된 JAR 파일을 컨테이너 내로 복사)
 RUN cp module-batch/build/libs/*.jar app.jar
 
