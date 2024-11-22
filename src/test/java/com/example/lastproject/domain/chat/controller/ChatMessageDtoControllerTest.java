@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = {ChatMessageController.class})
 @Import({SecurityConfig.class, JwtUtil.class})
-class ChatMessageControllerTest {
+class ChatMessageDtoControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static com.example.lastproject.domain.item.entity.QItem.item;
 import static com.example.lastproject.domain.likeitem.entity.QLikeItem.likeItem;
 import static com.example.lastproject.domain.party.entity.QParty.party;
 import static com.example.lastproject.domain.user.entity.QUser.user;
@@ -53,7 +54,8 @@ public class PartyQueryRepositoryImpl implements PartyQueryRepository {
         List<NearbyBookmarkUserDto> results = q
                 .select(new QNearbyBookmarkUserDto(user.id, distance))
                 .from(user)
-                .leftJoin(user.likeItems, likeItem).fetchJoin()
+                .leftJoin(likeItem).on(likeItem.user.id.eq(user.id))  // user와 likeItem을 연결하는 조건 추가
+                .leftJoin(likeItem.item, item)  // likeItem과 item을 연결
                 .where(distance.loe(10)) // 10KM 이하의 거리 필터
                 .where(likeItem.item.id.eq(itemId)) // 파티의 품목과 유저의 즐겨찾기 품목이 같은지 필터
                 .fetch();

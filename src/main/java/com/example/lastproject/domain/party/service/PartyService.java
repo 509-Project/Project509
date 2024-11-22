@@ -1,11 +1,12 @@
 package com.example.lastproject.domain.party.service;
 
-import com.example.lastproject.common.annotation.LogisticsNotify;
+import com.example.lastproject.common.annotation.SseNotify;
 import com.example.lastproject.common.dto.AuthUser;
 import com.example.lastproject.common.enums.ErrorCode;
 import com.example.lastproject.common.exception.CustomException;
 import com.example.lastproject.domain.item.entity.Item;
 import com.example.lastproject.domain.item.repository.ItemRepository;
+//import com.example.lastproject.domain.market.entity.Market;
 import com.example.lastproject.domain.party.dto.request.PartyCreateRequest;
 import com.example.lastproject.domain.party.dto.request.PartyUpdateRequest;
 import com.example.lastproject.domain.party.dto.response.NearbyPartyResponse;
@@ -42,7 +43,6 @@ public class PartyService {
     private final PartyMemberRepository partyMemberRepository;
     private final UserRepository userRepository;
 
-
     // 공통으로 사용하는 partyId로 Party 객체를 조회하는 메서드
     private Party findPartyById(Long partyId) {
         return partyRepository.findById(partyId)
@@ -62,7 +62,7 @@ public class PartyService {
      * @throws CustomException INVALID_MEMBERS_COUNT: "최소 참가 인원은 1명 이상이어야 합니다."
      */
     @Transactional
-    @LogisticsNotify
+    @SseNotify
     public PartyResponse createParty(PartyCreateRequest request, AuthUser authUser) {
         User user = User.fromAuthUser(authUser);
 
@@ -255,10 +255,11 @@ public class PartyService {
      * @throws CustomException PARTY_NOT_FOUND: "파티를 찾을 수 없습니다."
      */
     @Transactional
-    @LogisticsNotify
-    public void cancelParty(Long partyId) {
+    @SseNotify
+    public PartyResponse cancelParty(Long partyId) {
         Party party = findPartyById(partyId);
         party.cancelParty();
+        return new PartyResponse(party, "Leader");
     }
 
     /**
@@ -342,5 +343,7 @@ public class PartyService {
 
         return responses;
     }
+
+
 
 }

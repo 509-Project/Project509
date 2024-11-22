@@ -49,12 +49,12 @@ public class User extends Timestamped {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus = UserStatus.ACTIVATED;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "user")
-    private List<LikeItem> likeItems = new ArrayList<>();
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<LikeItem> likeItems = new ArrayList<>();
 
     public User(String email, String password, String nickname, String address, BigDecimal latitude, BigDecimal longitude, UserRole userRole) {
         this.email = email;
