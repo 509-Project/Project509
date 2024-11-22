@@ -61,165 +61,100 @@
 
 ## 📯기술적 의사결정
 
->### 공공데이터 파싱을 위한 의사결정 Spring batch / WebClient
-- 성능 개선 사항
-- 10,000 건 데이터 기준 테스트 결과 : 1분 15초 → 1.7초로 <span style="color:orange; font-weight:bold;">97% 개선</span>
-    - 적용 전  
-      <br/>
-      <img src="src/main/resources/assets/parse_before.png" width="750">
-    - 적용 후  
-      <br/>
-      <img src="src/main/resources/assets/parse_after.png" width="750">
-
-
-- 요구사항 : 정형화된 품목 카테고리 필요
-- 기술결정 : WebClient를 통해 API 요청을 보내고 받아온 데이터를 비동기 처리 & 데이터 파싱 및 DB 저장은 Spring batch를 활용
 
 <details>
-  <summary>대안비교</summary>
-  <ul>
-    <li>WebClient
-      <ul>
-        <li>장점: 싱글 스레드 기반의 비동기방식으로 동작해 적은 자원사용과 높은 효율</li>
-        <li>단점: 이벤트루프기반의 비동기 동작하기 때문에 어려운 디버깅 추적</li>
-      </ul>
-    </li>
-    <li>RestTemplate
-      <ul>
-        <li>장점: Spring의 여러 기능들과 통합 용이, 직관적인 API 제공</li>
-        <li>단점: 동기식 처리로 대용량 처리시 병목현상 발생, 비동기 환경에서는 블로킹으로 인한 성능 제한</li>
-      </ul>
-    </li>
-    <li>OpenFeignClient
-      <ul>
-        <li>장점: HTTP 요청의 로직을 구현할 필요 없이 단순히 메서드를 정의, HTTP 요청 헤더나 파라미터 등을 쉽게 수정</li>
-        <li>단점: 제한된 설정으로 제한된 성능최적화, Spring Cloud 라이브러리와의 통합이 필요</li>
-      </ul>
-    </li>
-  </ul>
+  <summary><span style="font-size:1.2em"><strong>공공데이터 파싱을 위한 의사결정 Spring batch / WebClient</strong></span></summary>
+
+- 성능 개선사항
+
+- 10,000 건 데이터 기준 테스트 결과 : 1분 15초 → 1.7초로 <span style="color:orange; font-weight:bold;">97% 개선</span>
+  <br/>
+<img src="src/main/resources/assets/batch_result.png" width="750">
+      <br/>
+- 요구사항 : 정형화된 품목 카테고리 필요
+
+      
+
+
+| 대안 | 장점 | 단점 |
+| --- | ---- | --- |
+| WebClient | ● 싱글 스레드 기반의 비동기방식으로 동작으로 적은 자원사용과 높은 효율<br> ● 컨텍스트 스위칭비용 미발생 | ● RestTemplate보다 설정과 사용이 복잡<br> ● 이벤트루프기반의 비동기 동작으로 디버깅 추적이 어려움 |
+| RestTemplate | ● Spring의 여러 기능들과 통합 용이<br>● 직관적인 API 제공 | ● 동기식 처리로 대용량 처리시 병목현상 발생<br>● 비동기 환경에서는 블로킹으로 인한 성능 제한 |
+| OpenFeignClient | ● HTTP 요청 로직 구현 필요 없이 메서드를 정의<br>● HTTP 요청 헤더나 파라미터 등을 쉽게 수정 | ● 제한된 설정으로 제한된 성능최적화<br>● Spring Cloud 라이브러리와의 통합이 필요 |
+
+- 기술결정 : WebClient를 통해 API 요청을 보내고 받아온 데이터를 비동기 처리 & 데이터 파싱 및 DB 저장은 Spring batch를 활용
 </details>
 
-> ### 다중서버 채팅 동기화
+<details>
+  <summary><span style="font-size:1.2em"><strong>다중서버 채팅 동기화</strong></span></summary>
 
 - 성능개선 사항
     - 상황 1 - 1명의 유저가 같은 채팅방에서 다량의 메세지를 보낼 때 채팅 메시지 전송 속도 평균 <span style="color:orange; font-weight:bold;">45% 개선</span>
-      <img src="src/main/resources/assets/chat_sync_1.png" width="750">
+      <img src="src/main/resources/assets/1.png" width="750">
 
     - 상황 2 - 100명의 유저가 동시다발적으로 채팅방을 생성하고 채팅메세지를 보낼 때 채팅 메시지 전송 속도 평균 <span style="color:orange; font-weight:bold;">34% 개선</span>
-      <img src="src/main/resources/assets/chat_sync_2.png" width="750">
-
+      <img src="src/main/resources/assets/2.png" width="750">
 - 요구사항 : 다중서버에서 채팅 동기화를 위한 외부 메세지 브로커를 구현 필요
+
+| 대안 | 장점 | 단점 |
+| --- | ---- | --- |
+| Redis | ● 성능이 빠르며 설정, 사용이 간단<br> ● Pub/Sub 메커니즘으로 실시간 통신 구현 | ● 메세지 저장 기능이 없음<br> ● 대규모 서비스에서는 확장성 제한 |
+| RabbitMQ | ● 복잡한 메세지 라우팅이 가능<br>● 큐 기반으로 메세지 영구 저장이 가능<br>● AMQP 프로토콜 사용으로 안정성과 신뢰성이 높음 | ● Redis에 비해 설정,관리가 복잡<br>● 상대적으로 성능이 느린 경우 존재<br>● 대규모 환경에서는 추가적인 성능 튜닝이 필요 |
+| Kafka | ● 대용량 데이터 처리에 최적화<br>● 높은 처리량과 내결함성을 제공<br>● 메시지 영구 저장 및 복구가 가능<br>● 분산 시스템으로 스케일링이 쉬움 | ● 설정과 운영이 가장 복잡<br>● 메시지 지연이 가장 높은 편 |
+
 - 기술결정 : 채팅 메세지에 고도화된 기능이 필요하지 않기 때문에, 소규모이며 실시간 응답성이 가장 빠른 Redis로 선택
-<details>
-  <summary>대안비교</summary>
-  <ul>
-    <li>Redis : 소규모 또는 간단한 채팅 기능 구현에 적합
-      <ul>
-        <li>장점 : 성능이 빠르며 설정, 사용이 간단하며 Pub/Sub 메커니즘으로 실시간 통신에 적합</li>
-        <li>단점 : 메세지 저장 기능이 없고, 대규모 서비스에서는 확장성 제한</li>
-      </ul>
-    </li>
-    <li>RabbitMQ : 안정적이고 지속 가능한 메세지 저장과 복잡한 라우팅이 필요한 경우에 적합
-      <ul>
-        <li>장점 : 복잡한 메세지 라우팅이 가능하고, 큐 기반으로 메세지 영구 저장이 가능, AMQP 프로토콜을 사용하여 안정성과 신뢰성이 높음</li>
-        <li>단점 : Redis에 비해 설정, 관리가 복잡하고 상대적으로 성능이 느린 경우 존재, 높은 처리량이 필요한 대규모 환경에서는 추가적인 성능 튜닝이 필요</li>
-      </ul>
-    </li>
-    <li>Kafka : 매우 높은 트래픽과 데이터 영속성, 분석이 필요한 대규모 환경에 적합
-      <ul>
-        <li>장점 : 대용량 데이터 처리에 최적화되어 있으며 높은 처리량과 내결함성을 제공, 메시지 영구 저장 및 복구가 가능하고 분산 시스템으로 스케일링이 쉬움</li>
-        <li>단점 : 설정과 운영이 가장 복잡하며, 메시지 지연(latency)이 Redis와 RabbitMQ에 비해 높은 편</li>
-      </ul>
-    </li>
-  </ul>
 </details>
 
-> ### Redis 캐싱을 이용한 페널티 집계값 조회 성능 개선
+
+<details>
+  <summary><span style="font-size:1.2em"><strong>Redis 캐싱을 이용한 페널티 집계값 조회 성능 개선</strong></span></summary>
 
 - 성능 개선 사항
-- 평균 응답 시간 <span style="color:orange; font-weight:bold;">2% 감소</span>, 최대 응답 시간 <span style="color:orange; font-weight:bold;">52% 감소</span>
-- 표준 편차 <span style="color:orange; font-weight:bold;">22% 감소</span>, 초당 처리 요청 수 <span style="color:orange; font-weight:bold;">2% 증가</span>
-    - 전후 비교
+  - 최대 응답 시간 <span style="color:orange; font-weight:bold;">52% 감소</span>
+  - 표준 편차 <span style="color:orange; font-weight:bold;">22% 감소</span>
+  - 평균 응답 시간 <span style="color:orange; font-weight:bold;">2% 감소</span>
+  - 전후 비교
       <br/>
       <img src="src/main/resources/assets/redis_graph.png" width="750">
 - 요구사항 : DB 데이터의 조회가 반복될 경우 성능 저하로 인해 응답 속도나 서버 부하에 문제가 생길 수 있다고 판단
-- 기술결정 : 조회 빈도가 높은 유저의 페널티 집계값을 빠르고 원활하게 조회하려면 Redis 캐싱이 성능의 최적화에 유리할 것이라고 판단
 
-<details>
-  <summary>대안비교</summary>
-  <ul>
-    <li>RDBMS ( 데이터베이스 )
-      <ul>
-        <li>장점: 데이터의 일관성을 보장하기 위한 트랜잭션을 지원하는 등의 특징</li>
-        <li>단점: 캐싱이 아닌 DB의 직접적인 조회는 데이터의 사이즈가 커진 서비스의 성능과 확장성 면에서 비효율적</li>
-      </ul>
-    </li>
-    <li>Memcached
-      <ul>
-        <li>장점: 메모리 기반 캐시로, 단순한 키-값 저장소로 자주 쓰임, 캐시된 데이터의 만료 시간 설정도 가능</li>
-        <li>단점: Redis에 비해 기능이 제한적이고 데이터가 비영속적</li>
-      </ul>
-    </li>
-    <li>Redis
-      <ul>
-        <li>장점: 트래픽이 많고 조회 빈도가 높은 유저의 페널티 집계값을 빠르고 원활하게 조회하려면 Redis 캐싱이 성능의 최적화와 빠른 속도, 유연성 면에서 유리할 것이라고 판단</li>
-        <li>단점: 설정과 운영이 가장 복잡하며, 메시지 지연(latency)이 Redis와 RabbitMQ에 비해 높은 편</li>
-      </ul>
-    </li>
-  </ul>
+| 대안 | 장점 | 단점 |
+| --- | ---- | --- |
+| RDBMS | ● 데이터의 일관성을 보장하기 위한 트랜잭션을 지원 | ● 캐싱이 아닌 DB의 직접적인 조회는 데이터의 사이즈가 커진 서비스의 성능과 확장성 면에서 비효율적 |
+| Memcached | ● 메모리 기반 캐시로, 단순한 키-값 저장소로 자주 쓰임<br>● 캐시된 데이터의 만료 시간 설정도 가능 | ● Redis에 비해 기능이 제한적이고 데이터가 비영속적 |
+| Redis | ● 성능의 최적화와 빠른 속도, 유연성 | ● 복잡한 쿼리 지원 부족 |
+
+- 기술결정 : 조회 빈도가 높은 유저의 페널티 집계값을 빠르고 원활하게 조회하려면 Redis 캐싱이 성능의 최적화에 유리할 것이라고 판단
 </details>
 
-> ### CI/CD 파이프라인 구축
+<details>
+  <summary><span style="font-size:1.2em"><strong>CI/CD 파이프라인 구축</strong></span></summary>
 
 - 요구사항 : CI/CD 파이프라인을 구축하기 위해 적합한 도구를 선정
+
+| 대안 | 장점 | 단점 |
+| --- | ---- | --- |
+| Github Actions | ● GitHub과 연동되어 있어 설정이 간편<br>●  GitHub Marketplace에 있는 액션 활용가능으로 비용이 효율적<br>● GitHub 기반 프로젝트에 최적화<br> | ● 복잡한 파이프라인을 구현하기 힘듦<br>● 작업 커스터마이징이 어려움 |
+| Jenkins | ● 높은 유연성과 확장성을 제공<br>● GitHub 외의 다양한 버전 관리 시스템과 연동가능 | ● 자체 서버 설치 및 운영이 필요하므로 유지 관리 비용이 증가<br>● 초기 설정이 GitHub Actions보다 복잡 |
+
 - 기술결정 : GitHub Actions이 GitHub와의 통합이 매끄럽고 설정이 간단해 더 효율적이라고 판단
-<details>
-  <summary>대안비교</summary>
-  <ul>
-    <li>Github Actions
-      <ul>
-        <li>장점: GitHub과 연동되어 있어 설정이 간편, GitHub Marketplace에 있는 액션 활용가능으로 비용이 효율적, GitHub 기반 프로젝트에 최적화</li>
-        <li>단점: 복잡한 파이프라인을 구현하기 힘듦, 작업 커스터마이징이 어려움</li>
-      </ul>
-    </li>
-    <li>Jenkins
-      <ul>
-        <li>장점: 높은 유연성과 확장성을 제공, GitHub 외의 다양한 버전 관리 시스템과 연동가능</li>
-        <li>단점: 자체 서버 설치 및 운영이 필요하므로 유지 관리 비용이 증가, 초기 설정이 GitHub Actions보다 복잡</li>
-      </ul>
-    </li>
-  </ul>
 </details>
 
-> ### 알림 데이터의 실시간 동기화
+<details>
+  <summary><span style="font-size:1.2em"><strong>알림 구현</strong></span></summary>
 
 - 요구사항 : 사용자 경험을 향상시키기 위해 빠르고 안정적으로 데이터 전달 필요
+
+| 대안 | 장점 | 단점 |
+| --- | ---- | --- |
+| WebSocket | ● 클라이언트와 서버 간에 양방향 통신이 가능한 지속적인 연결을 제공 | ● 구현이 복잡하고 높은 리소스를 소모 |
+| Long Polling | ● 클라이언트가 서버에 데이터를 요청하면, 서버는 즉시 응답을 보내지 않고 데이터가 준비될 때까지 대기 상태를 유지<br>● 양방향 통신이 가능하고 실시간 데이터 처리가 가능 | ● 빈번한 연결과 응답을 반복하여 서버 부하가 증가 |
+| SSE | ● 서버 리소스 소모 적음<br>● Keep-Alive로 연결 유지 비용 낮음<br>● 단순하고 간편한 구현 | ● 바이너리 데이터 전송 제한<br>● 단방향 통신 |
+
 - 기술결정 : 서버에서 클라이언트로만 데이터 푸시가 필요한 경우에 적합하고, 사용자가 적은 리소스로 연결을 유지하기 때문에 SSE 방식 선택
-<details>
-  <summary>대안비교</summary>
-  <ul>
-    <li>WebSocket
-      <ul>
-        <li>장점: 클라이언트와 서버 간에 양방향 통신이 가능한 지속적인 연결을 제공</li>
-        <li>단점: 구현이 복잡하고 높은 리소스를 소모</li>
-      </ul>
-    </li>
-    <li>Long Polling
-      <ul>
-        <li>장점: 클라이언트가 서버에 데이터를 요청하면, 서버는 즉시 응답을 보내지 않고 데이터가 준비될 때까지 대기 상태를 유지. 양방향 통신이 가능하고 실시간 데이터 처리가 가능.</li>
-        <li>단점: 빈번한 연결과 응답을 반복하여 서버 부하가 증가</li>
-      </ul>
-    </li>
-    <li>SSE
-      <ul>
-        <li>장점: 서버 리소스 소모 적음, Keep-Alive로 연결 유지 비용 낮음, 단순하고 간편한 구현</li>
-        <li>단점: 바이너리 데이터 전송 제한, 단방향 통신</li>
-      </ul>
-    </li>
-  </ul>
 </details>
 
-> ### 알림 SSE (작성 예정)
+
 
 ## ❓ 트러블 슈팅 Trouble Shooting
 
@@ -249,14 +184,10 @@
     - 테스트하는 과정에서 docker 이미지가 계속 쌓이는 것을 발견
     - 테스트 과정에서 Docker 이미지가 계속 쌓이는 현상을 발견
     - Docker 이미지는 여러 층(Layer)으로 구성되어 있어, 쌓이는 이미지가 스토리지와 성능에 영향을 미침
-      <br/>
-      <img src="src/main/resources/assets/deploy_1.png" width="750">
 - 해결 방안
     - EC2 터미널에 접속해 태그 없는 이미지를 삭제하는 명령어 사용
     - docker rmi $(docker images -f "dangling=true" -q)
     - 불필요한 Docker 이미지 정리 후 RDS 환경변수가 정상적으로 적용되는 것을 확인
-      <br/>
-      <img src="src/main/resources/assets/deploy_2.png" width="750">
 
 > ### JPA 쿼리메서드를 사용한 DB 조회의 성능 저하
 
@@ -316,8 +247,10 @@
 
 ## 👨‍👩‍👧‍👦 팀원들 Our Team
 
-| 권이슬 | 김나영 | 박대현 | 이가연 | 최원용 |
-|:---:|:---:|:---:|:---:|:---:|
+|                👑권이슬                |              👩‍🔬김나영              |               🧑‍🔬박대현               |                👩‍🔬이가연                |                🧑‍🔬최원용                |
+|:-----------------------------------:|:----------------------------------:|:------------------------------------:|:--------------------------------------:|:--------------------------------------:|
+| [github](https://github.com/cbb715) | [github](https://github.com/abxl1) | [github](https://github.com/pdhpark) | [github](https://github.com/dlrkdus12) | [github](https://github.com/dnjsdyd78) |
+
 
 ### 📒 팀 노션 Team Project Notion
 
