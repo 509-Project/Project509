@@ -9,6 +9,7 @@
 //import org.aspectj.lang.annotation.After;
 //import org.aspectj.lang.annotation.AfterReturning;
 //import org.aspectj.lang.annotation.Aspect;
+//import org.aspectj.lang.annotation.Pointcut;
 //import org.springframework.scheduling.annotation.EnableAsync;
 //import org.springframework.security.core.Authentication;
 //import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,12 +24,20 @@
 //
 //    private final NotificationService notificationService;
 //
-//    @AfterReturning(pointcut = "@annotation(com.example.lastproject.common.annotation.SseNotify) && " +
-//            "execution(* com.example.lastproject.domain.party.service.PartyService.createParty(..))",
-//            returning = "result")
-//    public void afterPartyCreation(Object result) {
-//        // 반환된 result 객체를 PartyResponse 타입으로 캐스팅
-//        PartyResponse partyResponse = (PartyResponse) result;
+//    @Pointcut("execution(* com.example.lastproject.domain.party.service.PartyService.createParty(..))")
+//    private void partyCreate() {
+//    }
+//
+//    @Pointcut("execution(* com.example.lastproject.domain.party.service.PartyService.cancelParty(..))")
+//    private void partyCancel() {
+//    }
+//
+//    @Pointcut("execution(* com.example.lastproject.domain.chat.service.ChatRoomServiceImpl.createChatRoom(..))")
+//    private void chatCreate() {
+//    }
+//
+//    @AfterReturning(pointcut = "partyCreate()", returning = "partyResponse")
+//    public void afterPartyCreation(PartyResponse partyResponse) {
 //
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        AuthUser authUser = (AuthUser) authentication.getPrincipal();
@@ -38,26 +47,22 @@
 //
 //        // notifyUsersAboutPartyCreation 메서드 호출 시 marketId 제거
 //        notificationService.notifyUsersAboutPartyCreation(authUser, itemName, partyResponse.getId());
-//        log.info("Party 생성 알림 전송 완료: {}", result);
+//        log.info("Party 생성 알림 전송 완료: {}", partyResponse);
 //    }
 //
 //    // 파티 취소 알림 AOP 메서드
-//    @After("@annotation(com.example.lastproject.common.annotation.SseNotify) && " +
-//            "execution(* com.example.lastproject.domain.party.service.PartyService.cancelParty(..))")
-//    public void afterPartyCancellation() {
+//    @AfterReturning(pointcut = "partyCancel()", returning = "partyResponse")
+//    public void afterPartyCancellation(PartyResponse partyResponse) {
+//        // 반환된 result 객체를 PartyResponse 타입으로 캐스팅
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        AuthUser authUser = (AuthUser) authentication.getPrincipal();
-//        notificationService.notifyUsersAboutPartyCancellation(authUser);
+//        notificationService.notifyUsersAboutPartyCancellation(authUser, partyResponse.getId());
 //        log.info("Party 취소 알림 전송 완료");
 //    }
 //
 //    // 채팅방 생성 알림 AOP 메서드
-//    @AfterReturning(pointcut = "@annotation(com.example.lastproject.common.annotation.SseNotify) && " +
-//            "execution(com.example.lastproject.domain.chat.dto.ChatRoomResponse *(..))",
-//            returning = "result")
-//    public void afterChatCreation(Object result) {
-//        // 반환된 result 객체를 PartyResponse 타입으로 캐스팅
-//        ChatRoomResponse chatRoomResponse = (ChatRoomResponse) result;
+//    @AfterReturning(pointcut = "chatCreate()", returning = "chatRoomResponse")
+//    public void afterChatCreation(ChatRoomResponse chatRoomResponse) {
 //
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        AuthUser authUser = (AuthUser) authentication.getPrincipal();
