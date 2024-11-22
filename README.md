@@ -7,7 +7,7 @@
 ## 🏁 프로젝트 기획 및 소개
 
 - 내 주변 오프라인 마트에서 물품의 공동구매를 원하는 소비자들을 모아주는 플랫폼
-- 빠른 시간 내에 소량 구매를 원하는 소비자가 타겟인 서비스
+- 대량 판매 물품의 소량구매를 원하는 소비자가 타겟인 서비스
 
 ## 🎈 인프라 설계도
 
@@ -28,18 +28,23 @@
 
 ### 🔔 채팅
 
-> * WebSocket 과 STOMP 를 사용하여 실시간 채팅기능 구현
-> * 사용자가 채팅방 입장 시, 입장 전 오갔던 메세지 확인 가능
+> * WebSocket 과 STOMP를 사용하여 실시간 채팅기능 구현
+> * Redis pub/sub을 이용하여 외부 메세지 브로커 구현 및 성능 개선
 
 ### 🔔 알림
 
 > * 이벤트 발생시 SSE 를 이용하여 실시간, 지속적인 알림 기능 제공
 > * 단방향 서비스를 제공하여 리소스 부담이 적고 구현이 간단
+> * RabbitMQ를 사용하여, 이벤트 발생시 지역 기반으로 큐를 생성해 효율적으로 메시지 전송
 
 ### 🔔 품목 업데이트
 
-> * 더미 데이터가 아닌 공공데이터를 통해 실제 사용되는 품목 데이터를 이용
+> * 공공데이터를 통해 실제 사용되는 품목 데이터를 이용
 > * Spring Batch 와 Webclient 를 통해 데이터를 동기 방식으로 병렬 처리
+
+### 🔔 위치기반 파티찾기
+
+> * 하버사인 알고리즘을 이용해 유저주변 10km 반경내에 생성된 파티 조회
 
 ## 📝 Technologies & Tools 📝
 
@@ -65,16 +70,8 @@
 <details>
   <summary><span style="font-size:1.2em"><strong>공공데이터 파싱을 위한 의사결정 Spring batch / WebClient</strong></span></summary>
 
-- 성능 개선사항
 
-- 10,000 건 데이터 기준 테스트 결과 : 1분 15초 → 1.7초로 <span style="color:orange; font-weight:bold;">97% 개선</span>
-  <br/>
-<img src="src/main/resources/assets/batch_result.png" width="750">
-      <br/>
 - 요구사항 : 정형화된 품목 카테고리 필요
-
-      
-
 
 | 대안 | 장점 | 단점 |
 | --- | ---- | --- |
@@ -85,15 +82,17 @@
 - 기술결정 : WebClient를 통해 API 요청을 보내고 받아온 데이터를 비동기 처리 & 데이터 파싱 및 DB 저장은 Spring batch를 활용
 </details>
 
+- 성능 개선사항
+
+- 10,000 건 데이터 기준 테스트 결과 : 1분 15초 → 1.7초로 <span style="color:orange; font-weight:bold;">97% 개선</span>
+  <br/>
+<img src="src/main/resources/assets/batch_result.png" width="750">
+      <br/>
+
 <details>
   <summary><span style="font-size:1.2em"><strong>다중서버 채팅 동기화</strong></span></summary>
 
-- 성능개선 사항
-    - 상황 1 - 1명의 유저가 같은 채팅방에서 다량의 메세지를 보낼 때 채팅 메시지 전송 속도 평균 <span style="color:orange; font-weight:bold;">45% 개선</span>
-      <img src="src/main/resources/assets/1.png" width="750">
 
-    - 상황 2 - 100명의 유저가 동시다발적으로 채팅방을 생성하고 채팅메세지를 보낼 때 채팅 메시지 전송 속도 평균 <span style="color:orange; font-weight:bold;">34% 개선</span>
-      <img src="src/main/resources/assets/2.png" width="750">
 - 요구사항 : 다중서버에서 채팅 동기화를 위한 외부 메세지 브로커를 구현 필요
 
 | 대안 | 장점 | 단점 |
@@ -105,17 +104,17 @@
 - 기술결정 : 채팅 메세지에 고도화된 기능이 필요하지 않기 때문에, 소규모이며 실시간 응답성이 가장 빠른 Redis로 선택
 </details>
 
+- 성능개선 사항
+  
+    - 상황 1 - 1명의 유저가 같은 채팅방에서 다량의 메세지를 보낼 때 채팅 메시지 전송 속도 평균 <span style="color:orange; font-weight:bold;">45% 개선</span>
+      <img src="src/main/resources/assets/1.png" width="750">
+    - 상황 2 - 100명의 유저가 동시다발적으로 채팅방을 생성하고 채팅메세지를 보낼 때 채팅 메시지 전송 속도 평균 <span style="color:orange; font-weight:bold;">34% 개선</span>
+      <img src="src/main/resources/assets/2.png" width="750">
 
 <details>
   <summary><span style="font-size:1.2em"><strong>Redis 캐싱을 이용한 페널티 집계값 조회 성능 개선</strong></span></summary>
 
-- 성능 개선 사항
-  - 최대 응답 시간 <span style="color:orange; font-weight:bold;">52% 감소</span>
-  - 표준 편차 <span style="color:orange; font-weight:bold;">22% 감소</span>
-  - 평균 응답 시간 <span style="color:orange; font-weight:bold;">2% 감소</span>
-  - 전후 비교
-      <br/>
-      <img src="src/main/resources/assets/redis_graph.png" width="750">
+
 - 요구사항 : DB 데이터의 조회가 반복될 경우 성능 저하로 인해 응답 속도나 서버 부하에 문제가 생길 수 있다고 판단
 
 | 대안 | 장점 | 단점 |
@@ -126,6 +125,14 @@
 
 - 기술결정 : 조회 빈도가 높은 유저의 페널티 집계값을 빠르고 원활하게 조회하려면 Redis 캐싱이 성능의 최적화에 유리할 것이라고 판단
 </details>
+
+- 성능 개선 사항
+  - 최대 응답 시간 <span style="color:orange; font-weight:bold;">52% 감소</span>
+  - 표준 편차 <span style="color:orange; font-weight:bold;">22% 감소</span>
+  - 평균 응답 시간 <span style="color:orange; font-weight:bold;">2% 감소</span>
+  - 전후 비교
+      <br/>
+      <img src="src/main/resources/assets/redis_graph.png" width="750">
 
 <details>
   <summary><span style="font-size:1.2em"><strong>CI/CD 파이프라인 구축</strong></span></summary>
