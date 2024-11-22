@@ -18,12 +18,12 @@ public class NotificationServiceSimulation extends Simulation {
             .userAgentHeader("Gatling");
 
     // 미리 발급된 JWT 토큰을 하드코딩
-    String hardCodedJwtToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ1c2VyNEA1MDkuY29tIiwidXNlclJvbGUiOiJST0xFX1VTRVIiLCJleHAiOjE3MzIxOTI5NjgsImlhdCI6MTczMjE4OTM2OH0.pAGFqOtJg1EInBy3Y9ff87_r7IFPJdjfwkydvM7wv88"; // 여기에 실제 JWT 토큰을 입력하세요.
-//    String hardCodedJwtToken2 = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ1c2VyNEA1MDkuY29tIiwidXNlclJvbGUiOiJST0xFX1VTRVIiLCJleHAiOjE3MzE4NTU1MjgsImlhdCI6MTczMTg1MTkyOH0.1Fs5kdnjM92MosRQk_lfFLg30Q6vQcAtrTgYdihyNEo"; // 여기에 실제 JWT 토큰을 입력하세요.
-//    String hardCodedJwtToken3 = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ1c2VyNEA1MDkuY29tIiwidXNlclJvbGUiOiJST0xFX1VTRVIiLCJleHAiOjE3MzE4NTU1MjgsImlhdCI6MTczMTg1MTkyOH0.1Fs5kdnjM92MosRQk_lfFLg30Q6vQcAtrTgYdihyNEo"; // 여기에 실제 JWT 토큰을 입력하세요.
-//    String hardCodedJwtToken4 = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ1c2VyNEA1MDkuY29tIiwidXNlclJvbGUiOiJST0xFX1VTRVIiLCJleHAiOjE3MzE4NTU1MjgsImlhdCI6MTczMTg1MTkyOH0.1Fs5kdnjM92MosRQk_lfFLg30Q6vQcAtrTgYdihyNEo"; // 여기에 실제 JWT 토큰을 입력하세요.
-//    String hardCodedJwtToken5 = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ1c2VyNEA1MDkuY29tIiwidXNlclJvbGUiOiJST0xFX1VTRVIiLCJleHAiOjE3MzE4NTU1MjgsImlhdCI6MTczMTg1MTkyOH0.1Fs5kdnjM92MosRQk_lfFLg30Q6vQcAtrTgYdihyNEo"; // 여기에 실제 JWT 토큰을 입력하세요.
-//    String hardCodedJwtToken6 = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ1c2VyNEA1MDkuY29tIiwidXNlclJvbGUiOiJST0xFX1VTRVIiLCJleHAiOjE3MzE4NTU1MjgsImlhdCI6MTczMTg1MTkyOH0.1Fs5kdnjM92MosRQk_lfFLg30Q6vQcAtrTgYdihyNEo"; // 여기에 실제 JWT 토큰을 입력하세요.
+    String hardCodedJwtToken1 = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiZW1haWwiOiJ1c2VyMUA1MDkuY29tIiwidXNlclJvbGUiOiJST0xFX1VTRVIiLCJleHAiOjE3MzIyMDkwNjIsImlhdCI6MTczMjIwNTQ2Mn0.m-c4AWv6phC3ABX6z6G9xdRMwpIDbi-vrenn8o_R17k"; // 여기에 실제 JWT 토큰을 입력하세요.
+    String hardCodedJwtToken2 = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMSIsImVtYWlsIjoidXNlcjUxQDUwOS5jb20iLCJ1c2VyUm9sZSI6IlJPTEVfVVNFUiIsImV4cCI6MTczMjIwOTY2OSwiaWF0IjoxNzMyMjA2MDY5fQ.YLxz7M2mws_RZmg12us-ZqehDVwKf_lEUpyyPzNlO_4"; // 여기에 실제 JWT 토큰을 입력하세요.
+    String hardCodedJwtToken3 = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ1c2VyNEA1MDkuY29tIiwidXNlclJvbGUiOiJST0xFX1VTRVIiLCJleHAiOjE3MzIyMDk2OTAsImlhdCI6MTczMjIwNjA5MH0.nHFIgGZwAYaN5B5yS3J1uR6R9kI2bBPdlPfRQa22a3A"; // 여기에 실제 JWT 토큰을 입력하세요.
+    String hardCodedJwtToken4 = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ1c2VyNEA1MDkuY29tIiwidXNlclJvbGUiOiJST0xFX1VTRVIiLCJleHAiOjE3MzE4NTU1MjgsImlhdCI6MTczMTg1MTkyOH0.1Fs5kdnjM92MosRQk_lfFLg30Q6vQcAtrTgYdihyNEo"; // 여기에 실제 JWT 토큰을 입력하세요.
+    String hardCodedJwtToken5 = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMSIsImVtYWlsIjoidXNlcjUxQDUwOS5jb20iLCJ1c2VyUm9sZSI6IlJPTEVfVVNFUiIsImV4cCI6MTczMjIxMjEzMywiaWF0IjoxNzMyMjA4NTMzfQ.FuNL_Cw5LVE6mD41ULA57CnInf3U_r-FzrBflIc6Y6c"; // 여기에 실제 JWT 토큰을 입력하세요.
+    String hardCodedJwtToken6 = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMiIsImVtYWlsIjoidXNlcjU1QDUwOS5jb20iLCJ1c2VyUm9sZSI6IlJPTEVfVVNFUiIsImV4cCI6MTczMjIxMjE5NCwiaWF0IjoxNzMyMjA4NTk0fQ.UQJIk1i3ZzJpLLwVQuhTQvX7_wOp69Zq44uHS-3M54o"; // 여기에 실제 JWT 토큰을 입력하세요.
 //    String hardCodedJwtToken7 = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ1c2VyNEA1MDkuY29tIiwidXNlclJvbGUiOiJST0xFX1VTRVIiLCJleHAiOjE3MzE4NTU1MjgsImlhdCI6MTczMTg1MTkyOH0.1Fs5kdnjM92MosRQk_lfFLg30Q6vQcAtrTgYdihyNEo"; // 여기에 실제 JWT 토큰을 입력하세요.
 //    String hardCodedJwtToken8 = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ1c2VyNEA1MDkuY29tIiwidXNlclJvbGUiOiJST0xFX1VTRVIiLCJleHAiOjE3MzE4NTU1MjgsImlhdCI6MTczMTg1MTkyOH0.1Fs5kdnjM92MosRQk_lfFLg30Q6vQcAtrTgYdihyNEo"; // 여기에 실제 JWT 토큰을 입력하세요.
 //    String hardCodedJwtToken9 = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ1c2VyNEA1MDkuY29tIiwidXNlclJvbGUiOiJST0xFX1VTRVIiLCJleHAiOjE3MzE4NTU1MjgsImlhdCI6MTczMTg1MTkyOH0.1Fs5kdnjM92MosRQk_lfFLg30Q6vQcAtrTgYdihyNEo"; // 여기에 실제 JWT 토큰을 입력하세요.
@@ -77,11 +77,10 @@ public class NotificationServiceSimulation extends Simulation {
 //                return session;
 //            })
 
-
             .exec(sse("SSE Connect")
                     .sseName("SSE Connect Stream")  // 스트림 이름을 설정
                     .connect("/notifications/connect")
-                    .header("Authorization", "Bearer " + hardCodedJwtToken)
+                    .header("Authorization", "Bearer " + hardCodedJwtToken1)
                     .header("Content-Type", "text/event-stream")
                     .await(30) // 최대 30초 대기
                     .on(sse.checkMessage("SSE Check Notification")
@@ -89,41 +88,99 @@ public class NotificationServiceSimulation extends Simulation {
                     )
             )
 
-            // 파티 생성 시나리오
-            .exec(http("Create Party Request")
-                    .post("/parties")
-                    .header("Content-Type", "application/json")
-                    .header("Authorization", "Bearer " + hardCodedJwtToken)
-                    .body(StringBody("""
-                                {
-                                    "marketName" : "이마트 역삼점",
-                                    "marketAddress" : "서울 강남구",
-                                    "latitude": "37.5173319258532",
-                                    "longitude": "127.047377408384",
-                                    "itemId" : 1,
-                                    "itemCount" : 3,
-                                    "itemUnit" : "kg",
-                                    "startTime" : "11-22 16:20",
-                                    "endTime" : "11-22 18:00",
-                                    "membersCount" : 4
-                                }
-                            """))
-                    .check(status().is(201)) // 파티 생성 성공 확인
-            )
-//             알림 확인 시나리오
-            .exec(sse("SSE Check Notification")
-                    .sseName("Check Notification Stream")  // 스트림 이름 설정
+            .exec(sse("SSE Connect")
+                    .sseName("SSE Connect Stream")  // 스트림 이름을 설정
                     .connect("/notifications/connect")
-                    .header("Authorization", "Bearer " + hardCodedJwtToken)
+                    .header("Authorization", "Bearer " + hardCodedJwtToken3)
                     .header("Content-Type", "text/event-stream")
                     .await(30) // 최대 30초 대기
-                    .on(
-                            sse.checkMessage("Check Notification")
-                                    .check(
-                                            regex("\\{.*\\}").exists()  // 이벤트 데이터가 존재하는지 확인
-                                    )
+                    .on(sse.checkMessage("SSE Check Notification")
+                            .check(regex("\\{.*\\}").exists()) // 이벤트 데이터 존재 여부 확인
+                    )
+            )
+
+            .exec(sse("SSE Connect")
+                    .sseName("SSE Connect Stream")  // 스트림 이름을 설정
+                    .connect("/notifications/connect")
+                    .header("Authorization", "Bearer " + hardCodedJwtToken5)
+                    .header("Content-Type", "text/event-stream")
+                    .await(30) // 최대 30초 대기
+                    .on(sse.checkMessage("SSE Check Notification")
+                            .check(regex("\\{.*\\}").exists()) // 이벤트 데이터 존재 여부 확인
+                    )
+            )
+
+            .exec(sse("SSE Connect")
+                    .sseName("SSE Connect Stream")  // 스트림 이름을 설정
+                    .connect("/notifications/connect")
+                    .header("Authorization", "Bearer " + hardCodedJwtToken4)
+                    .header("Content-Type", "text/event-stream")
+                    .await(30) // 최대 30초 대기
+                    .on(sse.checkMessage("SSE Check Notification")
+                            .check(regex("\\{.*\\}").exists()) // 이벤트 데이터 존재 여부 확인
+                    )
+            )
+
+            .exec(sse("SSE Connect")
+                    .sseName("SSE Connect Stream")  // 스트림 이름을 설정
+                    .connect("/notifications/connect")
+                    .header("Authorization", "Bearer " + hardCodedJwtToken6)
+                    .header("Content-Type", "text/event-stream")
+                    .await(30) // 최대 30초 대기
+                    .on(sse.checkMessage("SSE Check Notification")
+                            .check(regex("\\{.*\\}").exists()) // 이벤트 데이터 존재 여부 확인
+                    )
+            )
+
+
+            .exec(sse("SSE Connect")
+                    .sseName("SSE Connect Stream")  // 스트림 이름을 설정
+                    .connect("/notifications/connect")
+                    .header("Authorization", "Bearer " + hardCodedJwtToken2)
+                    .header("Content-Type", "text/event-stream")
+                    .await(30) // 최대 30초 대기
+                    .on(sse.checkMessage("SSE Check Notification")
+                            .check(regex("\\{.*\\}").exists()) // 이벤트 데이터 존재 여부 확인
                     )
             );
+
+
+
+//            // 파티 생성 시나리오
+//            .exec(http("Create Party Request")
+//                    .post("/parties")
+//                    .header("Content-Type", "application/json")
+//                    .header("Authorization", "Bearer " + hardCodedJwtToken1)
+//                    .body(StringBody("""
+//                                {
+//                                    "marketName" : "이마트 역삼점",
+//                                    "marketAddress" : "서울 강남구",
+//                                    "latitude": "37.5173319258532",
+//                                    "longitude": "127.047377408384",
+//                                    "itemId" : 1,
+//                                    "itemCount" : 3,
+//                                    "itemUnit" : "kg",
+//                                    "startTime" : "11-22 16:20",
+//                                    "endTime" : "11-22 18:00",
+//                                    "membersCount" : 4
+//                                }
+//                            """))
+//                    .check(status().is(201)) // 파티 생성 성공 확인
+//            )
+////             알림 확인 시나리오
+//            .exec(sse("SSE Check Notification")
+//                    .sseName("Check Notification Stream")  // 스트림 이름 설정
+//                    .connect("/notifications/connect")
+//                    .header("Authorization", "Bearer " + hardCodedJwtToken1)
+//                    .header("Content-Type", "text/event-stream")
+//                    .await(30) // 최대 30초 대기
+//                    .on(
+//                            sse.checkMessage("Check Notification")
+//                                    .check(
+//                                            regex("\\{.*\\}").exists()  // 이벤트 데이터가 존재하는지 확인
+//                                    )
+//                    )
+//            );
 
 
 //    atOnceUsers(10), // 즉시 실행
@@ -133,7 +190,7 @@ public class NotificationServiceSimulation extends Simulation {
     {
         // 여러 시나리오를 하나의 setUp에서 실행
         setUp(
-                scenario.injectOpen(rampUsers(100).during(10))  // 모든 시나리오를 한 번에 실행
+                scenario.injectOpen(rampUsers(50).during(10))  // 모든 시나리오를 한 번에 실행
         ).protocols(httpProtocol);  // HTTP 프로토콜 설정
     }
 }

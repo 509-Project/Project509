@@ -1,12 +1,10 @@
 package com.example.lastproject.domain.party.service;
 
-import com.example.lastproject.common.annotation.SseNotify;
 import com.example.lastproject.common.dto.AuthUser;
 import com.example.lastproject.common.enums.ErrorCode;
 import com.example.lastproject.common.exception.CustomException;
 import com.example.lastproject.domain.item.entity.Item;
 import com.example.lastproject.domain.item.repository.ItemRepository;
-//import com.example.lastproject.domain.market.entity.Market;
 import com.example.lastproject.domain.party.dto.request.PartyCreateRequest;
 import com.example.lastproject.domain.party.dto.request.PartyUpdateRequest;
 import com.example.lastproject.domain.party.dto.response.NearbyPartyResponse;
@@ -62,7 +60,6 @@ public class PartyService {
      * @throws CustomException INVALID_MEMBERS_COUNT: "최소 참가 인원은 1명 이상이어야 합니다."
      */
     @Transactional
-    @SseNotify
     public PartyResponse createParty(PartyCreateRequest request, AuthUser authUser) {
         User user = User.fromAuthUser(authUser);
 
@@ -255,7 +252,6 @@ public class PartyService {
      * @throws CustomException PARTY_NOT_FOUND: "파티를 찾을 수 없습니다."
      */
     @Transactional
-    @SseNotify
     public PartyResponse cancelParty(Long partyId) {
         Party party = findPartyById(partyId);
         party.cancelParty();
