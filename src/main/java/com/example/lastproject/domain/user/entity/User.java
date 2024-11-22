@@ -2,7 +2,6 @@ package com.example.lastproject.domain.user.entity;
 
 import com.example.lastproject.common.Timestamped;
 import com.example.lastproject.common.dto.AuthUser;
-import com.example.lastproject.domain.likeitem.entity.LikeItem;
 import com.example.lastproject.domain.user.dto.request.UserUpdateRequest;
 import com.example.lastproject.domain.user.enums.UserRole;
 import com.example.lastproject.domain.user.enums.UserStatus;
@@ -13,8 +12,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
