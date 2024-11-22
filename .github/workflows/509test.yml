@@ -116,5 +116,7 @@ jobs:
               -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
               -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
               -e DB_URL=${{ secrets.DB_URL }} \
+              -e KAKAO_API_KEY=${{ secrets.KAKAO_API_KEY }} \
+              -e KAKAO_URL=${{ secrets.KAKAO_URL }} \
               -e CLIENT_BASIC_URL=${{ secrets.CLIENT_BASIC_URL }} \
               $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
