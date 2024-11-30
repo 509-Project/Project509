@@ -1,6 +1,7 @@
 .gradle
 application.properties
 application.yml
+application-batch.yml
 application-local.yml
 application-prod.yml
 build/
