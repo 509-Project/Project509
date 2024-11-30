@@ -32,6 +32,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class ModuleBatchApplication {
 
     public static void main(String[] args) {
+        System.setProperty("spring.profiles.active", "batch");
         SpringApplication.run(ModuleBatchApplication.class, args);
     }
 
